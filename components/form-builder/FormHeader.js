@@ -5,10 +5,10 @@ import { cn } from '@/lib/utils';
 export const FormHeader = ({ isPreview, onTogglePreview }) => {
   return (
     <header className="h-14 border-b border-border bg-card flex items-center px-6 shrink-0">
-      <h1 className="text-lg font-semibold text-foreground">Form Builder</h1>
+      <h1 className="text-lg font-semibold text-foreground">Formoteka</h1>
       
       {/* Center navigation link */}
-      <nav className="flex-1 flex items-center justify-center gap-6">
+      <nav className="mr-8 flex-1 flex items-center justify-end gap-6">
         <a
           href="#settings"
           className={cn(

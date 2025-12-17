@@ -43,7 +43,7 @@ export const FormCanvas = ({
     >
       <div className="max-w-2xl mx-auto py-12 px-8">
         {/* Form header */}
-        <div className="mb-8 text-center">
+        <div className="pl-14 mb-8 text-center">
           <h1 className="text-2xl font-bold text-foreground mb-2">Untitled Form</h1>
           <p className="text-muted-foreground">Add blocks to build your form</p>
         </div>
@@ -65,9 +65,9 @@ export const FormCanvas = ({
               <div className="w-16 h-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
                 <Plus className="w-8 h-8 text-muted-foreground" />
               </div>
-              <p className="text-muted-foreground mb-2">Your form is empty</p>
+              <p className="text-muted-foreground mb-2">Ваша форма порожня</p>
               <p className="text-sm text-muted-foreground">
-                Click on a block in the panel or drag it here to get started
+                Натисніть на будь-який блок у панелі справа або перетягніть його сюди, щоб почати
               </p>
             </div>
           ) : (

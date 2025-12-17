@@ -1,0 +1,50 @@
+import { blockDefinitions } from '@/data/block-definitions';
+import { BlockIcon } from './BlockIcon';
+import { cn } from '@/lib/utils';
+
+const categories = [
+  { key: 'content', label: 'Content' },
+  { key: 'input', label: 'Input Fields' },
+  { key: 'choice', label: 'Choice Fields' },
+];
+
+export const AddBlockTab = ({ onAddBlock }) => {
+  return (
+    <div className="p-4 space-y-6 animate-fade-in">
+      {categories.map((category) => {
+        const blocks = blockDefinitions.filter((b) => b.category === category.key);
+        return (
+          <div key={category.key}>
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+              {category.label}
+            </h4>
+            <div className="grid grid-cols-2 gap-2">
+              {blocks.map((block) => (
+                <button
+                  key={block.type}
+                  onClick={() => onAddBlock(block.type)}
+                  draggable
+                  onDragStart={(e) => {
+                    e.dataTransfer.setData('blockType', block.type);
+                    e.dataTransfer.effectAllowed = 'copy';
+                  }}
+                  className={cn(
+                    'flex flex-col items-center gap-2 p-3 rounded-lg',
+                    'bg-secondary/50 hover:bg-secondary border border-transparent hover:border-primary/20',
+                    'transition-smooth cursor-grab active:cursor-grabbing',
+                    'group'
+                  )}
+                >
+                  <div className="w-10 h-10 rounded-lg bg-background flex items-center justify-center shadow-soft group-hover:shadow-medium transition-smooth">
+                    <BlockIcon icon={block.icon} className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-smooth" />
+                  </div>
+                  <span className="text-xs font-medium text-foreground">{block.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};

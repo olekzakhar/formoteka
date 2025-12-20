@@ -49,17 +49,16 @@ export const ProductsBlockSettings = ({ block, onUpdate }) => {
             <Package className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <p className="text-sm font-medium text-foreground">Products</p>
-            <p className="text-xs text-muted-foreground">{products.length} products</p>
+            <p className="text-sm font-medium text-foreground">Продукти</p>
+            <p className="text-xs text-muted-foreground">{products.length} продуктів</p>
           </div>
         </div>
 
         <Button
           onClick={() => setShowManageProducts(true)}
           className="w-full"
-          variant="outline"
         >
-          Manage Products
+          Керування продуктами
         </Button>
       </div>
 

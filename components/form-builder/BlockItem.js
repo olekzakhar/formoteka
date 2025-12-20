@@ -554,7 +554,7 @@ export const BlockItem = ({
               )}
               <div className="p-4 border-2 border-dashed border-border rounded-lg bg-muted/30 text-center">
                 <p className="text-sm text-muted-foreground">
-                  Продукти не додано. Керуйте ними в налаштуваннях.
+                  Продукти не додано. Керуйте ними в параметрах блоку.
                 </p>
               </div>
             </div>

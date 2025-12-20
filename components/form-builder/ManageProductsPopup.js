@@ -188,7 +188,7 @@ export const ManageProductsPopup = ({
         >
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-            <h2 className="text-xl font-semibold text-foreground">Manage Products</h2>
+            <h2 className="text-xl font-semibold text-foreground">Керування продуктами</h2>
             <div className="flex items-center gap-2">
               <button
                 onClick={(e) => {

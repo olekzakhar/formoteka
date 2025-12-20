@@ -37,7 +37,7 @@ export const SidePanel = ({
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
-          <span className="text-sm font-medium text-foreground">Block Settings</span>
+          <span className="text-sm font-medium text-foreground">Параметри блоку</span>
         </div>
         <div className="flex-1 overflow-y-auto">
           <BlockSettingsTab block={activeBlock} onUpdate={onUpdateBlock} />

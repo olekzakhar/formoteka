@@ -6,6 +6,7 @@ const categories = [
   { key: 'content', label: 'Content' },
   { key: 'input', label: 'Input Fields' },
   { key: 'choice', label: 'Choice Fields' },
+  { key: 'layout', label: 'Layout' },
 ];
 
 export const AddBlockTab = ({ onAddBlock }) => {
@@ -26,6 +27,8 @@ export const AddBlockTab = ({ onAddBlock }) => {
                   draggable
                   onDragStart={(e) => {
                     e.dataTransfer.setData('blockType', block.type);
+                    // Safari/Firefox compatibility
+                    e.dataTransfer.setData('text/plain', block.type);
                     e.dataTransfer.effectAllowed = 'copy';
                   }}
                   className={cn(

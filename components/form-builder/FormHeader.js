@@ -1,43 +1,113 @@
-import { Eye, Edit3, Settings } from 'lucide-react';
+import { ArrowLeft, Play, Copy, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { useState, useRef, useEffect } from 'react';
 
-export const FormHeader = ({ isPreview, onTogglePreview }) => {
+export const FormHeader = ({ formName, onFormNameChange, onTogglePreview, onBack }) => {
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editValue, setEditValue] = useState(formName);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    setEditValue(formName);
+  }, [formName]);
+
+  useEffect(() => {
+    if (isEditingName && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isEditingName]);
+
+  const handleSaveName = () => {
+    if (editValue.trim()) {
+      onFormNameChange(editValue.trim());
+    } else {
+      setEditValue(formName);
+    }
+    setIsEditingName(false);
+  };
+
+  const handleCopyUrl = () => {
+    navigator.clipboard.writeText(window.location.href);
+  };
+
+  const handleOpenInNewTab = () => {
+    window.open(window.location.href, '_blank');
+  };
+
   return (
-    <header className="h-14 border-b border-border bg-card flex items-center px-6 shrink-0">
-      <h1 className="text-lg font-semibold text-foreground">Formoteka</h1>
-      
-      {/* Center navigation link */}
-      <nav className="mr-8 flex-1 flex items-center justify-end gap-6">
-        <a
-          href="#settings"
-          className={cn(
-            "flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth"
-          )}
+    <header className="h-14 border-b border-border bg-card flex items-center px-4 shrink-0">
+      {/* Left section - Back button and form name - fixed width */}
+      <div className="flex items-center gap-2 w-[200px]">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onBack}
+          className="h-8 w-8 flex-shrink-0"
         >
-          <Settings className="h-4 w-4" />
-          Settings
-        </a>
-      </nav>
-
-      <Button
-        variant={isPreview ? 'default' : 'outline'}
-        size="sm"
-        onClick={onTogglePreview}
-        className="gap-2"
-      >
-        {isPreview ? (
-          <>
-            <Edit3 className="h-4 w-4" />
-            Edit
-          </>
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+        
+        {isEditingName ? (
+          <input
+            ref={inputRef}
+            type="text"
+            value={editValue}
+            onChange={(e) => setEditValue(e.target.value)}
+            onBlur={handleSaveName}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleSaveName();
+              if (e.key === 'Escape') {
+                setEditValue(formName);
+                setIsEditingName(false);
+              }
+            }}
+            className="text-sm font-medium text-foreground bg-transparent border-b-2 border-primary outline-none px-1 min-w-0"
+          />
         ) : (
-          <>
-            <Eye className="h-4 w-4" />
-            Preview
-          </>
+          <button
+            onClick={() => setIsEditingName(true)}
+            className="text-sm font-medium text-foreground hover:text-primary transition-smooth truncate"
+          >
+            {formName}
+          </button>
         )}
-      </Button>
+      </div>
+      
+      {/* Center - Brand name - absolute positioned to stay centered */}
+      <div className="absolute left-1/2 -translate-x-1/2">
+        <span className="text-lg font-semibold text-foreground">Formoteka</span>
+      </div>
+
+      {/* Right section - Action buttons - fixed width */}
+      <div className="flex items-center gap-1 ml-auto">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onTogglePreview}
+          className="h-8 w-8"
+          title="Preview"
+        >
+          <Play className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleCopyUrl}
+          className="h-8 w-8"
+          title="Copy URL"
+        >
+          <Copy className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleOpenInNewTab}
+          className="h-8 w-8"
+          title="Open in new tab"
+        >
+          <ExternalLink className="h-4 w-4" />
+        </Button>
+      </div>
     </header>
   );
 };

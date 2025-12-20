@@ -1,4 +1,8 @@
+'use client'
+
+import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
 
 const backgroundColors = [
   { value: 'bg-background', label: 'Default', preview: 'bg-background' },
@@ -23,6 +27,29 @@ const fontSizes = [
 ];
 
 export const DesignTab = ({ design, onUpdateDesign }) => {
+  const [showCustomBgColor, setShowCustomBgColor] = useState(false);
+  const [customBgColor, setCustomBgColor] = useState('#ffffff');
+  const [showCustomTextColor, setShowCustomTextColor] = useState(false);
+  const [customTextColor, setCustomTextColor] = useState('#000000');
+
+  // Check if current background is a custom color
+  const isCustomBg = design.backgroundColor.startsWith('bg-[#');
+  const isCustomText = design.textColor.startsWith('text-[#');
+
+  const handleCustomBgColorChange = (color) => {
+    setCustomBgColor(color);
+    if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
+      onUpdateDesign({ backgroundColor: `bg-[${color}]` });
+    }
+  };
+
+  const handleCustomTextColorChange = (color) => {
+    setCustomTextColor(color);
+    if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
+      onUpdateDesign({ textColor: `text-[${color}]` });
+    }
+  };
+
   return (
     <div className="p-4 space-y-6 animate-fade-in">
       {/* Background Color */}
@@ -32,10 +59,13 @@ export const DesignTab = ({ design, onUpdateDesign }) => {
           {backgroundColors.map((color) => (
             <button
               key={color.value}
-              onClick={() => onUpdateDesign({ backgroundColor: color.value })}
+              onClick={() => {
+                setShowCustomBgColor(false);
+                onUpdateDesign({ backgroundColor: color.value });
+              }}
               className={cn(
                 'flex flex-col items-center gap-2 p-3 rounded-lg border transition-smooth',
-                design.backgroundColor === color.value
+                design.backgroundColor === color.value && !isCustomBg
                   ? 'border-primary bg-accent/50'
                   : 'border-border hover:border-primary/50'
               )}
@@ -44,7 +74,46 @@ export const DesignTab = ({ design, onUpdateDesign }) => {
               <span className="text-xs text-muted-foreground">{color.label}</span>
             </button>
           ))}
+          {/* Custom color button */}
+          <button
+            onClick={() => setShowCustomBgColor(!showCustomBgColor)}
+            className={cn(
+              'flex flex-col items-center gap-2 p-3 rounded-lg border transition-smooth',
+              (showCustomBgColor || isCustomBg)
+                ? 'border-primary bg-accent/50'
+                : 'border-border hover:border-primary/50'
+            )}
+          >
+            <div 
+              className="w-8 h-8 rounded-md border border-border"
+              style={{ 
+                background: isCustomBg 
+                  ? design.backgroundColor.match(/bg-\[(#[0-9A-Fa-f]+)\]/)?.[1] || 'linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1)'
+                  : 'linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1)'
+              }}
+            />
+            <span className="text-xs text-muted-foreground">Custom</span>
+          </button>
         </div>
+        
+        {/* Custom background color picker */}
+        {showCustomBgColor && (
+          <div className="flex gap-2 items-center mt-2">
+            <input
+              type="color"
+              value={customBgColor}
+              onChange={(e) => handleCustomBgColorChange(e.target.value)}
+              className="w-10 h-10 rounded-md border border-border cursor-pointer"
+            />
+            <Input
+              value={customBgColor}
+              onChange={(e) => handleCustomBgColorChange(e.target.value)}
+              placeholder="#FFFFFF"
+              className="flex-1 uppercase"
+              maxLength={7}
+            />
+          </div>
+        )}
       </div>
 
       {/* Text Color */}
@@ -54,10 +123,13 @@ export const DesignTab = ({ design, onUpdateDesign }) => {
           {textColors.map((color) => (
             <button
               key={color.value}
-              onClick={() => onUpdateDesign({ textColor: color.value })}
+              onClick={() => {
+                setShowCustomTextColor(false);
+                onUpdateDesign({ textColor: color.value });
+              }}
               className={cn(
                 'flex items-center gap-3 p-3 rounded-lg border transition-smooth',
-                design.textColor === color.value
+                design.textColor === color.value && !isCustomText
                   ? 'border-primary bg-accent/50'
                   : 'border-border hover:border-primary/50'
               )}
@@ -66,7 +138,46 @@ export const DesignTab = ({ design, onUpdateDesign }) => {
               <span className="text-sm text-foreground">{color.label}</span>
             </button>
           ))}
+          {/* Custom text color button */}
+          <button
+            onClick={() => setShowCustomTextColor(!showCustomTextColor)}
+            className={cn(
+              'flex items-center gap-3 p-3 rounded-lg border transition-smooth col-span-2',
+              (showCustomTextColor || isCustomText)
+                ? 'border-primary bg-accent/50'
+                : 'border-border hover:border-primary/50'
+            )}
+          >
+            <div 
+              className="w-6 h-6 rounded-full border border-border"
+              style={{ 
+                background: isCustomText 
+                  ? design.textColor.match(/text-\[(#[0-9A-Fa-f]+)\]/)?.[1] || 'linear-gradient(135deg, #ff6b6b, #4ecdc4)'
+                  : 'linear-gradient(135deg, #ff6b6b, #4ecdc4)'
+              }}
+            />
+            <span className="text-sm text-foreground">Custom Color</span>
+          </button>
         </div>
+
+        {/* Custom text color picker */}
+        {showCustomTextColor && (
+          <div className="flex gap-2 items-center mt-2">
+            <input
+              type="color"
+              value={customTextColor}
+              onChange={(e) => handleCustomTextColorChange(e.target.value)}
+              className="w-10 h-10 rounded-md border border-border cursor-pointer"
+            />
+            <Input
+              value={customTextColor}
+              onChange={(e) => handleCustomTextColorChange(e.target.value)}
+              placeholder="#000000"
+              className="flex-1 uppercase"
+              maxLength={7}
+            />
+          </div>
+        )}
       </div>
 
       {/* Font Size */}
@@ -87,6 +198,32 @@ export const DesignTab = ({ design, onUpdateDesign }) => {
               {size.label}
             </button>
           ))}
+        </div>
+      </div>
+
+      {/* Form Disabled Toggle */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <label className="text-sm font-medium text-foreground">Disable Form</label>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              When enabled, form submissions are disabled
+            </p>
+          </div>
+          <button
+            onClick={() => onUpdateDesign({ formDisabled: !design.formDisabled })}
+            className={cn(
+              'relative w-11 h-6 rounded-full transition-smooth',
+              design.formDisabled ? 'bg-primary' : 'bg-muted'
+            )}
+          >
+            <span
+              className={cn(
+                'absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-background shadow-soft transition-smooth',
+                design.formDisabled && 'translate-x-5'
+              )}
+            />
+          </button>
         </div>
       </div>
     </div>

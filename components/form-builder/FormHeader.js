@@ -1,4 +1,4 @@
-import { ArrowLeft, Play, Copy, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Play, Link, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useRef, useEffect } from 'react';
 
@@ -35,7 +35,7 @@ export const FormHeader = ({ formName, onFormNameChange, onTogglePreview, onBack
   };
 
   return (
-    <header className="h-14 border-b border-border bg-card flex items-center px-4 shrink-0">
+    <header className="h-14 border-b border-border bg-card flex items-center px-4 shrink-0 bg-transparent">
       {/* Left section - Back button and form name - fixed width */}
       <div className="flex items-center gap-2 w-[200px]">
         <Button
@@ -89,6 +89,7 @@ export const FormHeader = ({ formName, onFormNameChange, onTogglePreview, onBack
         >
           <Play className="h-4 w-4" />
         </Button>
+
         <Button
           variant="ghost"
           size="icon"
@@ -96,8 +97,9 @@ export const FormHeader = ({ formName, onFormNameChange, onTogglePreview, onBack
           className="h-8 w-8"
           title="Copy URL"
         >
-          <Copy className="h-4 w-4" />
+          <Link className="h-4 w-4" />
         </Button>
+
         <Button
           variant="ghost"
           size="icon"

@@ -430,7 +430,7 @@ export const FormPreview = ({
           {/* Modal container with header inside */}
           <div className="flex flex-col rounded-2xl overflow-hidden shadow-2xl h-full">
             {/* Top bar with form URL and close button - inside the modal */}
-            <div className="bg-muted/80 px-4 py-2.5 flex items-center justify-between border-b border-border">
+            <div className="bg-[#F4F4F4] px-4 py-2.5 flex items-center justify-between border-b">
               <button
                 onClick={onClose}
                 className="p-1 rounded-md hover:bg-muted transition-colors"

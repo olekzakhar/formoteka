@@ -7,7 +7,7 @@ export const MobileSidePanelDrawer = ({ children }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartY, setDragStartY] = useState(0);
   const [currentTranslateY, setCurrentTranslateY] = useState(0);
-  const drawerRef = useRef<HTMLDivElement>(null);
+  const drawerRef = useRef(null);
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
@@ -125,12 +125,13 @@ export const MobileSidePanelDrawer = ({ children }) => {
         ref={drawerRef}
         className={cn(
           'fixed inset-x-0 bottom-0 z-50 md:hidden',
-          'bg-card border-t border-border shadow-xl',
           isDragging ? '' : 'transition-transform duration-300 ease-out'
         )}
         style={{
           transform: getTransformStyle(),
-          maxHeight: '85vh',
+          // paddingTop: '60px',
+          maxHeight: '92%',
+          height: '100%'
         }}
       >
         {/* Handle button */}
@@ -152,8 +153,7 @@ export const MobileSidePanelDrawer = ({ children }) => {
               borderTopLeftRadius: '36px',
               borderTopRightRadius: '36px',
               borderBottomLeftRadius: '0',
-              borderBottomRightRadius: '0',
-              marginTop: '-32px',
+              borderBottomRightRadius: '0'
             }}
           >
             {isOpen ? (
@@ -165,7 +165,7 @@ export const MobileSidePanelDrawer = ({ children }) => {
         </div>
 
         {/* Content */}
-        <div className="h-[70vh] overflow-y-auto">
+        <div className="min-h-full h-full overflow-y-auto">
           {children}
         </div>
       </div>

@@ -1,5 +1,5 @@
 export const blockDefinitions = [
-  { type: 'products', label: 'Products', icon: 'Package', category: 'choice' },
+  { type: 'products', label: 'Продукти', icon: 'Package', category: 'choice' },
   { type: 'heading', label: 'Heading', icon: 'Heading', category: 'content' },
   { type: 'paragraph', label: 'Paragraph', icon: 'AlignLeft', category: 'content' },
   { type: 'short-text', label: 'Short Text', icon: 'Type', category: 'input' },
@@ -27,7 +27,7 @@ export const getDefaultBlock = (type) => {
     checkbox: { label: 'Checkbox', options: ['Option 1', 'Option 2'], showLabel: true },
     radio: { label: 'Radio Group', options: ['Option 1', 'Option 2', 'Option 3'], showLabel: true },
     date: { label: 'Date', placeholder: 'Select a date', showLabel: true },
-    products: { label: 'Products', products: [], productsLayout: 'grid-2', showLabel: true },
+    products: { label: 'Продукти', products: [], productsLayout: 'grid-2', showLabel: true },
     spacer: { label: 'Spacer', height: 32 },
     image: { label: 'Image', imageCount: 1, images: [] },
     divider: { label: 'Divider', dividerColor: '#e5e7eb', dividerThickness: 1, dividerWidth: 100, dividerStyle: 'solid' },

@@ -274,7 +274,7 @@ export const FormCanvas = ({
 
   return (
     <div
-      className="flex-1 h-full bg-canvas overflow-y-auto"
+      className="flex-1 h-full overflow-y-auto"
       onClick={handleClearAll}
       onDragEnterCapture={(e) => {
         e.preventDefault();
@@ -302,9 +302,9 @@ export const FormCanvas = ({
         }
       }}
     >
-      <div className="w-full max-w-4xl mx-auto py-8 px-4">
+      <div className="w-full max-w-4xl mx-auto py-6 px-6">
         {/* Form Container */}
-        <div className={cn('rounded-2xl shadow-lg overflow-hidden', formDesign.backgroundColor)}>
+        <div className={cn('rounded-2xl border', formDesign.backgroundColor)}>
           <div className="w-full py-10 px-4 sm:px-6">
             <div className={cn('w-full max-w-[700px] mx-auto', formDesign.textColor, fontSizeClass[formDesign.fontSize])}>
             {/* Blocks */}
@@ -324,8 +324,8 @@ export const FormCanvas = ({
                   <div className="w-16 h-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
                     <Plus className="w-8 h-8 text-muted-foreground" />
                   </div>
-                  <p className="text-muted-foreground mb-2">Your form is empty</p>
-                  <p className="text-sm text-muted-foreground">Drag blocks here from the Add tab</p>
+                  <p className="text-muted-foreground mb-2">Ваша форма порожня</p>
+                  <p className="text-sm text-muted-foreground">Додайте або перетягніть сюди блоки з вкладки &quot;Додати&quot;</p>
                 </div>
               ) : (
                 <div
@@ -447,7 +447,7 @@ export const FormCanvas = ({
         </div>
 
         {/* Success Page Section */}
-        <div className="mt-8 rounded-2xl bg-card border border-border shadow-lg overflow-hidden">
+        <div className={cn('mt-8 rounded-2xl border', formDesign.backgroundColor)}>
           <div className="py-8">
             <div className="text-center mb-6">
               <div className="w-16 h-16 rounded-full bg-accent mx-auto mb-4 flex items-center justify-center">
@@ -469,8 +469,8 @@ export const FormCanvas = ({
                   onDragOver={(e) => handleSuccessDragOver(e, 0)}
                   onDrop={(e) => handleSuccessDrop(e, 0)}
                 >
-                  <p className="text-muted-foreground mb-2">Success page is empty</p>
-                  <p className="text-sm text-muted-foreground">Drag blocks here from the Add tab</p>
+                  <p className="text-muted-foreground mb-2">Сторінка успіху порожня</p>
+                  <p className="text-sm text-muted-foreground">Додайте або перетягніть сюди блоки з вкладки &quot;Додати&quot;</p>
                 </div>
                ) : (
                  <div

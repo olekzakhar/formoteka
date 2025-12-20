@@ -5,7 +5,7 @@ import { SubmitButtonSettings } from './SubmitButtonSettings';
 import { cn } from '@/lib/utils';
 import { Palette, Settings, ArrowLeft, Plus } from 'lucide-react';
 
-const PANEL_WIDTH = 'w-full md:w-[280px] lg:w-[360px]';
+const PANEL_WIDTH = 'w-full md:w-[280px] lg:w-[360px] h-[calc(100%-16px)]! mt-[8px] mr-[10px] rounded-3xl border';
 
 export const SidePanel = ({
   activeTab,
@@ -29,8 +29,8 @@ export const SidePanel = ({
   // Render Block Settings view (for form blocks)
   if (showBlockSettings && activeBlock) {
     return (
-      <div className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shadow-panel shrink-0')}>
-        <div className="flex items-center gap-2 px-4 py-3.5 border-b border-border">
+      <div className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shrink-0')}>
+        <div className="flex items-center gap-2 px-4 py-[11px] border-b border-border">
           <button
             onClick={onCloseBlockSettings}
             className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-smooth"
@@ -49,7 +49,7 @@ export const SidePanel = ({
   // Render Success Block Settings view
   if (showSuccessBlockSettings && activeSuccessBlock) {
     return (
-      <div className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shadow-panel shrink-0')}>
+      <div className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shrink-0')}>
         <div className="flex items-center gap-2 px-4 py-3.5 border-b border-border">
           <button
             onClick={onCloseSuccessBlockSettings}
@@ -69,7 +69,7 @@ export const SidePanel = ({
   // Render Submit Button Settings view
   if (showSubmitSettings) {
     return (
-      <div className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shadow-panel shrink-0')}>
+      <div className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shrink-0')}>
         <div className="flex items-center gap-2 px-4 py-3.5 border-b border-border">
           <button
             onClick={onCloseSubmitSettings}
@@ -91,7 +91,7 @@ export const SidePanel = ({
 
   // Render main tabs (Add + Design + Settings)
   return (
-    <div className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shadow-panel shrink-0')}>
+    <div className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shrink-0 overflow-hidden')}>
       {/* Tabs */}
       <div className="flex border-b border-border">
         <button
@@ -99,36 +99,36 @@ export const SidePanel = ({
           className={cn(
             'flex-1 flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium transition-smooth',
             activeTab === 'add'
-              ? 'text-primary border-b-2 border-primary bg-accent/30'
+              ? 'text-primary border-b-2 border-primary! bg-accent/30'
               : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
           )}
         >
           <Plus className="w-4 h-4" />
-          Add
+          Додати
         </button>
         <button
           onClick={() => onTabChange('design')}
           className={cn(
             'flex-1 flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium transition-smooth',
             activeTab === 'design'
-              ? 'text-primary border-b-2 border-primary bg-accent/30'
+              ? 'text-primary border-b-2 border-primary! bg-accent/30'
               : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
           )}
         >
           <Palette className="w-4 h-4" />
-          Design
+          Дизайн
         </button>
         <button
           onClick={() => onTabChange('settings')}
           className={cn(
             'flex-1 flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium transition-smooth',
             activeTab === 'settings'
-              ? 'text-primary border-b-2 border-primary bg-accent/30'
+              ? 'text-primary border-b-2 border-primary! bg-accent/30'
               : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
           )}
         >
           <Settings className="w-4 h-4" />
-          Settings
+          Параметри
         </button>
       </div>
 

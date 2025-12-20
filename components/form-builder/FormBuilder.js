@@ -15,8 +15,8 @@ export const FormBuilder = () => {
   const [isPreview, setIsPreview] = useState(false);
   const [showBlockSettings, setShowBlockSettings] = useState(false);
   const [showSubmitSettings, setShowSubmitSettings] = useState(false);
-  const [formName, setFormName] = useState('Untitled Form');
-  const [submitButtonText, setSubmitButtonText] = useState('Submit');
+  const [formName, setFormName] = useState('Без назви');
+  const [submitButtonText, setSubmitButtonText] = useState('Надіслати');
   const [formDesign, setFormDesign] = useState({
     backgroundColor: 'bg-white',
     textColor: 'text-foreground',
@@ -26,8 +26,8 @@ export const FormBuilder = () => {
 
   // Success page blocks state
   const [successBlocks, setSuccessBlocks] = useState([
-    { id: 'success-heading', type: 'heading', label: 'Thank you!', textAlign: 'center' },
-    { id: 'success-text', type: 'paragraph', label: 'Your submission has been received.', textAlign: 'center' },
+    { id: 'success-heading', type: 'heading', label: 'Дякуємо!', textAlign: 'center' },
+    { id: 'success-text', type: 'paragraph', label: 'Ми отримали вашу заявку.', textAlign: 'center' },
   ]);
   const [activeSuccessBlockId, setActiveSuccessBlockId] = useState(null);
   const [isEditingSuccessBlock, setIsEditingSuccessBlock] = useState(false);

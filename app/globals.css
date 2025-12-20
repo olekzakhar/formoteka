@@ -36,7 +36,7 @@ body {
 /* @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap'); */
 
 :root {
-  --background: 210 20% 98%;
+  --background: 0, 0%, 96.078%; /* 0, 0%, 95.686%; - #F4F4F4 */ /* 210 20% 98% */
   --foreground: 220 25% 10%;
 
   --card: 0 0% 100%;
@@ -60,7 +60,7 @@ body {
   --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 100%;
 
-  --border: 210 20% 90%;
+  --border: 0, 0%, 0%, 0.09 /* 30, 4.348%, 90.98% */ /* 210 20% 90% */;
   --input: 210 20% 90%;
   --ring: 173 80% 40%;
 
@@ -300,7 +300,7 @@ body {
   /* Box Shadows */
   --shadow-soft: 0 2px 8px -2px rgba(0, 0, 0, 0.08), 0 4px 16px -4px rgba(0, 0, 0, 0.06);
   --shadow-medium: 0 4px 12px -2px rgba(0, 0, 0, 0.1), 0 8px 24px -4px rgba(0, 0, 0, 0.08);
-  --shadow-panel: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 4px 16px -2px rgba(0, 0, 0, 0.1);
+  /* --shadow-panel: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 4px 16px -2px rgba(0, 0, 0, 0.1); */
 
   /* Container */
   --breakpoint-2xl: 1400px;
@@ -399,4 +399,9 @@ body {
 /* Manual dark mode class */
 .dark {
   /* Add your dark mode variables here if needed */
+}
+
+
+button {
+  cursor: pointer !important;
 }

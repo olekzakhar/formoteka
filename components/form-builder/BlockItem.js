@@ -554,7 +554,7 @@ export const BlockItem = ({
               )}
               <div className="p-4 border-2 border-dashed border-border rounded-lg bg-muted/30 text-center">
                 <p className="text-sm text-muted-foreground">
-                  No products added. Click settings to manage products.
+                  Продукти не додано. Керуйте ними в налаштуваннях.
                 </p>
               </div>
             </div>
@@ -698,9 +698,10 @@ export const BlockItem = ({
       }}
     >
       {/* Left action bar - vertical, close to block */}
+      {/* gap-0.5 */}
       <div
         className={cn(
-          'absolute -left-9 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-0.5',
+          'absolute -left-9 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-[1px]',
           'opacity-0 transition-smooth group-hover:opacity-100'
         )}
       >

@@ -305,7 +305,7 @@ export const FormCanvas = ({
       <div className="w-full max-w-4xl mx-auto py-6 px-6">
         {/* Form Container */}
         <div className={cn('rounded-2xl border', formDesign.backgroundColor)}>
-          <div className="w-full py-10 px-4 sm:px-6">
+          <div className="w-full pt-4 pb-10 px-4 sm:px-6">
             <div className={cn('w-full max-w-[700px] mx-auto', formDesign.textColor, fontSizeClass[formDesign.fontSize])}>
             {/* Blocks */}
             <div className="space-y-2">

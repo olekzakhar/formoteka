@@ -456,7 +456,7 @@ export const FormPreview = ({
                 formDesign.backgroundColor
               )}
             >
-              <div className="w-full py-10 px-4 sm:px-6">
+              <div className="w-full pt-4 pb-10 px-4 sm:px-6">
                 <div className={cn('w-full max-w-[700px] mx-auto', formDesign.textColor, fontSizeClass[formDesign.fontSize])}>
                 {blocks.length === 0 && !isSubmitted ? (
                   <div className="flex items-center justify-center h-64">

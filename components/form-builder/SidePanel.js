@@ -5,7 +5,8 @@ import { SubmitButtonSettings } from './SubmitButtonSettings';
 import { cn } from '@/lib/utils';
 import { Palette, Settings, ArrowLeft, Plus } from 'lucide-react';
 
-const PANEL_WIDTH = 'w-full md:w-[280px] lg:w-[360px] h-[calc(100%-16px)]! mt-[8px] mr-[10px] rounded-3xl border';
+const PANEL_WIDTH = 'w-full md:w-[280px] lg:w-[360px] md:h-[calc(100%-16px)] md:mt-[8px] md:mr-[10px] rounded-3xl border';
+
 
 export const SidePanel = ({
   activeTab,

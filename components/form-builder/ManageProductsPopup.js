@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -192,6 +192,13 @@ export const ManageProductsPopup = ({
   const isMobile = useIsMobile();
   const [localProducts, setLocalProducts] = useState(products);
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const scrollAnchorRef = useRef(null);
+
+  useEffect(() => {
+    if (localProducts.length > products.length) {
+      scrollAnchorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+  }, [localProducts.length]);
 
   // Додаємо в кінець списку (вниз)
   const handleAddProduct = () => {
@@ -343,7 +350,6 @@ export const ManageProductsPopup = ({
                     <div
                       className={cn(
                         'relative rounded-lg border-2 cursor-pointer transition-all overflow-hidden bg-background',
-                        // Колір бордера primary для активної картки
                         selectedProductId === product.id ? 'border-primary!' : 'border-border hover:border-muted-foreground/30'
                       )}
                       onClick={(e) => handleSelectProduct(e, product.id)}
@@ -400,6 +406,7 @@ export const ManageProductsPopup = ({
                     )}
                   </div>
                 ))}
+                <div ref={scrollAnchorRef} />
               </div>
             </ScrollArea>
           </div>

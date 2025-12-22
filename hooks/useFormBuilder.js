@@ -1,3 +1,5 @@
+// hooks/useFormBuilder
+
 import { useState, useCallback } from 'react';
 import { getDefaultBlock } from '@/data/block-definitions';
 
@@ -24,7 +26,8 @@ export const useFormBuilder = () => {
       return [...prev, newBlock];
     });
 
-    setActiveBlockId(newBlock.id);
+    // ❌ ПРИБРАТИ ЦЕЙ РЯДОК:
+    // setActiveBlockId(newBlock.id);
   }, []);
 
   const updateBlock = useCallback((id, updates) => {
@@ -58,7 +61,8 @@ export const useFormBuilder = () => {
       return newBlocks;
     });
 
-    setActiveBlockId(newBlock.id);
+    // ❌ ПРИБРАТИ ЦЕЙ РЯДОК:
+    // setActiveBlockId(newBlock.id);
   }, [blocks]);
 
   const moveBlock = useCallback((fromIndex, toIndex) => {

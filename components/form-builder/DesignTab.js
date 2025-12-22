@@ -9,8 +9,8 @@ const backgroundColors = [
   { value: 'bg-white', label: 'White', preview: 'bg-white' },
   { value: 'bg-slate-50', label: 'Light Gray', preview: 'bg-slate-50' },
   { value: 'bg-slate-100', label: 'Gray', preview: 'bg-slate-100' },
-  { value: 'bg-primary/5', label: 'Primary Tint', preview: 'bg-primary/20' },
-  { value: 'bg-blue-50', label: 'Blue Tint', preview: 'bg-blue-100' },
+  { value: 'bg-[#E7CBCB]', label: 'Пудровий', preview: 'bg-[#E7CBCB]' },
+  { value: 'bg-[#BDC2C2]', label: 'Попелястий', preview: 'bg-[#BDC2C2]' },
 ];
 
 const textColors = [
@@ -32,9 +32,14 @@ export const DesignTab = ({ design, onUpdateDesign }) => {
   const [showCustomTextColor, setShowCustomTextColor] = useState(false);
   const [customTextColor, setCustomTextColor] = useState('#000000');
 
-  // Check if current background is a custom color
-  const isCustomBg = design.backgroundColor.startsWith('bg-[#');
-  const isCustomText = design.textColor.startsWith('text-[#');
+  // Check if current background is a custom color (excluding predefined ones)
+  const predefinedBgColors = backgroundColors.map(c => c.value);
+  const predefinedTextColors = textColors.map(c => c.value);
+  
+  const isCustomBg = design.backgroundColor.startsWith('bg-[#') && 
+                     !predefinedBgColors.includes(design.backgroundColor);
+  const isCustomText = design.textColor.startsWith('text-[#') && 
+                       !predefinedTextColors.includes(design.textColor);
 
   const handleCustomBgColorChange = (color) => {
     setCustomBgColor(color);

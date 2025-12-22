@@ -345,7 +345,7 @@ export const FormPreview = ({
             )}
             <select
               name={block.id}
-              className="flex h-10 w-full max-w-[300px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              className="flex h-10 w-full max-w-[300px] rounded-md border border-input bg-input px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
               defaultValue=""
               required={block.required}
             >
@@ -430,7 +430,7 @@ export const FormPreview = ({
           {/* Modal container with header inside */}
           <div className="flex flex-col rounded-2xl overflow-hidden shadow-2xl h-full">
             {/* Top bar with form URL and close button - inside the modal */}
-            <div className="bg-[#F4F4F4] px-4 py-2.5 flex items-center justify-between border-b">
+            <div className="bg-[#F7F7F8] px-4 py-2.5 flex items-center justify-between border-b">
               <button
                 onClick={onClose}
                 className="p-1 rounded-md hover:bg-muted transition-colors"
@@ -456,7 +456,7 @@ export const FormPreview = ({
                 formDesign.backgroundColor
               )}
             >
-              <div className="w-full pt-4 pb-10 px-4 sm:px-6">
+              <div className="w-full pt-6 pb-10 px-4 sm:px-6">
                 <div className={cn('w-full max-w-[700px] mx-auto', formDesign.textColor, fontSizeClass[formDesign.fontSize])}>
                 {blocks.length === 0 && !isSubmitted ? (
                   <div className="flex items-center justify-center h-64">

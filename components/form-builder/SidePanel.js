@@ -1,3 +1,5 @@
+// form-builder/SidePanel
+
 import { AddBlockTab } from './AddBlockTab';
 import { BlockSettingsTab } from './BlockSettingsTab';
 import { DesignTab, FormDesign } from './DesignTab';

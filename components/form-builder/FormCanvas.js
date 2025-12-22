@@ -1,3 +1,5 @@
+// form-builder/FormCanvas
+
 import { BlockItem } from './BlockItem';
 import { Plus, ArrowRight, CheckCircle, Settings as SettingsIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';

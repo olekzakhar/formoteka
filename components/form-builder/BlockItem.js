@@ -353,14 +353,14 @@ export const BlockItem = ({
                 onChange={(e) => setEditPlaceholderValue(e.target.value)}
                 onBlur={handleSavePlaceholder}
                 onKeyDown={handlePlaceholderKeyDown}
-                className="w-full max-w-[300px] px-3 py-2 rounded-md border border-input bg-background text-foreground outline-none"
+                className="w-full max-w-[300px] px-3 py-2 rounded-md border border-input bg-input text-foreground outline-none"
               />
             ) : (
               <input
                 type="text"
                 value=""
                 placeholder={block.placeholder}
-                className="w-full max-w-[300px] px-3 py-2 rounded-md border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none cursor-text"
+                className="w-full max-w-[300px] px-3 py-2 rounded-md border border-input bg-input text-foreground placeholder:text-muted-foreground focus:outline-none cursor-text"
                 onClick={(e) => {
                   e.stopPropagation();
                   onSelect();
@@ -407,13 +407,13 @@ export const BlockItem = ({
                 onChange={(e) => setEditPlaceholderValue(e.target.value)}
                 onBlur={handleSavePlaceholder}
                 onKeyDown={handlePlaceholderKeyDown}
-                className="w-full px-3 py-2 rounded-md border border-input bg-background text-foreground outline-none"
+                className="w-full px-3 py-2 rounded-md border border-input bg-input text-foreground outline-none"
               />
             ) : (
               <textarea
                 placeholder={block.placeholder}
                 rows={3}
-                className="w-full px-3 py-2 rounded-md border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none resize-none cursor-text"
+                className="w-full px-3 py-2 rounded-md border border-input bg-input text-foreground placeholder:text-muted-foreground focus:outline-none resize-none cursor-text"
                 onClick={(e) => {
                   e.stopPropagation();
                   onSelect();
@@ -453,7 +453,7 @@ export const BlockItem = ({
               )
             )}
             <select
-              className="w-full max-w-[300px] px-3 py-2 rounded-md border border-input bg-background text-muted-foreground"
+              className="w-full max-w-[300px] px-3 py-2 rounded-md border border-input bg-input text-muted-foreground"
               disabled
             >
               <option>Select an option...</option>
@@ -670,7 +670,7 @@ export const BlockItem = ({
             )}
             <input
               type="date"
-              className="w-full max-w-[300px] px-3 py-2 rounded-md border border-input bg-background text-muted-foreground"
+              className="w-full max-w-[300px] px-3 py-2 rounded-md border border-input bg-input text-muted-foreground"
               disabled
             />
           </div>

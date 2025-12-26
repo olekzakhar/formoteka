@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { createClient } from '@/utils/supabase/server'
 import { getForms } from '@/server/action'
 import SignOutButton from '@/components/SignOutButton'
-import { BASE_URL, FORMS_PATH } from '@/constants'
+import FormCard from '@/components/FormCard'
 
 export default async function Forms() {
   const supabase = await createClient()
@@ -30,17 +30,10 @@ export default async function Forms() {
         <Link href="/forms/slug">Редактор форми</Link>
         {/* Your dashboard content here */}
 
-
         {forms?.length
           ? <div className="mt-4 flex flex-col gap-4">
-              {forms.map((form, i) =>
-                <div key={form.id} className="group bg-[#F3F4F5] flex justify-between items-center border border-[#E8E8E8] rounded-2xl">
-                  <div>
-                    <div>{form?.name}</div>
-                    <div>{BASE_URL}/{form?.slug}</div>
-                  </div>
-                  <Link href={`${FORMS_PATH}/${form.slug}`}>Edit</Link>
-                </div>
+              {forms.map((form) =>
+                <FormCard key={form.id} form={form} />
               )}
             </div>
           : <div className="p-7 mt-3 flex justify-center items-center border bg-white border-[#E8E8E8] rounded-2xl">

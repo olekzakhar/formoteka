@@ -1,0 +1,390 @@
+/* Тепер тема працює так само як у старому проекті - за замовчуванням світла, а темна тема активується коли до <html> або <body> додається клас dark. */
+/* Якщо у вашому проекті є компонент для перемикання теми, він має додавати/видаляти клас dark до елемента html або body. */
+
+@import "tailwindcss";
+
+/* @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap'); */
+
+:root {
+  --background: 240, 6.667%, 97.059%; /* 0, 0%, 96.078%; - #F5F5F5 */ /* 0, 0%, 95.686%; - #F4F4F4 */ /* 210 20% 98% */
+  --foreground: 220 25% 10%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 220 25% 10%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 25% 10%;
+
+  --primary: 173 80% 40%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 210 20% 96%;
+  --secondary-foreground: 220 25% 20%;
+
+  --muted: 210 15% 93%;
+  --muted-foreground: 220 10% 45%;
+
+  --accent: 173 60% 95%;
+  --accent-foreground: 173 80% 30%;
+
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 0, 0%, 0%, 0.08 /* 30, 4.348%, 90.98% */ /* 210 20% 90% */;
+  --input: 210 20% 90%;
+  --ring: 173 80% 40%;
+
+  --radius: 0.625rem;
+
+  /* Custom tokens */
+  --block-border-active: 173 80% 40%;
+  --block-border-hover: 220 10% 75%;
+  --panel-width: 340px;
+  --canvas-bg: 210 25% 97%;
+
+  --sidebar-background: 0 0% 98%;
+  --sidebar-foreground: 240 5.3% 26.1%;
+  --sidebar-primary: 240 5.9% 10%;
+  --sidebar-primary-foreground: 0 0% 98%;
+  --sidebar-accent: 240 4.8% 95.9%;
+  --sidebar-accent-foreground: 240 5.9% 10%;
+  --sidebar-border: 220 13% 91%;
+  --sidebar-ring: 217.2 91.2% 59.8%;
+}
+
+.dark {
+  --background: 220 25% 8%;
+  --foreground: 210 20% 98%;
+
+  --card: 220 25% 12%;
+  --card-foreground: 210 20% 98%;
+
+  --popover: 220 25% 12%;
+  --popover-foreground: 210 20% 98%;
+
+  --primary: 173 70% 45%;
+  --primary-foreground: 220 25% 8%;
+
+  --secondary: 220 20% 18%;
+  --secondary-foreground: 210 20% 90%;
+
+  --muted: 220 20% 20%;
+  --muted-foreground: 210 15% 55%;
+
+  --accent: 173 50% 20%;
+  --accent-foreground: 173 70% 70%;
+
+  --destructive: 0 62% 45%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 220 20% 20%;
+  --input: 220 20% 20%;
+  --ring: 173 70% 45%;
+
+  --block-border-active: 173 70% 45%;
+  --block-border-hover: 220 15% 40%;
+  --canvas-bg: 220 25% 6%;
+
+  --sidebar-background: 240 5.9% 10%;
+  --sidebar-foreground: 240 4.8% 95.9%;
+  --sidebar-primary: 224.3 76.3% 48%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 240 3.7% 15.9%;
+  --sidebar-accent-foreground: 240 4.8% 95.9%;
+  --sidebar-border: 240 3.7% 15.9%;
+  --sidebar-ring: 217.2 91.2% 59.8%;
+}
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-canvas-bg: hsl(var(--canvas-bg));
+  --color-sidebar-background: hsl(var(--sidebar-background));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+  
+  --font-sans: 'DM Sans', sans-serif;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: 'DM Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@utility block-active {
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--primary));
+}
+
+@utility block-hover {
+  box-shadow: 0 0 0 1px hsl(var(--muted-foreground) / 0.3);
+}
+
+@utility transition-smooth {
+  transition-property: all;
+  transition-timing-function: ease-out;
+  transition-duration: 200ms;
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+
+
+
+
+
+
+/* tailwind.config.js */
+
+/* Tailwind 4 Configuration */
+@theme {
+  /* Font Family */
+  --font-sans: "DM Sans", system-ui, sans-serif;
+
+  /* Colors - Custom CSS Variables */
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-canvas: hsl(var(--canvas-bg));
+  
+  /* Primary */
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  
+  /* Secondary */
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  
+  /* Destructive */
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  
+  /* Muted */
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  
+  /* Accent */
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  
+  /* Popover */
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  
+  /* Card */
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  
+  /* Block */
+  --color-block-active: hsl(var(--block-border-active));
+  --color-block-hover: hsl(var(--block-border-hover));
+  
+  /* Sidebar */
+  --color-sidebar: hsl(var(--sidebar-background));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  /* Border Radius */
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  /* Box Shadows */
+  --shadow-soft: 0 2px 8px -2px rgba(0, 0, 0, 0.08), 0 4px 16px -4px rgba(0, 0, 0, 0.06);
+  --shadow-medium: 0 4px 12px -2px rgba(0, 0, 0, 0.1), 0 8px 24px -4px rgba(0, 0, 0, 0.08);
+  /* --shadow-panel: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 4px 16px -2px rgba(0, 0, 0, 0.1); */
+
+  /* Container */
+  --breakpoint-2xl: 1400px;
+
+  /* Animations */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-fade-in: fade-in 0.2s ease-out;
+  --animate-slide-in: slide-in 0.2s ease-out;
+}
+
+/* Keyframe Animations */
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Utility Classes */
+@layer utilities {
+  .container {
+    @apply mx-auto px-8;
+    max-width: 1400px;
+  }
+  
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .shadow-medium {
+    box-shadow: var(--shadow-medium);
+  }
+  
+  .shadow-panel {
+    box-shadow: var(--shadow-panel);
+  }
+  
+  .animate-accordion-down {
+    animation: var(--animate-accordion-down);
+  }
+  
+  .animate-accordion-up {
+    animation: var(--animate-accordion-up);
+  }
+  
+  .animate-fade-in {
+    animation: var(--animate-fade-in);
+  }
+  
+  .animate-slide-in {
+    animation: var(--animate-slide-in);
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Add your dark mode variables here if needed */
+  }
+}
+
+/* Manual dark mode class */
+.dark {
+  /* Add your dark mode variables here if needed */
+}
+
+
+button {
+  cursor: pointer !important;
+}
+
+.bg-input {
+  background: rgba(255,255,255, 0.5);
+  /* box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 1px 0px, rgba(60, 58, 52, 0.16) 0px 0px 0px 1px, rgba(60, 58, 52, 0.08) 0px 2px 5px 0px; */
+}
+
+/* .bg-background {
+  background: rgba(0,0,0, 0.01);
+} */
+
+.border-input {
+  border-color: rgba(0,0,0, 0.21);
+}

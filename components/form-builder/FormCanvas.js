@@ -434,8 +434,8 @@ export const FormCanvas = ({
                     onSubmitButtonClick();
                   }}
                   className={cn(
-                    'inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-smooth',
-                    'bg-primary text-primary-foreground hover:bg-primary/90',
+                    'inline-flex items-center gap-2 px-6 py-[9px] rounded-lg font-medium transition-smooth',
+                    'bg-[#2F3032] text-[#FAFAFA] hover:bg-[#2F3032]/90',
                     'focus:outline-none'
                   )}
                 >

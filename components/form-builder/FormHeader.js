@@ -1,8 +1,10 @@
-import { ArrowLeft, Play, Link, ExternalLink } from 'lucide-react';
+import Link from 'next/link';
+import { ArrowLeft, Play, Link as LinkIcon, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useRef, useEffect } from 'react';
+import { FORMS_PATH } from '@/constants';
 
-export const FormHeader = ({ formName, onFormNameChange, onTogglePreview, onBack }) => {
+export const FormHeader = ({ formName, onTogglePreview }) => {
   const [isEditingName, setIsEditingName] = useState(false);
   const [editValue, setEditValue] = useState(formName);
   const inputRef = useRef(null);
@@ -19,7 +21,7 @@ export const FormHeader = ({ formName, onFormNameChange, onTogglePreview, onBack
 
   const handleSaveName = () => {
     if (editValue.trim()) {
-      onFormNameChange(editValue.trim());
+      // onFormNameChange(editValue.trim());
     } else {
       setEditValue(formName);
     }
@@ -38,14 +40,13 @@ export const FormHeader = ({ formName, onFormNameChange, onTogglePreview, onBack
     <header className="h-[52px] border-b border-border bg-card rounded-b-3xl flex items-center px-4 shrink-0 bg-transparent">
       {/* Left section - Back button and form name - fixed width */}
       <div className="flex items-center gap-2 w-[200px]">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onBack}
-          className="h-8 w-8 flex-shrink-0"
+        <Link
+          href={FORMS_PATH}
+          className="h-8 w-8 flex justify-center items-center hover:bg-accent hover:text-accent-foreground
+            rounded-md text-sm font-medium transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-        </Button>
+        </Link>
         
         {isEditingName ? (
           <input
@@ -97,7 +98,7 @@ export const FormHeader = ({ formName, onFormNameChange, onTogglePreview, onBack
           className="h-8 w-8"
           title="Copy URL"
         >
-          <Link className="h-4 w-4" />
+          <LinkIcon className="h-4 w-4" />
         </Button>
 
         <Button

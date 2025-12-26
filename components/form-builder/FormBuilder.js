@@ -12,12 +12,12 @@ import { MobileSidePanelDrawer } from './MobileSidePanelDrawer';
 import { getDefaultBlock } from '@/data/block-definitions';
 import { useIsMobile } from '@/hooks/use-mobile';
 
-export const FormBuilder = () => {
+export const FormBuilder = ({ form }) => {
   const isMobile = useIsMobile();
   const [isPreview, setIsPreview] = useState(false);
   const [showBlockSettings, setShowBlockSettings] = useState(false);
   const [showSubmitSettings, setShowSubmitSettings] = useState(false);
-  const [formName, setFormName] = useState('Без назви');
+  // const [formName, setFormName] = useState('Без назви');
   const [submitButtonText, setSubmitButtonText] = useState('Надіслати');
   const [formDesign, setFormDesign] = useState({
     backgroundColor: 'bg-white',
@@ -177,10 +177,6 @@ export const FormBuilder = () => {
     setFormDesign((prev) => ({ ...prev, ...updates }));
   };
 
-  const handleBack = () => {
-    console.log('Back navigation');
-  };
-
   const handleSubmitButtonClick = () => {
     setShowSubmitSettings(true);
     setShowBlockSettings(false);
@@ -259,10 +255,9 @@ export const FormBuilder = () => {
   return (
     <div className="flex flex-col h-screen w-full overflow-hidden">
       <FormHeader
-        formName={formName}
-        onFormNameChange={setFormName}
+        formName={form?.name}
+        // onFormNameChange={setFormName}
         onTogglePreview={() => setIsPreview((v) => !v)}
-        onBack={handleBack}
       />
 
       <div className="flex flex-1 overflow-hidden">
@@ -312,7 +307,7 @@ export const FormBuilder = () => {
             successBlocks={successBlocks}
             submitButtonText={submitButtonText}
             formDesign={formDesign}
-            formName={formName}
+            formName={form?.name}
             onClose={() => setIsPreview(false)}
           />
         )}

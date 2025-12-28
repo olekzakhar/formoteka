@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button-2";
 import { ArrowRight, CheckCircle2, Package, ShoppingBag } from "lucide-react";
 import heroFlowers from "@/public/landing/hero-flowers.jpg";
 import heroCeramics from "@/public/landing/hero-ceramics.jpg";

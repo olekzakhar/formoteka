@@ -1,7 +1,7 @@
 // components/landing/Hero
 
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button-2";
 import { ArrowRight, MessageCircle, Clock, Zap } from "lucide-react";
 
 const Hero = () => {

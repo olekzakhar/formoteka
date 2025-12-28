@@ -1,6 +1,6 @@
 // components/landing/FinalCTA
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button-2";
 import { ArrowRight, Sparkles } from "lucide-react";
 
 const FinalCTA = () => {

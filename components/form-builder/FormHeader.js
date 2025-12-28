@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { ArrowLeft, Play, Link as LinkIcon, ExternalLink } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button-2';
 import { useState, useRef, useEffect } from 'react';
 import { FORMS_PATH } from '@/constants';
 

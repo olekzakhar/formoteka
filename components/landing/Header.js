@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button-2";
+import { Button } from "@/components/ui/button";
 import { FileText } from "lucide-react";
 
 const Header = ({ isUser=false }) => {

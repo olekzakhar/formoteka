@@ -3,12 +3,12 @@
 import { createClient } from '@/utils/supabase/server'
 import Header from "@/components/landing/Header"
 import HeroSection from "@/components/landing/Hero"
-import PainSection from "@/components/landing/PainSection"
-import ComparisonSection from "@/components/landing/ComparisonSection"
-import BenefitsSection from "@/components/landing/BenefitsSection"
-import ForWhoSection from "@/components/landing/ForWhoSection"
-import FAQSection from "@/components/landing/FAQSection"
-import CTASection from "@/components/landing/CTASection"
+import PainSection from "@/components/landing/Pain"
+import ComparisonSection from "@/components/landing/Comparison"
+import BenefitsSection from "@/components/landing/Benefits"
+import ForWhoSection from "@/components/landing/ForWho"
+import FAQSection from "@/components/landing/FAQ"
+import CTASection from "@/components/landing/CTA"
 import Footer from "@/components/landing/Footer"
 
 export default async function Home() {

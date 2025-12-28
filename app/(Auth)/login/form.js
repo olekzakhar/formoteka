@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form'
 import { createClient } from '@/utils/supabase/client'
 
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button-2'
 // import FormError from '@/components/form/Error'
 
 import { signIn, signUp } from '@/app/(Auth)/login/actions'

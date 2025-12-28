@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button-2';
 import { Label } from '@/components/ui/label';
 import { ManageProductsPopup } from './ManageProductsPopup';
 import { cn } from '@/lib/utils';

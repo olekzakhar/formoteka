@@ -1,35 +1,24 @@
-// components/landing/Footer
+import { Sparkles } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="py-12 bg-foreground text-background/80">
-      <div className="container-wide">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-          {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-background/10 flex items-center justify-center">
-              <span className="text-background font-bold">F</span>
+    <footer className="py-8">
+      <div className="container">
+        <div className="relative z-[60] flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+          <a href="#" className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded-md gradient-hero flex items-center justify-center">
+              <Sparkles className="w-3 h-3 text-primary-foreground" />
             </div>
-            <span className="text-lg font-bold text-background">Formoteka</span>
-          </div>
+            <span className="font-semibold text-foreground">Formoteka</span>
+          </a>
 
-          {/* Links */}
-          <nav className="flex items-center gap-6 text-sm">
-            <a href="#" className="hover:text-background transition-colors">
-              Політика конфіденційності
-            </a>
-            <a href="#" className="hover:text-background transition-colors">
-              Умови використання
-            </a>
-            <a href="#" className="hover:text-background transition-colors">
-              Контакти
-            </a>
+          <nav className="flex items-center gap-6 text-xs">
+            <a href="#" className="hover:text-foreground transition-colors">Про сервіс</a>
+            <a href="#" className="hover:text-foreground transition-colors">Тарифи</a>
+            <a href="#" className="hover:text-foreground transition-colors">Контакти</a>
           </nav>
 
-          {/* Copyright */}
-          <p className="text-sm">
-            © Formoteka. Зроблено в Україні 🇺🇦
-          </p>
+          <span className="text-xs">© Formoteka</span>
         </div>
       </div>
     </footer>

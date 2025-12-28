@@ -6,7 +6,7 @@
 /* @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap'); */
 
 :root {
-  --background: 240, 6.667%, 97.059%; /* 0, 0%, 96.078%; - #F5F5F5 */ /* 0, 0%, 95.686%; - #F4F4F4 */ /* 210 20% 98% */
+  --background: 0, 0%, 97.65%; /* - #F9F9F9 */ /* 240, 6.667%, 97.059% - #F7F7F8 */ /* 0, 0%, 96.078%; - #F5F5F5 */ /* 0, 0%, 95.686%; - #F4F4F4 */ /* 210 20% 98% */
   --foreground: 220 25% 10%;
 
   --card: 0 0% 100%;

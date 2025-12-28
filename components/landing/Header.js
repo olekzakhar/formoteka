@@ -1,39 +1,48 @@
-// components/landing/Header
-
 import Link from "next/link";
+import { Button } from "@/components/ui/button-2";
+import { FileText } from "lucide-react";
 
 const Header = ({ isUser=false }) => {
-
   return (
-    <header className="fixed top-4 left-1/2 -translate-x-1/2 w-full max-w-1/2 rounded-full z-50 bg-black/[0.07] backdrop-blur-lg ring-1 ring-inset ring-black/[0.06]">
-      <div className="px-5 flex items-center justify-between h-[60px]">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-lg bg-gradient-hero flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-lg">F</span>
+    <header className="fixed top-4 left-1/2 -translate-x-1/2 w-full max-w-1/2 rounded-full z-50 bg-black/[0.06] backdrop-blur-lg ring-1 ring-inset ring-black/[0.04]">
+      <div className="container px-3.5 flex items-center justify-between h-14">
+        <a href="#" className="flex items-center gap-2 group">
+          <div className="w-9 h-9 rounded-lg gradient-hero flex items-center justify-center shadow-soft group-hover:shadow-glow transition-shadow duration-300">
+            <FileText className="w-5 h-5 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold">Formoteka</span>
-        </Link>
+          <span className="text-xl font-bold text-foreground">Formoteka</span>
+        </a>
+        
+        <nav className="hidden md:flex items-center gap-8">
+          <a href="#pain" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium">
+            Ситуація
+          </a>
+          <a href="#benefits" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium">
+            Переваги
+          </a>
+          <a href="#for-who" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium">
+            Кому підійде
+          </a>
+          <a href="#faq" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium">
+            FAQ
+          </a>
+        </nav>
 
-        {/* CTA */}
-        {/* <Button variant="default" size="sm">
-          Спробувати безкоштовно
+        {/* <Button className="rounded-full" size="sm">
+          Спробувати
         </Button> */}
         {isUser
-          ? <Link
-              href="/forms"
-              className="inline-flex items-center justify-center px-5 h-[40px] rounded-full! gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0
-                bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3">
-              Керувати формами
-            </Link>
-          : <Link
-              href="/forms"
-              className="inline-flex items-center justify-center px-5 h-[40px] rounded-full! gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0
-                bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3">
-              Створити форму
-            </Link>
+          ? <Button className="rounded-full" size="sm">
+              <Link href="/forms">
+                Керувати формами
+              </Link>
+            </Button>
+          : <Button className="rounded-full" size="sm">
+              <Link href="/forms">
+                Створити форму
+              </Link>
+            </Button>
         }
-        
       </div>
     </header>
   );

@@ -5,12 +5,12 @@ import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 
 const backgroundColors = [
-  { value: 'bg-background', label: 'Default', preview: 'bg-background' },
-  { value: 'bg-white', label: 'White', preview: 'bg-white' },
-  { value: 'bg-slate-50', label: 'Light Gray', preview: 'bg-slate-50' },
-  { value: 'bg-slate-100', label: 'Gray', preview: 'bg-slate-100' },
-  { value: 'bg-[#E7CBCB]', label: 'Пудровий', preview: 'bg-[#E7CBCB]' },
+  { value: 'bg-white', label: 'Білий', preview: 'bg-white' },
+  { value: 'bg-[#F9F8F7]', label: 'Молочний', preview: 'bg-[#F9F8F7]' },
+  { value: 'bg-[#DAD6D3]', label: 'Піщаний', preview: 'bg-[#DAD6D3]' },
   { value: 'bg-[#BDC2C2]', label: 'Попелястий', preview: 'bg-[#BDC2C2]' },
+  { value: 'bg-[#E7CBCB]', label: 'Пудровий', preview: 'bg-[#E7CBCB]' },
+  { value: 'bg-[#4B4913]', label: 'Оливковий', preview: 'bg-[#4B4913]' },
 ];
 
 const textColors = [

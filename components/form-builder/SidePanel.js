@@ -102,7 +102,7 @@ export const SidePanel = ({
           className={cn(
             'flex-1 flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium transition-smooth',
             activeTab === 'add'
-              ? 'text-primary border-b-2 border-primary! bg-accent/30'
+              ? 'text-primary border-b-2 border-primary! bg-accent/60'
               : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
           )}
         >
@@ -114,7 +114,7 @@ export const SidePanel = ({
           className={cn(
             'flex-1 flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium transition-smooth',
             activeTab === 'design'
-              ? 'text-primary border-b-2 border-primary! bg-accent/30'
+              ? 'text-primary border-b-2 border-primary! bg-accent/60'
               : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
           )}
         >
@@ -126,7 +126,7 @@ export const SidePanel = ({
           className={cn(
             'flex-1 flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium transition-smooth',
             activeTab === 'settings'
-              ? 'text-primary border-b-2 border-primary! bg-accent/30'
+              ? 'text-primary border-b-2 border-primary! bg-accent/60'
               : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
           )}
         >

@@ -2,7 +2,7 @@ import "./home.css";
 
 export default function HomeLayout({ children }) {
   return (
-    <>
+    <div data-theme="landing">
       {children}
 
       {/* Блюр знизу сторінки */}
@@ -16,6 +16,6 @@ export default function HomeLayout({ children }) {
           "
         />
       </div>
-    </>
+    </div>
   )
 }

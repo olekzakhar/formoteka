@@ -3,5 +3,9 @@
 import "./dashboard.css";
 
 export default function DashboardLayout({ children }) {
-  return <>{children}</>;
+  return (
+    <div data-theme="dashboard">
+      {children}
+    </div>
+  )
 }

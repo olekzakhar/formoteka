@@ -1,11 +1,13 @@
 /* Тепер тема працює так само як у старому проекті - за замовчуванням світла, а темна тема активується коли до <html> або <body> додається клас dark. */
 /* Якщо у вашому проекті є компонент для перемикання теми, він має додавати/видаляти клас dark до елемента html або body. */
 
+/* app/(Dashboard)/dashboard.css */
+
 @import "tailwindcss";
 
 /* @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap'); */
 
-:root {
+:root:has([data-theme="dashboard"]) {
   --background: 0, 0%, 97.65%; /* - #F9F9F9 */ /* 240, 6.667%, 97.059% - #F7F7F8 */ /* 0, 0%, 96.078%; - #F5F5F5 */ /* 0, 0%, 95.686%; - #F4F4F4 */ /* 210 20% 98% */
   --foreground: 220 25% 10%;
 
@@ -52,7 +54,7 @@
   --sidebar-ring: 217.2 91.2% 59.8%;
 }
 
-.dark {
+[data-theme="dashboard"] .dark {
   --background: 220 25% 8%;
   --foreground: 210 20% 98%;
 
@@ -128,11 +130,11 @@
   --font-sans: 'DM Sans', sans-serif;
 }
 
-* {
+[data-theme="dashboard"] * {
   border-color: hsl(var(--border));
 }
 
-body {
+[data-theme="dashboard"] body {
   background: hsl(var(--background));
   color: hsl(var(--foreground));
   font-family: 'DM Sans', sans-serif;
@@ -154,25 +156,25 @@ body {
   transition-duration: 200ms;
 }
 
-#root {
+[data-theme="dashboard"] #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
 }
 
-.logo {
+[data-theme="dashboard"] .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
 
-.logo:hover {
+[data-theme="dashboard"] .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
 
-.logo.react:hover {
+[data-theme="dashboard"] .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
@@ -186,26 +188,18 @@ body {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
+  [data-theme="dashboard"] a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
 }
 
-.card {
+[data-theme="dashboard"] .card {
   padding: 2em;
 }
 
-.read-the-docs {
+[data-theme="dashboard"] .read-the-docs {
   color: #888;
 }
-
-
-
-
-
-
-
-/* tailwind.config.js */
 
 /* Tailwind 4 Configuration */
 @theme {
@@ -325,66 +319,53 @@ body {
 
 /* Utility Classes */
 @layer utilities {
-  .container {
+  [data-theme="dashboard"] .container {
     @apply mx-auto px-8;
     max-width: 1400px;
   }
   
-  .shadow-soft {
+  [data-theme="dashboard"] .shadow-soft {
     box-shadow: var(--shadow-soft);
   }
   
-  .shadow-medium {
+  [data-theme="dashboard"] .shadow-medium {
     box-shadow: var(--shadow-medium);
   }
   
-  .shadow-panel {
+  [data-theme="dashboard"] .shadow-panel {
     box-shadow: var(--shadow-panel);
   }
   
-  .animate-accordion-down {
+  [data-theme="dashboard"] .animate-accordion-down {
     animation: var(--animate-accordion-down);
   }
   
-  .animate-accordion-up {
+  [data-theme="dashboard"] .animate-accordion-up {
     animation: var(--animate-accordion-up);
   }
   
-  .animate-fade-in {
+  [data-theme="dashboard"] .animate-fade-in {
     animation: var(--animate-fade-in);
   }
   
-  .animate-slide-in {
+  [data-theme="dashboard"] .animate-slide-in {
     animation: var(--animate-slide-in);
   }
 }
 
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Add your dark mode variables here if needed */
-  }
-}
-
-/* Manual dark mode class */
-.dark {
-  /* Add your dark mode variables here if needed */
-}
-
-
-button {
+[data-theme="dashboard"] button {
   cursor: pointer !important;
 }
 
-.bg-input {
+[data-theme="dashboard"] .bg-input {
   background: rgba(255,255,255, 0.5);
   /* box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 1px 0px, rgba(60, 58, 52, 0.16) 0px 0px 0px 1px, rgba(60, 58, 52, 0.08) 0px 2px 5px 0px; */
 }
 
-/* .bg-background {
+/* [data-theme="dashboard"] .bg-background {
   background: rgba(0,0,0, 0.01);
 } */
 
-.border-input {
+[data-theme="dashboard"] .border-input {
   border-color: rgba(0,0,0, 0.21);
 }

@@ -1,8 +1,10 @@
+/* app/(Landing)/home.css */
+
 @import "tailwindcss";
 
 /* @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap'); */
 
-:root {
+:root:has([data-theme="landing"]) {
   /* Base Color Values */
   --background: 0 0% 100%;
   --foreground: 210 11% 15%;
@@ -48,7 +50,7 @@
   --sidebar-ring: 160 84% 39%;
 }
 
-.dark {
+[data-theme="landing"] .dark {
   --background: 200 15% 8%;
   --foreground: 150 10% 95%;
   --card: 200 12% 11%;
@@ -122,11 +124,11 @@
   --breakpoint-2xl: 1200px;
 }
 
-* {
+[data-theme="landing"] * {
   border-color: hsl(var(--border));
 }
 
-body {
+[data-theme="landing"] body {
   background: hsl(var(--background));
   color: hsl(var(--foreground));
   font-family: var(--font-sans);
@@ -134,7 +136,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-html {
+[data-theme="landing"] html {
   scroll-behavior: smooth;
 }
 
@@ -146,13 +148,13 @@ html {
 }
 
 @media (min-width: 1536px) {
-  .container {
+  [data-theme="landing"] .container {
     max-width: 1200px;
   }
 }
 
 /* Custom utility classes */
-.text-gradient {
+[data-theme="landing"] .text-gradient {
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
@@ -160,60 +162,60 @@ html {
   background-image: var(--gradient-hero);
 }
 
-.shadow-glow {
+[data-theme="landing"] .shadow-glow {
   box-shadow: var(--shadow-glow);
 }
 
-.shadow-soft {
+[data-theme="landing"] .shadow-soft {
   box-shadow: var(--shadow-soft);
 }
 
-.shadow-card {
+[data-theme="landing"] .shadow-card {
   box-shadow: var(--shadow-card);
 }
 
-.shadow-elevated {
+[data-theme="landing"] .shadow-elevated {
   box-shadow: var(--shadow-elevated);
 }
 
-.gradient-hero {
+[data-theme="landing"] .gradient-hero {
   background: var(--gradient-hero);
 }
 
-.gradient-warm {
+[data-theme="landing"] .gradient-warm {
   background: var(--gradient-warm);
 }
 
-.gradient-card {
+[data-theme="landing"] .gradient-card {
   background: var(--gradient-card);
 }
 
-.gradient-subtle {
+[data-theme="landing"] .gradient-subtle {
   background: var(--gradient-subtle);
 }
 
 /* Animation utilities */
-.animate-fade-up {
+[data-theme="landing"] .animate-fade-up {
   animation: fadeUp 0.6s ease-out forwards;
   opacity: 0;
 }
 
-.animate-fade-up-delay-1 {
+[data-theme="landing"] .animate-fade-up-delay-1 {
   animation: fadeUp 0.6s ease-out 0.1s forwards;
   opacity: 0;
 }
 
-.animate-fade-up-delay-2 {
+[data-theme="landing"] .animate-fade-up-delay-2 {
   animation: fadeUp 0.6s ease-out 0.2s forwards;
   opacity: 0;
 }
 
-.animate-fade-up-delay-3 {
+[data-theme="landing"] .animate-fade-up-delay-3 {
   animation: fadeUp 0.6s ease-out 0.3s forwards;
   opacity: 0;
 }
 
-.animate-float {
+[data-theme="landing"] .animate-float {
   animation: float 4s ease-in-out infinite;
 }
 
@@ -266,38 +268,38 @@ html {
 }
 
 /* Animation utilities from config */
-.animate-accordion-down {
+[data-theme="landing"] .animate-accordion-down {
   animation: accordion-down 0.2s ease-out;
 }
 
-.animate-accordion-up {
+[data-theme="landing"] .animate-accordion-up {
   animation: accordion-up 0.2s ease-out;
 }
 
-.animate-pulse-soft {
+[data-theme="landing"] .animate-pulse-soft {
   animation: pulse-soft 2s ease-in-out infinite;
 }
 
 /* Legacy styles */
-#root {
+[data-theme="landing"] #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
 }
 
-.logo {
+[data-theme="landing"] .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
 
-.logo:hover {
+[data-theme="landing"] .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
 
-.logo.react:hover {
+[data-theme="landing"] .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
@@ -311,15 +313,15 @@ html {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
+  [data-theme="landing"] a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
 }
 
-.card {
+[data-theme="landing"] .card {
   padding: 2em;
 }
 
-.read-the-docs {
+[data-theme="landing"] .read-the-docs {
   color: #888;
 }

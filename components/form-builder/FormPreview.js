@@ -2,7 +2,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button-2';
+import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle, Image, ExternalLink, X } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -430,7 +430,7 @@ export const FormPreview = ({
           {/* Modal container with header inside */}
           <div className="flex flex-col rounded-2xl overflow-hidden shadow-2xl h-full">
             {/* Top bar with form URL and close button - inside the modal */}
-            <div className="bg-[#F7F7F8] px-4 py-2.5 flex items-center justify-between border-b">
+            <div className="bg-[#F3F4F6] px-4 py-2.5 flex items-center justify-between border-b">
               <button
                 onClick={onClose}
                 className="p-1 rounded-md hover:bg-muted transition-colors"
@@ -483,12 +483,9 @@ export const FormPreview = ({
                     ))}
                     <div className="pt-4">
                       <Button
+                        variant="black"
+                        size="black"
                         type="submit"
-                        className={cn(
-                          'inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-smooth',
-                          'bg-[#2F3032] text-[#FAFAFA] hover:bg-#2F3032/90',
-                          'focus:outline-none focus:ring-2 focus:ring-primary/20'
-                        )}
                       >
                         {submitButtonText}
                         <ArrowRight className="w-4 h-4" />

@@ -37,7 +37,7 @@ export const FormHeader = ({ formName, onTogglePreview }) => {
   };
 
   return (
-    <header className="h-[52px] border-b border-border bg-card rounded-b-3xl flex items-center px-4 shrink-0 bg-transparent">
+    <header className="h-[52px] border-b border-border bg-card rounded-b-3xl flex items-center px-5 shrink-0 bg-transparent">
       {/* Left section - Back button and form name - fixed width */}
       <div className="flex items-center gap-2 w-[200px]">
         <Link

@@ -4,6 +4,7 @@ import { BlockItem } from './BlockItem';
 import { Plus, ArrowRight, CheckCircle, Settings as SettingsIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEffect, useRef, useState } from 'react';
+import { Button } from '@/components/ui/button'
 
 const fontSizeClass = {
   small: 'text-sm',
@@ -306,7 +307,7 @@ export const FormCanvas = ({
     >
       <div className="w-full max-w-4xl mx-auto py-6 px-6">
         {/* Form Container */}
-        <div className={cn('rounded-2xl border', formDesign.backgroundColor)}>
+        <div className={cn('rounded-2xl border-2 border-[#2f3032]/90!', formDesign.backgroundColor)}>
           <div className="w-full pt-6 pb-10 px-4 sm:px-6">
             <div className={cn('w-full max-w-[700px] mx-auto', formDesign.textColor, fontSizeClass[formDesign.fontSize])}>
             {/* Blocks */}
@@ -428,20 +429,17 @@ export const FormCanvas = ({
                     : 'ring-0 group-hover/submit:ring-2 group-hover/submit:ring-border group-hover/submit:ring-offset-2'
                 )}
               >
-                <button
+                <Button
+                  variant="black"
+                  size="black"
                   onClick={(e) => {
                     e.stopPropagation();
                     onSubmitButtonClick();
                   }}
-                  className={cn(
-                    'inline-flex items-center gap-2 px-6 py-[9px] rounded-lg font-medium transition-smooth',
-                    'bg-[#2F3032] text-[#FAFAFA] hover:bg-[#2F3032]/90',
-                    'focus:outline-none'
-                  )}
                 >
                   {submitButtonText}
                   <ArrowRight className="w-4 h-4" />
-                </button>
+                </Button>
               </div>
             </div>
             </div>
@@ -449,7 +447,7 @@ export const FormCanvas = ({
         </div>
 
         {/* Success Page Section */}
-        <div className={cn('mt-8 rounded-2xl border', formDesign.backgroundColor)}>
+        <div className={cn('mt-8 rounded-2xl shadow-sm', formDesign.backgroundColor)}>
           <div className="py-8">
             <div className="text-center mb-6">
               <div className="w-16 h-16 rounded-full bg-accent mx-auto mb-4 flex items-center justify-center">

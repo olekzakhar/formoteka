@@ -19,13 +19,14 @@ export default function FormCard({ form }) {
         group
         bg-card rounded-lg
         transition-smooth
-        hover:ring-1 hover:ring-block-hover
-        shadow-soft
+        hover:bg-card/45
+        hover:ring-1 hover:ring-block-hover/30
+        shadow-sm
       "
     >
       <div className="flex justify-between items-center">
         <div className="flex-1">
-          <div className="font-medium">{form?.name}</div>
+          <div className="text-lg font-medium">{form?.name}</div>
 
           {/* absolute overlay link */}
           <Link
@@ -40,13 +41,13 @@ export default function FormCard({ form }) {
             className="
               relative z-10
               inline-flex items-center gap-1
-              text-sm text-blue-600
-              hover:text-blue-800 hover:underline
+              text-sm text-black/60
+              hover:text-black/80
               mt-1
             "
           >
             {BASE_URL}/{form?.slug}
-            <ExternalLink className="w-3 h-3" />
+            <ExternalLink className="w-[13px] h-[13px]" />
           </Link>
         </div>
 

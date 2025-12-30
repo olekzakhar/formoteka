@@ -313,5 +313,5 @@ export const FormBuilder = ({ form }) => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}

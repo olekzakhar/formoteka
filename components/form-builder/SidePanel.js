@@ -5,7 +5,7 @@ import { BlockSettingsTab } from './BlockSettingsTab';
 import { DesignTab, FormDesign } from './DesignTab';
 import { SubmitButtonSettings } from './SubmitButtonSettings';
 import { cn } from '@/lib/utils';
-import { Palette, Settings, ArrowLeft, Plus } from 'lucide-react';
+import { PaintbrushVertical, Settings, ArrowLeft, Plus } from 'lucide-react';
 
 const PANEL_WIDTH = 'w-full md:w-[280px] lg:w-[360px] md:h-[calc(100%-16px)] md:mt-[8px] md:mr-[10px] rounded-3xl border';
 
@@ -80,7 +80,7 @@ export const SidePanel = ({
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
-          <span className="text-sm font-medium text-foreground">Submit Button</span>
+          <span className="text-sm font-medium text-foreground">Кнопка відправки</span>
         </div>
         <div className="flex-1 overflow-y-auto">
           <SubmitButtonSettings
@@ -102,7 +102,7 @@ export const SidePanel = ({
           className={cn(
             'flex-1 flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium transition-smooth',
             activeTab === 'add'
-              ? 'text-primary border-b-2 border-primary! bg-accent/60'
+              ? 'text-primary border-b-2 border-primary! bg-accent/70'
               : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
           )}
         >
@@ -114,11 +114,11 @@ export const SidePanel = ({
           className={cn(
             'flex-1 flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium transition-smooth',
             activeTab === 'design'
-              ? 'text-primary border-b-2 border-primary! bg-accent/60'
+              ? 'text-primary border-b-2 border-primary! bg-accent/70'
               : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
           )}
         >
-          <Palette className="w-4 h-4" />
+          <PaintbrushVertical className="w-4 h-4" />
           Дизайн
         </button>
         <button
@@ -126,7 +126,7 @@ export const SidePanel = ({
           className={cn(
             'flex-1 flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium transition-smooth',
             activeTab === 'settings'
-              ? 'text-primary border-b-2 border-primary! bg-accent/60'
+              ? 'text-primary border-b-2 border-primary! bg-accent/70'
               : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
           )}
         >

@@ -147,7 +147,7 @@ export default async function Forms() {
               </svg>
               <p className="text-gray-500 text-lg font-medium mb-2">Поки що немає форм</p>
               <p className="text-gray-400 text-sm mb-4">Створіть свою першу форму, щоб почати</p>
-              <Button>
+              <Button variant="black" size="sm-black">
                 Створити форму
               </Button>
             </div>

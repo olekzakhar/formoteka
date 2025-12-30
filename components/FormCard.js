@@ -119,6 +119,7 @@ export default function FormCard({ form }) {
                   <Button
                     variant="ghost"
                     size="icon"
+                    asChild
                     className="
                       transition-colors
                       duration-400

@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form'
 import { createClient } from '@/utils/supabase/client'
 
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button-2'
+import { Button } from '@/components/ui/button'
 // import FormError from '@/components/form/Error'
 
 import { signIn, signUp } from '@/app/(Auth)/login/actions'
@@ -122,8 +122,8 @@ export default function SignInForm({ signInForm=true }) {
                 className="p-6 max-[400px]:px-4 flex flex-col flex-shrink-0 max-w-[400px]"
               >
                 {isLogin
-                  ? <h1 className="text-2xl">Log in</h1>
-                  : <h1 className="text-2xl">Sign up</h1>
+                  ? <h1 className="text-2xl">Увійти</h1>
+                  : <h1 className="text-2xl">Створити акаунт</h1>
                 }
 
                 <div className="mt-6 flex flex-col gap-3">
@@ -131,29 +131,29 @@ export default function SignInForm({ signInForm=true }) {
                     <Input
                       type="email"
                       {...register('email', {
-                        required: 'Email is required',
+                        required: `Електронна адреса обовʼязкова`,
                         pattern: {
                           value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                          message: "Invalid email address"
+                          message: "Невірна електронна адреса"
                         }
                       })}
-                      placeholder="Email address" />
+                      placeholder="Електронна пошта" />
                     {/* <FormError field={errors?.email} /> */}
 
                     <Input
                       type="password"
                       {...register('password', {
-                        required: 'Password is required',
+                        required: `Пароль обовʼязковий`,
                         minLength: {
                           value: 6,
-                          message: "Password must be at least 6 characters long"
+                          message: "Пароль має бути не коротший за 6 символів"
                         },
                         maxLength: {
                           value: 100,
                           message: 'Не більше 100 символів'
                         }
                       })}
-                      placeholder="Password" />
+                      placeholder="Пароль" />
                       {/* <FormError field={errors?.password} /> */}
                   </div>
 
@@ -163,7 +163,7 @@ export default function SignInForm({ signInForm=true }) {
                         href="/reset-password"
                         className="text-xs underline underline-offset-4 hover:text-zinc-800 transition-colors duration-150"
                       >
-                        Forgot password?
+                        Забули пароль?
                       </Link>
                     </div>
                   }
@@ -171,18 +171,20 @@ export default function SignInForm({ signInForm=true }) {
                   {isLogin
                     ? <Button
                         type="submit"
+                        variant="black"
                         // full
                         // loading={loading}
                       >
-                        Log in
+                        Увійти
                       </Button>
                     : <Button
                         type="submit"
+                        variant="black"
                         // full
                         className="mt-1"
                         // loading={loading}
                       >
-                        Sign up
+                        Створити акаунт
                       </Button>
                   }
                 </div>
@@ -200,16 +202,16 @@ export default function SignInForm({ signInForm=true }) {
 
                 {isLogin
                   ? <p className="mt-8 text-center text-sm text-zinc-600">
-                      Don&apos;t have an account?&nbsp;
+                      Немає акаунта?&nbsp;
                       <Link
                         href={SIGN_UP_PATH}
                         className="underline underline-offset-4 hover:text-zinc-800 cursor-pointer transition-colors duration-150"
                       >
-                        Sign up
+                        Створити акаунт
                       </Link>
                     </p>
                   : <p className="mt-8 text-center text-sm text-zinc-600">
-                      Already have an account? <Link href={SIGN_IN_PATH} className="underline underline-offset-4 hover:text-zinc-800 cursor-pointer">Log in</Link>
+                      Вже є акаунт? <Link href={SIGN_IN_PATH} className="underline underline-offset-4 hover:text-zinc-800 cursor-pointer">Увійти</Link>
                     </p>
                 }
               </form>

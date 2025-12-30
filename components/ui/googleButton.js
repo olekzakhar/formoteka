@@ -99,7 +99,7 @@ export default function GoogleButton() {
               </clipPath>
             </defs>
           </svg>
-          Continue with Google
+          Увійти через Google
         </>
       )}
     </button>

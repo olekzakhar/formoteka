@@ -7,6 +7,7 @@ import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 import { cn } from '@/utils'
 import LoadingIcon from '@/components/icons/Loading'
+import { Button } from '@/components/ui/button'
 import { BASE_URL } from '@/constants'
 
 export default function SignOutButton() {
@@ -30,17 +31,18 @@ export default function SignOutButton() {
   }
 
   return (
-    <button
-      type="button"
+    <Button
+      variant="secondary"
+      size="sm"
       className={cn(
-        'flex items-center gap-3',
+        'w-full flex items-center gap-3',
         loading ? 'cursor-not-allowed' : undefined
       )}
       onClick={handleSignOut}
       disabled={loading}
     >
-      Sign out
+      Вийти
       {loading && <LoadingIcon loading={loading} className="relative w-4 h-4" />}
-    </button>
+    </Button>
   )
 }

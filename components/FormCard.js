@@ -16,7 +16,6 @@ export default function FormCard({ form }) {
     <div
       className="
         relative pl-8 pr-6 py-5 block
-        group
         bg-card rounded-lg
         transition-smooth
         hover:bg-card/45
@@ -28,30 +27,40 @@ export default function FormCard({ form }) {
         <div className="flex-1">
           <div className="text-lg font-medium">{form?.name}</div>
 
-          {/* absolute overlay link */}
-          <Link
-            href={`${FORMS_PATH}/${form.slug}`}
-            className="absolute inset-0 rounded-lg"
-          />
-
-          <Link
-            href={`${BASE_URL}/${form?.slug}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="
-              relative z-10
-              inline-flex items-center gap-1
-              text-sm text-black/60
-              hover:text-black/80
-              mt-1
-            "
-          >
-            {BASE_URL}/{form?.slug}
-            <ExternalLink className="w-[13px] h-[13px]" />
-          </Link>
+          <div className="relative inline-block group">
+            <Link
+              href={`${BASE_URL}/${form?.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="
+                inline-flex items-center
+                text-sm text-black/60
+                hover:text-black/80
+                mt-1
+                transition-smooth
+              "
+            >
+              {BASE_URL}/{form?.slug}
+            </Link>
+            
+            <ExternalLink 
+              className="
+                w-[13px] h-[13px] 
+                absolute 
+                left-[calc(100%+4px)] 
+                top-[7px]
+                transition-opacity
+                duration-200
+                pointer-events-none
+                z-10
+                opacity-0
+                group-hover:opacity-100
+              "
+            />
+          </div>
         </div>
 
-        <div className="-mt-2 flex items-center gap-4">
+        <div className="-mt-2 flex items-center gap-2">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -71,7 +80,7 @@ export default function FormCard({ form }) {
                   className="
                     text-gray-600
                     transition-colors
-                    group-hover:text-gray-900
+                    hover:text-gray-900
                     relative z-10
                   "
                 >
@@ -82,11 +91,13 @@ export default function FormCard({ form }) {
                       transition-colors
                       duration-400
                       ease-out
-                      group-hover:bg-muted
-                      group-hover:text-gray-900
+                      hover:bg-muted
+                      hover:text-gray-900
                     "
                   >
-                    <Pencil className="w-4 h-4" />
+                    <Link href={`${FORMS_PATH}/${form.slug}`}>
+                      <Pencil className="w-4 h-4" />
+                    </Link>
                   </Button>
                 </span>
               </TooltipTrigger>

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import { ExternalLink, Pencil, MoreVertical, Copy, Trash2 } from 'lucide-react'
+import { ExternalLink, SquarePen, MoreVertical, Copy, Trash2 } from 'lucide-react'
 import { BASE_URL, FORMS_PATH } from '@/constants'
 import { Button } from '@/components/ui/button'
 import {
@@ -46,63 +46,64 @@ export default function FormCard({ form }) {
 
   return (
     <div
-      className="
-        relative pl-8 pr-4 py-5 block
-        bg-card rounded-lg
-        transition-smooth
-        hover:bg-card/45
-        hover:ring-1 hover:ring-block-hover/30
-        shadow-sm
-      "
-    >
+      className="relative pl-8 pr-4 py-5 block bg-card rounded-lg hover:bg-card/50 hover:ring-1 hover:ring-block-hover/30
+        shadow-sm hover:shadow-md transition-smooth">
       <div className="flex justify-between items-center">
         <div className="flex-1">
-          <div className="text-lg font-medium">{form?.name}</div>
+          <div className="-mb-0.5 text-xl font-medium">{form?.name}</div>
 
-          <div className="relative inline-block group">
+          {/* <div className="relative inline-block group">
             <Link
               href={`${BASE_URL}/${form?.slug}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="
-                inline-flex items-center
-                text-sm text-black/60
-                hover:text-black/80
-                mt-1
-                transition-smooth
-              "
+              className="inline-flex items-center text-sm text-black/60 hover:text-black/80 transition-smooth"
             >
               {BASE_URL}/{form?.slug}
             </Link>
             
             <ExternalLink 
-              className="
-                w-[13px] h-[13px] 
-                absolute 
-                left-[calc(100%+4px)] 
-                top-[7px]
-                transition-opacity
-                duration-200
-                pointer-events-none
-                z-10
-                opacity-0
-                group-hover:opacity-100
-              "
-            />
+              className="absolute top-[7px] left-[calc(100%+4px)] w-[13px] h-[13px] opacity-0 group-hover:opacity-100
+                z-10 pointer-events-none transition-opacity duration-200" />
+          </div> */}
+
+          <div className="mt-1.5 flex items-center gap-[18px]">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    href={`${BASE_URL}/${form?.slug}`}
+                    className="flex items-center gap-1.5 w-fit text-[#1a1a1a] text-sm font-semibold hover:text-[#0B7F58] transition-smooth"
+                  >
+                    <span className="inline-block w-2 h-2 rounded-full bg-[#10b981]"></span>
+                    <span>12 заявок</span>
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent className="bg-[#2F3032] text-[#FAFAFA] rounded-[5px] py-1 px-2 text-xs">
+                  <p>Кількість отриманих заявок</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            <div className="mt-0.5 text-[13px] text-[#6b7280]">Остання 15 хвилин тому</div>
           </div>
         </div>
 
         <div className="-mt-2 flex items-center">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="mr-2 text-sm z-10">1 Заявка</div>
-              </TooltipTrigger>
-              <TooltipContent className="bg-[#2F3032] text-[#FAFAFA] rounded-[5px] py-1 px-2 text-xs">
-                <p>Кількість отриманих заявок</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <Button
+            variant="secondary"
+            asChild
+            className="mr-2 px-4 py-1.5 h-[36px] rounded-tr-lg flex items-center gap-[8px] text-sm font-medium"
+          >
+            <Link
+              href={`${BASE_URL}/${form?.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Переглянути
+              <ExternalLink className="w-[13px] h-[13px]" />
+            </Link>
+          </Button>
 
           {/* pencil button */}
           <TooltipProvider>
@@ -129,7 +130,7 @@ export default function FormCard({ form }) {
                     "
                   >
                     <Link href={`${FORMS_PATH}/${form.slug}`}>
-                      <Pencil className="w-4 h-4" />
+                      <SquarePen className="w-[17px]! h-[17px]!" />
                     </Link>
                   </Button>
                 </span>
@@ -158,7 +159,7 @@ export default function FormCard({ form }) {
                 ${isMenuOpen ? 'bg-muted text-gray-900' : ''}
               `}
             >
-              <MoreVertical className="w-4 h-4" />
+              <MoreVertical className="w-[17px]! h-[17px]!" />
             </Button>
 
             {isMenuOpen && (

@@ -131,9 +131,9 @@ export default async function Forms() {
               ))}
             </div>
           ) : !error ? (
-            <div className="p-12 mt-3 flex flex-col items-center justify-center border bg-white border-[#E8E8E8] rounded-2xl">
+            <div className="p-12 mt-3 flex flex-col items-center justify-center shadow-sm bg-card rounded-2xl">
               <svg 
-                className="w-16 h-16 text-gray-300 mb-4" 
+                className="w-16 h-16 text-gray-400 mb-4" 
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"

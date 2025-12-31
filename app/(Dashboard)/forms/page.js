@@ -70,14 +70,15 @@
 
 
 
-
-
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 import { getForms } from '@/server/action'
 import FormCard from '@/components/FormCard'
 import { Button } from '@/components/ui/button'
 import UserMenu from '@/components/UserMenu'
+import { BASE_URL, FORMS_PATH } from '@/constants'
+import Logo from '@/components/Logo'
 
 export default async function Forms() {
   const supabase = await createClient()
@@ -96,10 +97,22 @@ export default async function Forms() {
           {/* Add content here if needed */}
         </div>
         
-        {/* Center - Brand name - absolute positioned to stay centered */}
-        <div className="absolute left-1/2 -translate-x-1/2">
-          <span className="text-lg font-semibold text-foreground">Formoteka</span>
-        </div>
+        {/* Logo */}
+        <Link
+          href={`${BASE_URL}${FORMS_PATH}`}
+          className="-mt-0.5 absolute left-1/2 -translate-x-1/2 text-[#14171F]"
+        >
+          <Logo />
+          {/* <Image
+            src="/logo.svg"
+            alt="Formoteka"
+            height={26}
+            width={0} // важливо, щоб Next.js не ламав
+            style={{ width: 'auto', height: '26px' }}
+            className="w-auto h-[26px] text-fuchsia-600"
+            priority
+          /> */}
+        </Link>
 
         {/* Right section - User menu */}
         <div className="flex items-center gap-3 ml-auto">

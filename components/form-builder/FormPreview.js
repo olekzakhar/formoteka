@@ -7,6 +7,7 @@ import { ArrowRight, CheckCircle, Image, ExternalLink, X } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { ProductsBlockRenderer } from './ProductsBlockRenderer';
+import { BASE_URL } from '@/constants';
 
 const fontSizeClass = {
   small: 'text-sm',
@@ -24,7 +25,7 @@ export const FormPreview = ({
 }) => {
   // Generate a fake form URL for preview
   const formSlug = formName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-  const formUrl = `formoteka.app/${formSlug}`;
+  const formUrl = `${BASE_URL}/${formSlug}`;
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
 

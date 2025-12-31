@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { ArrowLeft, Play, Link as LinkIcon, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button-2';
 import { useState, useRef, useEffect } from 'react';
-import { FORMS_PATH } from '@/constants';
+import { BASE_URL, FORMS_PATH } from '@/constants'
+import Logo from '@/components/Logo';
 
 export const FormHeader = ({ formName, onTogglePreview }) => {
   const [isEditingName, setIsEditingName] = useState(false);
@@ -74,10 +75,13 @@ export const FormHeader = ({ formName, onTogglePreview }) => {
         )}
       </div>
       
-      {/* Center - Brand name - absolute positioned to stay centered */}
-      <div className="absolute left-1/2 -translate-x-1/2">
-        <span className="text-lg font-semibold text-foreground">Formoteka</span>
-      </div>
+      {/* Logo */}
+      <Link
+        href={`${BASE_URL}${FORMS_PATH}`}
+        className="-mt-0.5 absolute left-1/2 -translate-x-1/2 text-[#14171F]"
+      >
+        <Logo />
+      </Link>
 
       {/* Right section - Action buttons - fixed width */}
       <div className="flex items-center gap-1 ml-auto">

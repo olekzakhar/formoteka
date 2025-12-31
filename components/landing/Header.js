@@ -18,7 +18,7 @@ const Header = ({ isUser=false }) => {
           href={BASE_URL}
           className="ml-1.5 flex items-center gap-2 group text-[#14171F]"
         >
-          <Logo height={24} />
+          <Logo />
         </Link>
         
         <nav className="hidden md:flex items-center gap-8">

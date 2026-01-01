@@ -74,7 +74,7 @@ export default function FormCard({ form }) {
                 <TooltipTrigger asChild>
                   {form?.order_count
                     ? <Link
-                        href={`${BASE_URL}/${form?.slug}`}
+                        href={`${BASE_URL}/orders/${form?.slug}`}
                         className="flex items-center gap-1.5 w-fit text-[#1a1a1a] text-sm font-semibold hover:text-[#0B7F58] transition-smooth"
                       >
                         <span className="inline-block w-2 h-2 rounded-full bg-[#10b981]"></span>

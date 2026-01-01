@@ -11,6 +11,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { timeAgo, pluralize } from '@/lib/utils'
 
 export default function FormCard({ form }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -71,13 +72,18 @@ export default function FormCard({ form }) {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Link
-                    href={`${BASE_URL}/${form?.slug}`}
-                    className="flex items-center gap-1.5 w-fit text-[#1a1a1a] text-sm font-semibold hover:text-[#0B7F58] transition-smooth"
-                  >
-                    <span className="inline-block w-2 h-2 rounded-full bg-[#10b981]"></span>
-                    <span>12 заявок</span>
-                  </Link>
+                  {form?.order_count
+                    ? <Link
+                        href={`${BASE_URL}/${form?.slug}`}
+                        className="flex items-center gap-1.5 w-fit text-[#1a1a1a] text-sm font-semibold hover:text-[#0B7F58] transition-smooth"
+                      >
+                        <span className="inline-block w-2 h-2 rounded-full bg-[#10b981]"></span>
+                        <span>{pluralize(form?.order_count)}</span>
+                      </Link>
+                    : <div className="flex items-center gap-1.5 w-fit text-[#6b7280] text-sm font-medium">
+                        <span>Заявок ще немає</span>
+                      </div>
+                  }
                 </TooltipTrigger>
                 <TooltipContent className="bg-[#2F3032] text-[#FAFAFA] rounded-[5px] py-1 px-2 text-xs">
                   <p>Кількість отриманих заявок</p>
@@ -85,7 +91,13 @@ export default function FormCard({ form }) {
               </Tooltip>
             </TooltipProvider>
 
-            <div className="mt-0.5 text-[13px] text-[#6b7280]">Остання 15 хвилин тому</div>
+            {/* <div className="mt-0.5 text-[13px] text-[#6b7280]">Остання 15 хвилин тому</div> */}
+            {form?.order_count && form?.last_order_at
+              ? <div className="mt-0.5 text-[13px] text-[#6b7280]">
+                  Остання {timeAgo(form?.last_order_at)}
+                </div>
+              : <></>
+            }
           </div>
         </div>
 

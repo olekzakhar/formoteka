@@ -440,7 +440,7 @@ export const FormPreview = ({
                 <X className="w-4 h-4 text-muted-foreground" />
               </button>
               <a
-                href={`https://${formUrl}`}
+                href={formUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"

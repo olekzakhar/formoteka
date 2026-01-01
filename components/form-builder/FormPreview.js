@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -26,6 +27,7 @@ export const FormPreview = ({
   // Generate a fake form URL for preview
   const formSlug = formName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
   const formUrl = `${BASE_URL}/${formSlug}`;
+  const displayUrl = formUrl.replace(/^https?:\/\//, '');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
 
@@ -439,15 +441,15 @@ export const FormPreview = ({
               >
                 <X className="w-4 h-4 text-muted-foreground" />
               </button>
-              <a
+              <Link
                 href={formUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
-                {formUrl}
+                {displayUrl}
                 <ExternalLink className="w-3.5 h-3.5" />
-              </a>
+              </Link>
             </div>
 
             {/* Form content */}

@@ -70,7 +70,7 @@ export default function FormCard({ form, userId }) {
 
 
   const handleDelete = async () => {
-    const confirmed = confirm(`Видалити форму "${form?.name}"? Ця дія незворотня і всі заявки будуть видалені.`)
+    const confirmed = confirm(`Видалити форму "${form?.name}"? Цю дію неможливо скасувати. Усі заявки буде видалено.`)
     
     if (!confirmed) return
     

@@ -8,7 +8,7 @@ import { createClient } from '@/utils/supabase/client'
 import { Button } from '@/components/ui/button'
 import { createForm } from '@/server/action'
 
-export default function FormsHeader({ userId }) {
+export default function FormsCreateButton({ userId }) {
   const [isCreating, setIsCreating] = useState(false)
   const router = useRouter()
   const supabase = createClient()
@@ -39,18 +39,13 @@ export default function FormsHeader({ userId }) {
   }
 
   return (
-    <div className="mb-6 px-3 flex items-center justify-between">
-      <div>
-        <h1 className="text-3xl font-bold">Мої форми</h1>
-      </div>
-      <Button
-        variant="black"
-        size="sm-black"
-        onClick={handleCreateForm}
-        disabled={isCreating}
-      >
-        {isCreating ? 'Створення...' : 'Створити форму'}
-      </Button>
-    </div>
+    <Button
+      variant="black"
+      size="sm-black"
+      onClick={handleCreateForm}
+      disabled={isCreating}
+    >
+      {isCreating ? 'Створення...' : 'Створити форму'}
+    </Button>
   )
 }

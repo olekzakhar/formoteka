@@ -78,7 +78,7 @@ import { Button } from '@/components/ui/button'
 import UserMenu from '@/components/UserMenu'
 import { BASE_URL, FORMS_PATH } from '@/constants'
 import Logo from '@/components/Logo'
-import FormsHeader from '@/components/forms/Header'
+import FormsCreateButton from '@/components/forms/CreateButton'
 import FormCard from '@/components/forms/Card'
 
 export default async function Forms() {
@@ -123,7 +123,12 @@ export default async function Forms() {
 
       <main className="p-8 pt-14">
         <div className="max-w-[700px] mx-auto">
-          <FormsHeader userId={user?.id} />
+          <div className="mb-6 px-3 flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold">Мої форми</h1>
+            </div>
+            <FormsCreateButton userId={user?.id} />
+          </div>
 
           {error && (
             <div className="p-4 mb-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
@@ -154,9 +159,7 @@ export default async function Forms() {
               </svg>
               <p className="text-gray-500 text-lg font-medium mb-2">Поки що немає форм</p>
               <p className="text-gray-400 text-sm mb-4">Створіть свою першу форму, щоб почати</p>
-              <Button variant="black" size="sm-black">
-                Створити форму
-              </Button>
+              <FormsCreateButton userId={user?.id} />
             </div>
           ) : null}
         </div>

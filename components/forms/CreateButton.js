@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import { Button } from '@/components/ui/button'
 import { createForm } from '@/server/action'
+import { FORMS_PATH } from '@/constants'
 
 export default function FormsCreateButton({ userId }) {
   const [isCreating, setIsCreating] = useState(false)
@@ -20,7 +21,7 @@ export default function FormsCreateButton({ userId }) {
       const { form, error } = await createForm(supabase, userId)
       
       if (error) {
-        console.error('Помилка створення форми:', error)
+        // console.error('Помилка створення форми:', error)
         alert('Не вдалося створити форму. Спробуйте ще раз.')
         setIsCreating(false)
         return
@@ -28,11 +29,11 @@ export default function FormsCreateButton({ userId }) {
       
       if (form) {
         // Перенаправляємо на сторінку форми
-        router.push(`/forms/${form.slug}`)
+        router.push(`${FORMS_PATH}/${form.slug}`)
         router.refresh()
       }
     } catch (err) {
-      console.error('Помилка:', err)
+      // console.error('Помилка:', err)
       alert('Сталася помилка. Спробуйте ще раз.')
       setIsCreating(false)
     }

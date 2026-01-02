@@ -139,7 +139,7 @@ export default async function Forms() {
           {forms && forms.length > 0 ? (
             <div className="flex flex-col gap-4">
               {forms.map((form) => (
-                <FormCard key={form.id} form={form} />
+                <FormCard key={form.id} form={form} userId={user?.id} />
               ))}
             </div>
           ) : !error ? (

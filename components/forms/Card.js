@@ -3,21 +3,28 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { createClient } from '@/utils/supabase/client'
 import { ExternalLink, SquarePen, MoreVertical, Copy, Trash2 } from 'lucide-react'
-import { BASE_URL, FORMS_PATH } from '@/constants'
 import { Button } from '@/components/ui/button'
+import { BASE_URL, FORMS_PATH } from '@/constants'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { duplicateForm, deleteForm } from '@/server/action'
 import { timeAgo, pluralize } from '@/utils'
 
-export default function FormCard({ form }) {
+export default function FormCard({ form, userId }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [isDuplicating, setIsDuplicating] = useState(false)
   const menuRef = useRef(null)
+  const router = useRouter()
+  const supabase = createClient()
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -35,15 +42,55 @@ export default function FormCard({ form }) {
     }
   }, [isMenuOpen])
 
-  const handleDuplicate = () => {
-    // Add your duplicate logic here
-    console.log('Duplicate form:', form.slug)
+
+  const handleDuplicate = async () => {
+    setIsDuplicating(true)
+    
+    try {
+      const { form: newForm, error } = await duplicateForm(supabase, form.slug, userId)
+      
+      if (error) {
+        // console.error('Помилка дублювання форми:', error)
+        // alert(`Не вдалося дублювати форму: ${error}`)
+        alert(`Не вдалося дублювати форму`)
+      } else {
+        router.refresh()
+      }
+    } catch (err) {
+      // console.error('Помилка:', err)
+      alert('Сталася помилка при дублюванні форми')
+    } finally {
+      setIsDuplicating(false)
+    }
+
     setIsMenuOpen(false)
   }
 
-  const handleDelete = () => {
-    // Add your delete logic here
-    console.log('Delete form:', form.slug)
+
+  const handleDelete = async () => {
+    const confirmed = confirm(`Видалити форму "${form?.name}"? Ця дія незворотня і всі заявки будуть видалені.`)
+    
+    if (!confirmed) return
+    
+    setIsDeleting(true)
+    
+    try {
+      const { success, error } = await deleteForm(supabase, form.slug, userId)
+      
+      if (error) {
+        // console.error('Помилка видалення форми:', error)
+        // alert(`Не вдалося видалити форму: ${error}`)
+        alert(`Не вдалося видалити форму`)
+      } else {
+        router.refresh()
+      }
+    } catch (err) {
+      // console.error('Помилка:', err)
+      alert('Сталася помилка при видаленні форми')
+    } finally {
+      setIsDeleting(false)
+    }
+
     setIsMenuOpen(false)
   }
 
@@ -181,27 +228,22 @@ export default function FormCard({ form }) {
                 <div className="py-1">
                   <button
                     onClick={handleDuplicate}
-                    className="
-                      w-full flex items-center gap-3 px-4 py-2
-                      text-sm text-gray-700
-                      hover:bg-gray-50
-                      transition-colors
-                    "
+                    disabled={isDuplicating}
+                    className="px-4 py-2 flex items-center gap-3 w-full text-sm text-gray-700 hover:bg-gray-50
+                      transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Copy className="w-4 h-4" />
-                    <span>Дублювати</span>
+                    <span>{isDuplicating ? 'Дублювання...' : 'Дублювати'}</span>
                   </button>
+
                   <button
                     onClick={handleDelete}
-                    className="
-                      w-full flex items-center gap-3 px-4 py-2
-                      text-sm text-red-600
-                      hover:bg-red-50
-                      transition-colors
-                    "
+                    disabled={isDeleting}
+                    className="px-4 py-2 flex items-center gap-3 w-full text-sm text-red-600 hover:bg-red-50
+                      transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Trash2 className="w-4 h-4" />
-                    <span>Видалити</span>
+                    <span>{isDeleting ? 'Видалення...' : 'Видалити'}</span>
                   </button>
                 </div>
               </div>

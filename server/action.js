@@ -42,6 +42,19 @@ export const getAllFormsSlugs = cache(fetchAllFormsSlugs)
 
 
 
+async function fetchAllPublicFormsSlugs(supabase) {
+  const { data: forms, error } = await supabase
+    .from('forms')
+    .select('slug, created_at')
+    .eq('is_public', true)  // Only fetch public forms
+    .order('created_at', { ascending: false })
+
+  return { forms, error }
+}
+export const getAllPublicFormsSlugs = cache(fetchAllPublicFormsSlugs)
+
+
+
 // Створення нової форми
 export async function createForm(supabase, userId) {  
   let attempts = 0

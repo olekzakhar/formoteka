@@ -1,3 +1,5 @@
+// components/landing/Footer
+
 import { Sparkles } from "lucide-react";
 
 const Footer = () => {

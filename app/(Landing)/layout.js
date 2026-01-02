@@ -1,3 +1,5 @@
+// app/(Landing)/layout
+
 import "./home.css";
 
 export default function HomeLayout({ children }) {

@@ -1,3 +1,5 @@
+// components/landing/ForWho
+
 import { Check } from "lucide-react";
 
 const scenarios = [

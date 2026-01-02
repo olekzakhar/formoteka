@@ -1,3 +1,5 @@
+// components/landing/Hero
+
 import Image from "next/image";
 import { Button } from "@/components/ui/button-2";
 import { ArrowRight, CheckCircle2, Package, ShoppingBag } from "lucide-react";

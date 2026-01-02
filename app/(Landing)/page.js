@@ -1,4 +1,4 @@
-// app/page
+// app/(Landing)/page
 
 import { createClient } from '@/utils/supabase/server'
 import Header from "@/components/landing/Header"

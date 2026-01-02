@@ -1,3 +1,5 @@
+// components/landing/Benefits
+
 import { MessageSquareOff, Eye, Timer, ListChecks, Brain, Wifi } from "lucide-react";
 
 const benefits = [

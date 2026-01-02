@@ -1,3 +1,5 @@
+// components/landing/FAQ
+
 import {
   Accordion,
   AccordionContent,

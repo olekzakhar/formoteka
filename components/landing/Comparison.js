@@ -1,3 +1,5 @@
+// components/landing/Comparison
+
 import { ArrowRight, X, Check } from "lucide-react";
 
 const comparisons = [

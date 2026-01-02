@@ -1,3 +1,5 @@
+// components/landing/Pain
+
 import { MessageCircle, Clock, HelpCircle, AlertTriangle, Moon, Inbox } from "lucide-react";
 
 const painPoints = [

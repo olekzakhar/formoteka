@@ -15,6 +15,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { toast } from 'sonner'
 import { duplicateForm, deleteForm } from '@/server/action'
 import { timeAgo, pluralize } from '@/utils'
 
@@ -61,6 +62,7 @@ export default function FormCard({ form, userId }) {
       alert('Сталася помилка при дублюванні форми')
     } finally {
       setIsDuplicating(false)
+      toast.success('Копію створено')
     }
 
     setIsMenuOpen(false)
@@ -92,6 +94,7 @@ export default function FormCard({ form, userId }) {
     }
 
     setIsMenuOpen(false)
+    toast.success('Видалено')
   }
 
   return (

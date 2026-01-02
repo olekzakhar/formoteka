@@ -4,7 +4,7 @@ import { AddBlockTab } from './AddBlockTab';
 import { BlockSettingsTab } from './BlockSettingsTab';
 import { DesignTab, FormDesign } from './DesignTab';
 import { SubmitButtonSettings } from './SubmitButtonSettings';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils';
 import { PaintbrushVertical, Settings, ArrowLeft, Plus } from 'lucide-react';
 
 const PANEL_WIDTH = 'w-full md:w-[280px] lg:w-[360px] md:h-[calc(100%-16px)] md:mt-[8px] md:mr-[10px] rounded-3xl border';

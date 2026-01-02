@@ -3,7 +3,7 @@
 import { blockDefinitions } from '@/data/block-definitions';
 import { BlockIcon } from './BlockIcon';
 import { Plus, X, AlignLeft, AlignCenter, AlignRight, Move } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils';
 import { useState, useRef } from 'react';
 import { ProductsBlockSettings } from './ProductsBlockSettings';
 

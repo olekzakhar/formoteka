@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button-2';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils';
 import { X, Plus, Copy, Trash2, ChevronUp, ChevronDown, Upload, Image, Info } from 'lucide-react';
 import {
   Tooltip,

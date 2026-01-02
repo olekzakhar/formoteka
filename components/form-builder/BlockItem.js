@@ -2,7 +2,7 @@
 
 import { blockDefinitions } from '@/data/block-definitions';
 import { GripVertical, Copy, Trash2, Image, Image as ImageIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils';
 import { useState, useRef, useEffect } from 'react';
 
 export const BlockItem = ({

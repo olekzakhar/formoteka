@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export const ImageLightbox = ({ images, initialIndex, onClose }) => {

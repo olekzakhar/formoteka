@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle, Image, ExternalLink, X } from 'lucide-react';
 import { useState } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils';
 import { ProductsBlockRenderer } from './ProductsBlockRenderer';
 import { BASE_URL } from '@/constants';
 

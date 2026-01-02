@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils';
 import { Minus, Plus, Image as ImageIcon } from 'lucide-react';
 import { ImageLightbox } from './ImageLightbox';
 

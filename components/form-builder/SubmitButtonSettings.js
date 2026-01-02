@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn } from '@/utils'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 

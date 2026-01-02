@@ -1,3 +1,5 @@
+// components/forms/Card
+
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
@@ -11,7 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { timeAgo, pluralize } from '@/lib/utils'
+import { timeAgo, pluralize } from '@/utils'
 
 export default function FormCard({ form }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)

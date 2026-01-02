@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button-2';
 import { Label } from '@/components/ui/label';
 import { ManageProductsPopup } from './ManageProductsPopup';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils';
 import { List, LayoutGrid, Package } from 'lucide-react';
 
 const layoutOptions = [

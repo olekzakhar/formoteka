@@ -68,17 +68,18 @@
 
 
 
-
+// app/(Dashboard)/forms/page
 
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 import { getForms } from '@/server/action'
-import FormCard from '@/components/FormCard'
 import { Button } from '@/components/ui/button'
 import UserMenu from '@/components/UserMenu'
 import { BASE_URL, FORMS_PATH } from '@/constants'
 import Logo from '@/components/Logo'
+import FormsHeader from '@/components/forms/Header'
+import FormCard from '@/components/forms/Card'
 
 export default async function Forms() {
   const supabase = await createClient()
@@ -122,14 +123,7 @@ export default async function Forms() {
 
       <main className="p-8 pt-14">
         <div className="max-w-[700px] mx-auto">
-          <div className="mb-6 px-3 flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold">Мої форми</h1>
-            </div>
-            <Button variant="black" size="sm-black">
-              Створити форму
-            </Button>
-          </div>
+          <FormsHeader userId={user?.id} />
 
           {error && (
             <div className="p-4 mb-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">

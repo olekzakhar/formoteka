@@ -2,7 +2,7 @@
 
 import { blockDefinitions } from '@/data/block-definitions';
 import { BlockIcon } from './BlockIcon';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils';
 
 const categories = [
   { key: 'content', label: 'Контент' },

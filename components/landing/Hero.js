@@ -76,6 +76,9 @@ const HeroSection = () => {
                   src={heroFlowers} 
                   alt="Флорист створює букет" 
                   className="w-full h-full object-cover"
+                  priority
+                  quality={85}
+                  placeholder="blur"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
               </div>
@@ -86,6 +89,9 @@ const HeroSection = () => {
                   src={heroCheese} 
                   alt="Крафтовий сир" 
                   className="w-full h-full object-cover"
+                  loading="eager"
+                  quality={80}
+                  placeholder="blur"
                 />
               </div>
               
@@ -95,6 +101,9 @@ const HeroSection = () => {
                   src={heroGift} 
                   alt="Упаковка подарунка" 
                   className="w-full h-full object-cover"
+                  loading="lazy"
+                  quality={80}
+                  placeholder="blur"
                 />
               </div>
               
@@ -104,6 +113,9 @@ const HeroSection = () => {
                   src={heroCeramics} 
                   alt="Керамічний виріб" 
                   className="w-full h-full object-cover"
+                  loading="lazy"
+                  quality={80}
+                  placeholder="blur"
                 />
               </div>
 
@@ -179,18 +191,46 @@ const HeroSection = () => {
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-3">
               <div className="h-40 rounded-xl overflow-hidden shadow-md">
-                <Image src={heroFlowers} alt="Флорист" className="w-full h-full object-cover" />
+                <Image 
+                  src={heroFlowers} 
+                  alt="Флорист" 
+                  className="w-full h-full object-cover"
+                  priority
+                  quality={85}
+                  placeholder="blur"
+                />
               </div>
               <div className="h-28 rounded-xl overflow-hidden shadow-md">
-                <Image src={heroCheese} alt="Крафтовий сир" className="w-full h-full object-cover" />
+                <Image 
+                  src={heroCheese} 
+                  alt="Крафтовий сир" 
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  quality={80}
+                  placeholder="blur"
+                />
               </div>
             </div>
             <div className="space-y-3 pt-6">
               <div className="h-32 rounded-xl overflow-hidden shadow-md">
-                <Image src={heroCeramics} alt="Кераміка" className="w-full h-full object-cover" />
+                <Image 
+                  src={heroCeramics} 
+                  alt="Кераміка" 
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  quality={80}
+                  placeholder="blur"
+                />
               </div>
               <div className="h-36 rounded-xl overflow-hidden shadow-md">
-                <Image src={heroGift} alt="Упаковка подарунка" className="w-full h-full object-cover" />
+                <Image 
+                  src={heroGift} 
+                  alt="Упаковка подарунка" 
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  quality={80}
+                  placeholder="blur"
+                />
               </div>
             </div>
           </div>

@@ -1,15 +1,20 @@
 // app/(Landing)/page
 
+import dynamic from 'next/dynamic';
+
 import { createClient } from '@/utils/supabase/server'
 import Header from "@/components/landing/Header"
 import HeroSection from "@/components/landing/Hero"
-import PainSection from "@/components/landing/Pain"
-import ComparisonSection from "@/components/landing/Comparison"
-import BenefitsSection from "@/components/landing/Benefits"
-import ForWhoSection from "@/components/landing/ForWho"
-import FAQSection from "@/components/landing/FAQ"
-import CTASection from "@/components/landing/CTA"
-import Footer from "@/components/landing/Footer"
+
+// Lazy load below-the-fold sections
+// Це щоб прискорити завантаження сторінки, щоб одразу завантажувався лише Header, Hero
+const PainSection = dynamic(() => import("@/components/landing/Pain"));
+const ComparisonSection = dynamic(() => import("@/components/landing/Comparison"));
+const BenefitsSection = dynamic(() => import("@/components/landing/Benefits"));
+const ForWhoSection = dynamic(() => import("@/components/landing/ForWho"));
+const FAQSection = dynamic(() => import("@/components/landing/FAQ"));
+const CTASection = dynamic(() => import("@/components/landing/CTA"));
+const Footer = dynamic(() => import("@/components/landing/Footer"));
 
 export default async function Home() {
   const supabase = await createClient()

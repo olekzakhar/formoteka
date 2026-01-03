@@ -1,4 +1,4 @@
-// components/form-builder/FormPreview
+// components/form-builder/Preview
 
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle, Image, ExternalLink, X } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/utils';
-import { ProductsBlockRenderer } from './ProductsBlockRenderer';
+import { BlockProductsRenderer } from '@/components/form-builder/block/ProductsRenderer';
 import { BASE_URL } from '@/constants';
 
 const fontSizeClass = {
@@ -18,7 +18,7 @@ const fontSizeClass = {
   large: 'text-lg',
 };
 
-export const FormPreview = ({
+export const Preview = ({
   blocks,
   successBlocks,
   submitButtonText,
@@ -272,7 +272,7 @@ export const FormPreview = ({
                 {block.required && <span className="text-destructive ml-1">*</span>}
               </Label>
             )}
-            <ProductsBlockRenderer
+            <BlockProductsRenderer
               block={block}
               selectedProducts={selectedProducts}
               onSelectProduct={handleSelectProduct}

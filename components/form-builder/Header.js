@@ -1,4 +1,4 @@
-// components/form-builder/FormHeader
+// components/form-builder/Header
 
 import Link from 'next/link';
 import { ArrowLeft, Play, Link as LinkIcon, ExternalLink, Loader2, CheckCheck, FileCheckCorner } from 'lucide-react';
@@ -8,7 +8,7 @@ import { BASE_URL, FORMS_PATH } from '@/constants';
 import Logo from '@/components/Logo';
 import { cn } from '@/utils';
 
-export const FormHeader = ({ 
+export const Header = ({ 
   formName, 
   onTogglePreview, 
   isSaving, 

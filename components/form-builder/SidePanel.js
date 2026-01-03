@@ -3,7 +3,7 @@
 import { TabsAdd } from '@/components/form-builder/tabs/Add';
 import { TabsSettings } from '@/components/form-builder/tabs/Settings';
 import { TabsDesign, FormDesign } from '@/components/form-builder/tabs/Design';
-import { SubmitButtonSettings } from './SubmitButtonSettings';
+import { SubmitButtonSettings } from '@/components/form-builder/SubmitButtonSettings';
 import { cn } from '@/utils';
 import { PaintbrushVertical, Settings, ArrowLeft, Plus } from 'lucide-react';
 

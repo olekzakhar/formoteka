@@ -1,7 +1,7 @@
 // components/form-builder/tabs/AddBlock
 
 import { blockDefinitions } from '@/data/block-definitions';
-import { BlockIcon } from '@/components/form-builder/BlockIcon';
+import { BlockIcon } from '@/components/form-builder/block/Icon';
 import { cn } from '@/utils';
 
 const categories = [

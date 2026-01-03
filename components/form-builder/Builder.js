@@ -4,11 +4,11 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useBuilder } from '@/hooks/useBuilder';
-import { FormCanvas } from './FormCanvas';
-import { SidePanel } from './SidePanel';
-import { FormHeader } from './FormHeader';
-import { FormPreview } from './FormPreview';
-import { MobileSidePanelDrawer } from './MobileSidePanelDrawer';
+import { Canvas } from '@/components/form-builder/Canvas';
+import { SidePanel } from '@/components/form-builder/SidePanel';
+import { Header } from '@/components/form-builder/Header';
+import { Preview } from '@/components/form-builder/Preview';
+import { MobileSidePanelDrawer } from '@/components/form-builder/MobileSidePanelDrawer';
 import { getDefaultBlock } from '@/data/block-definitions';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { updateFormData } from '@/server/action';
@@ -446,7 +446,7 @@ export const Builder = ({ form }) => {
 
   return (
     <div className="flex flex-col h-screen w-full overflow-hidden">
-      <FormHeader
+      <Header
         formName={form?.name}
         onTogglePreview={() => setIsPreview((v) => !v)}
         isSaving={isSaving}
@@ -456,7 +456,7 @@ export const Builder = ({ form }) => {
       />
 
       <div className="flex flex-1 overflow-hidden">
-        <FormCanvas
+        <Canvas
           blocks={blocks}
           activeBlockId={activeBlockId}
           formDesign={formDesign}
@@ -497,7 +497,7 @@ export const Builder = ({ form }) => {
         )}
 
         {isPreview && (
-          <FormPreview
+          <Preview
             blocks={blocks}
             successBlocks={successBlocks}
             submitButtonText={submitButtonText}

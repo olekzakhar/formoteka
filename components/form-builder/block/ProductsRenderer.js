@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { cn } from '@/utils';
 import { Minus, Plus, Image as ImageIcon } from 'lucide-react';
-import { ImageLightbox } from './ImageLightbox';
+import { ImageLightbox } from '@/components/form-builder/ImageLightbox';
 
-export const ProductsBlockRenderer = ({
+export const BlockProductsRenderer = ({
   block,
   selectedProducts,
   onSelectProduct,

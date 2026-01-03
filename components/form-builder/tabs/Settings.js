@@ -1,11 +1,11 @@
 'use client'
 
 import { blockDefinitions } from '@/data/block-definitions';
-import { BlockIcon } from '@/components/form-builder/BlockIcon';
+import { BlockIcon } from '@/components/form-builder/block/Icon';
 import { Plus, X, AlignLeft, AlignCenter, AlignRight, Move } from 'lucide-react';
 import { cn } from '@/utils';
 import { useState, useRef } from 'react';
-import { ProductsBlockSettings } from '@/components/form-builder/ProductsBlockSettings';
+import { BlockProductsSettings } from '@/components/form-builder/block/ProductsSettings';
 
 // Image settings component with position adjustment
 const ImageSettings = ({ block, onUpdate }) => {
@@ -396,7 +396,7 @@ export const TabsSettings = ({ block, onUpdate }) => {
 
       {/* Products settings */}
       {block.type === 'products' && (
-        <ProductsBlockSettings block={block} onUpdate={onUpdate} />
+        <BlockProductsSettings block={block} onUpdate={onUpdate} />
       )}
 
       {/* Label field */}

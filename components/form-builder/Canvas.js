@@ -1,6 +1,6 @@
-// components/form-builder/FormCanvas
+// components/form-builder/Canvas
 
-import { BlockItem } from './BlockItem';
+import { BlockItem } from '@/components/form-builder/block/Item';
 import { Plus, ArrowRight, CheckCircle, Settings as SettingsIcon } from 'lucide-react';
 import { cn } from '@/utils';
 import { useEffect, useRef, useState } from 'react';
@@ -51,7 +51,7 @@ const DropZone = ({
   );
 };
 
-export const FormCanvas = ({
+export const Canvas = ({
   blocks,
   activeBlockId,
   formDesign,

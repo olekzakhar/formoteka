@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button-2';
 import { Label } from '@/components/ui/label';
-import { ManageProductsPopup } from './ManageProductsPopup';
+import { ManageProductsPopup } from '@/components/form-builder/ManageProductsPopup';
 import { cn } from '@/utils';
 import { List, LayoutGrid, Package } from 'lucide-react';
 
@@ -26,7 +26,7 @@ const layoutOptions = [
   },
 ];
 
-export const ProductsBlockSettings = ({ block, onUpdate }) => {
+export const BlockProductsSettings = ({ block, onUpdate }) => {
   const [showManageProducts, setShowManageProducts] = useState(false);
 
   const products = block.products || [];

@@ -1,8 +1,8 @@
 // form-builder/SidePanel
 
-import { AddBlockTab } from './AddBlockTab';
-import { BlockSettingsTab } from './BlockSettingsTab';
-import { DesignTab, FormDesign } from './DesignTab';
+import { TabsAdd } from '@/components/form-builder/tabs/Add';
+import { TabsSettings } from '@/components/form-builder/tabs/Settings';
+import { TabsDesign, FormDesign } from '@/components/form-builder/tabs/Design';
 import { SubmitButtonSettings } from './SubmitButtonSettings';
 import { cn } from '@/utils';
 import { PaintbrushVertical, Settings, ArrowLeft, Plus } from 'lucide-react';
@@ -43,7 +43,7 @@ export const SidePanel = ({
           <span className="text-sm font-medium text-foreground">Параметри блоку</span>
         </div>
         <div className="flex-1 overflow-y-auto">
-          <BlockSettingsTab block={activeBlock} onUpdate={onUpdateBlock} />
+          <TabsSettings block={activeBlock} onUpdate={onUpdateBlock} />
         </div>
       </div>
     );
@@ -63,7 +63,7 @@ export const SidePanel = ({
           <span className="text-sm font-medium text-foreground">Success Block Settings</span>
         </div>
         <div className="flex-1 overflow-y-auto">
-          <BlockSettingsTab block={activeSuccessBlock} onUpdate={onUpdateSuccessBlock} />
+          <TabsSettings block={activeSuccessBlock} onUpdate={onUpdateSuccessBlock} />
         </div>
       </div>
     );
@@ -138,9 +138,9 @@ export const SidePanel = ({
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
         {activeTab === 'add' ? (
-          <AddBlockTab onAddBlock={onAddBlock} />
+          <TabsAdd onAddBlock={onAddBlock} />
         ) : activeTab === 'design' ? (
-          <DesignTab design={formDesign} onUpdateDesign={onUpdateDesign} />
+          <TabsDesign design={formDesign} onUpdateDesign={onUpdateDesign} />
         ) : (
           <div className="p-4">
             <p className="text-sm text-muted-foreground">Form settings coming soon...</p>

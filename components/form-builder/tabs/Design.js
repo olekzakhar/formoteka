@@ -1,3 +1,5 @@
+// components/form-builder/tabs/Design
+
 'use client'
 
 import { useState } from 'react';
@@ -26,7 +28,7 @@ const fontSizes = [
   { value: 'large', label: 'Large' },
 ];
 
-export const DesignTab = ({ design, onUpdateDesign }) => {
+export const TabsDesign = ({ design, onUpdateDesign }) => {
   const [showCustomBgColor, setShowCustomBgColor] = useState(false);
   const [customBgColor, setCustomBgColor] = useState('#ffffff');
   const [showCustomTextColor, setShowCustomTextColor] = useState(false);

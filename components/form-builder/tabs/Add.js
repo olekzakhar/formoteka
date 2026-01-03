@@ -1,7 +1,7 @@
-// form-builder/AddBlockTab
+// components/form-builder/tabs/AddBlock
 
 import { blockDefinitions } from '@/data/block-definitions';
-import { BlockIcon } from './BlockIcon';
+import { BlockIcon } from '@/components/form-builder/BlockIcon';
 import { cn } from '@/utils';
 
 const categories = [
@@ -11,7 +11,7 @@ const categories = [
   { key: 'layout', label: 'Макет' },
 ];
 
-export const AddBlockTab = ({ onAddBlock }) => {
+export const TabsAdd = ({ onAddBlock }) => {
   return (
     <div className="p-4 space-y-6 animate-fade-in">
       {categories.map((category) => {

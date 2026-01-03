@@ -1,11 +1,11 @@
 'use client'
 
 import { blockDefinitions } from '@/data/block-definitions';
-import { BlockIcon } from './BlockIcon';
+import { BlockIcon } from '@/components/form-builder/BlockIcon';
 import { Plus, X, AlignLeft, AlignCenter, AlignRight, Move } from 'lucide-react';
 import { cn } from '@/utils';
 import { useState, useRef } from 'react';
-import { ProductsBlockSettings } from './ProductsBlockSettings';
+import { ProductsBlockSettings } from '@/components/form-builder/ProductsBlockSettings';
 
 // Image settings component with position adjustment
 const ImageSettings = ({ block, onUpdate }) => {
@@ -216,7 +216,7 @@ const ImageSettings = ({ block, onUpdate }) => {
   );
 };
 
-export const BlockSettingsTab = ({ block, onUpdate }) => {
+export const TabsSettings = ({ block, onUpdate }) => {
   if (!block) {
     return (
       <div className="p-8 text-center animate-fade-in">

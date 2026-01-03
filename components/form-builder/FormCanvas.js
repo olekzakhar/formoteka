@@ -328,7 +328,7 @@ export const FormCanvas = ({
                     <Plus className="w-8 h-8 text-muted-foreground" />
                   </div>
                   <p className="text-muted-foreground mb-2">Ваша форма порожня</p>
-                  <p className="text-sm text-muted-foreground">Додайте або перетягніть сюди блоки з вкладки &quot;Додати&quot;</p>
+                  <p className="text-sm text-muted-foreground">Додайте або перетягніть сюди блоки з вкладки &quot;+ Додати&quot;</p>
                 </div>
               ) : (
                 <div
@@ -447,7 +447,7 @@ export const FormCanvas = ({
         </div>
 
         {/* Success Page Section */}
-        <div className={cn('mt-8 rounded-2xl shadow-sm', formDesign.backgroundColor)}>
+        <div className={cn('mt-8 rounded-2xl border border-[#2f3032]/[0.05]! shadow-sm', formDesign.backgroundColor)}>
           <div className="py-8">
             <div className="text-center mb-6">
               <div className="w-16 h-16 rounded-full bg-accent mx-auto mb-4 flex items-center justify-center">
@@ -470,7 +470,7 @@ export const FormCanvas = ({
                   onDrop={(e) => handleSuccessDrop(e, 0)}
                 >
                   <p className="text-muted-foreground mb-2">Сторінка успіху порожня</p>
-                  <p className="text-sm text-muted-foreground">Додайте або перетягніть сюди блоки з вкладки &quot;Додати&quot;</p>
+                  <p className="text-sm text-muted-foreground">Додайте або перетягніть сюди блоки з вкладки &quot;+ Додати&quot;</p>
                 </div>
                ) : (
                  <div

@@ -103,7 +103,21 @@ export default function FormCard({ form, userId }) {
         shadow-sm hover:shadow-md transition-smooth">
       <div className="flex justify-between items-center">
         <div className="flex-1">
-          <div className="-mb-0.5 text-xl font-medium">{form?.name}</div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href={`${BASE_URL}${FORMS_PATH}/${form?.slug}`}
+                  className="-mb-0.5 text-xl font-medium hover:opacity-80 transition-smooth"
+                >
+                  {form?.name}
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent className="bg-[#2F3032] text-[#FAFAFA] rounded-[5px] py-1 px-2 text-xs">
+                <p>Редагувати форму</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
 
           {/* <div className="relative inline-block group">
             <Link

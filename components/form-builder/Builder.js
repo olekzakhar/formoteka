@@ -2,7 +2,7 @@
 
 'use client'
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useBuilder } from '@/hooks/useBuilder';
 import { FormCanvas } from './FormCanvas';
 import { SidePanel } from './SidePanel';
@@ -11,31 +11,51 @@ import { FormPreview } from './FormPreview';
 import { MobileSidePanelDrawer } from './MobileSidePanelDrawer';
 import { getDefaultBlock } from '@/data/block-definitions';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { updateFormData } from '@/server/action';
+import { createClient } from '@/utils/supabase/client';
+import { useDebounce } from '@/hooks/useDebounce';
 
 export const Builder = ({ form }) => {
   const isMobile = useIsMobile();
   const [isPreview, setIsPreview] = useState(false);
   const [showBlockSettings, setShowBlockSettings] = useState(false);
   const [showSubmitSettings, setShowSubmitSettings] = useState(false);
-  // const [formName, setFormName] = useState('Без назви');
-  const [submitButtonText, setSubmitButtonText] = useState('Надіслати');
-  const [formDesign, setFormDesign] = useState({
-    backgroundColor: 'bg-white',
-    textColor: 'text-foreground',
-    fontSize: 'medium',
-    formDisabled: true,
-  });
+  const [isSaving, setIsSaving] = useState(false);
+  const [lastSaved, setLastSaved] = useState(null);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const supabase = createClient();
+
+  // Parse saved data from database
+  const savedFormData = form?.form_data || {};
+  const savedSettings = form?.settings || {};
+  const savedSuccessMessage = form?.success_message || [];
+
+  // Initialize state with saved data
+  const [submitButtonText, setSubmitButtonText] = useState(
+    savedFormData.submitButtonText || 'Надіслати'
+  );
+  const [formDesign, setFormDesign] = useState(
+    savedSettings.formDesign || {
+      backgroundColor: 'bg-white',
+      textColor: 'text-foreground',
+      fontSize: 'medium',
+      formDisabled: true,
+    }
+  );
 
   // Success page blocks state
-  const [successBlocks, setSuccessBlocks] = useState([
-    { id: 'success-heading', type: 'heading', label: 'Дякуємо!', textAlign: 'center' },
-    { id: 'success-text', type: 'paragraph', label: 'Ми отримали вашу заявку.', textAlign: 'center' },
-  ]);
+  const [successBlocks, setSuccessBlocks] = useState(
+    savedSuccessMessage.length > 0 ? savedSuccessMessage : [
+      { id: 'success-heading', type: 'heading', label: 'Дякуємо!', textAlign: 'center' },
+      { id: 'success-text', type: 'paragraph', label: 'Ми отримали вашу заявку.', textAlign: 'center' },
+    ]
+  );
   const [activeSuccessBlockId, setActiveSuccessBlockId] = useState(null);
   const [isEditingSuccessBlock, setIsEditingSuccessBlock] = useState(false);
 
   const {
     blocks,
+    setBlocks,
     activeBlockId,
     activeTab,
     setActiveTab,
@@ -46,7 +66,179 @@ export const Builder = ({ form }) => {
     moveBlock,
     selectBlock,
     clearSelection,
-  } = useBuilder();
+  } = useBuilder(savedFormData.blocks || []);
+
+  // Track if this is the initial load
+  const isInitialLoad = useRef(true);
+  const saveTimeoutRef = useRef(null);
+  const lastSaveDataRef = useRef(null);
+
+  // Debounce with longer delay (3 seconds instead of 1)
+  const debouncedBlocks = useDebounce(blocks, 3000);
+  const debouncedSubmitButtonText = useDebounce(submitButtonText, 3000);
+  const debouncedFormDesign = useDebounce(formDesign, 3000);
+  const debouncedSuccessBlocks = useDebounce(successBlocks, 3000);
+
+  // Core save function that actually saves to database
+  const saveToDatabase = useCallback(async (dataToSave) => {
+    if (!form?.slug || !form?.user_id) return false;
+
+    // Create data snapshot
+    const currentData = dataToSave || {
+      blocks: blocks,
+      submitButtonText: submitButtonText,
+      formDesign: formDesign,
+      successBlocks: successBlocks,
+    };
+
+    // Check if data actually changed (deep comparison)
+    const dataString = JSON.stringify(currentData);
+    if (lastSaveDataRef.current === dataString) {
+      return false; // No changes, skip save
+    }
+
+    setIsSaving(true);
+    setHasUnsavedChanges(false);
+
+    try {
+      const result = await updateFormData(supabase, form.slug, form.user_id, currentData);
+
+      if (result.success) {
+        lastSaveDataRef.current = dataString;
+        setLastSaved(new Date());
+        // console.log('✅ Form saved successfully');
+        return true;
+      } else {
+        // console.error('❌ Error saving form:', result.error);
+        setHasUnsavedChanges(true);
+        return false;
+      }
+    } catch (error) {
+      // console.error('❌ Error saving form:', error);
+      setHasUnsavedChanges(true);
+      return false;
+    } finally {
+      setIsSaving(false);
+    }
+  }, [form?.slug, form?.user_id, blocks, submitButtonText, formDesign, successBlocks, supabase]);
+
+  // Auto-save function (uses debounced values)
+  const autoSave = useCallback(async () => {
+    // Skip saving on initial load
+    if (isInitialLoad.current) {
+      isInitialLoad.current = false;
+      return;
+    }
+
+    const currentData = {
+      blocks: debouncedBlocks,
+      submitButtonText: debouncedSubmitButtonText,
+      formDesign: debouncedFormDesign,
+      successBlocks: debouncedSuccessBlocks,
+    };
+
+    await saveToDatabase(currentData);
+  }, [debouncedBlocks, debouncedSubmitButtonText, debouncedFormDesign, debouncedSuccessBlocks, saveToDatabase]);
+
+  // Manual save function (uses current values, not debounced)
+  const handleManualSave = useCallback(async () => {
+    if (!hasUnsavedChanges || isSaving) return;
+
+    const currentData = {
+      blocks: blocks,
+      submitButtonText: submitButtonText,
+      formDesign: formDesign,
+      successBlocks: successBlocks,
+    };
+
+    const success = await saveToDatabase(currentData);
+    if (success) {
+      console.log('✅ Manual save completed');
+    }
+  }, [hasUnsavedChanges, isSaving, blocks, submitButtonText, formDesign, successBlocks, saveToDatabase]);
+
+  // Trigger auto-save when debounced values change
+  useEffect(() => {
+    autoSave();
+  }, [autoSave]);
+
+  // Mark as having unsaved changes when state changes (immediate feedback)
+  useEffect(() => {
+    if (!isInitialLoad.current) {
+      setHasUnsavedChanges(true);
+    }
+  }, [blocks, submitButtonText, formDesign, successBlocks]);
+
+  // Save on page unload if there are unsaved changes
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasUnsavedChanges]);
+
+  // Save on visibility change (when user switches tabs)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden && hasUnsavedChanges && !isSaving) {
+        handleManualSave();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [hasUnsavedChanges, isSaving, handleManualSave]);
+
+  // Load saved data when form changes
+  useEffect(() => {
+    if (form) {
+      const formData = form.form_data || {};
+      const settings = form.settings || {};
+      const successMessage = form.success_message || [];
+      
+      if (formData.blocks) {
+        setBlocks(formData.blocks);
+      }
+      
+      if (successMessage.length > 0) {
+        setSuccessBlocks(successMessage);
+      }
+      
+      if (formData.submitButtonText) {
+        setSubmitButtonText(formData.submitButtonText);
+      }
+      
+      if (settings.formDesign) {
+        setFormDesign(settings.formDesign);
+      }
+
+      // Initialize last save data reference
+      lastSaveDataRef.current = JSON.stringify({
+        blocks: formData.blocks || [],
+        submitButtonText: formData.submitButtonText || 'Надіслати',
+        formDesign: settings.formDesign || {
+          backgroundColor: 'bg-white',
+          textColor: 'text-foreground',
+          fontSize: 'medium',
+          formDisabled: true,
+        },
+        successBlocks: successMessage.length > 0 ? successMessage : [
+          { id: 'success-heading', type: 'heading', label: 'Дякуємо!', textAlign: 'center' },
+          { id: 'success-text', type: 'paragraph', label: 'Ми отримали вашу заявку.', textAlign: 'center' },
+        ],
+      });
+
+      // Reset initial load flag after data is loaded
+      setTimeout(() => {
+        isInitialLoad.current = false;
+      }, 100);
+    }
+  }, [form, setBlocks]);
 
   const activeBlock = blocks.find((b) => b.id === activeBlockId) || null;
   const activeSuccessBlock = successBlocks.find((b) => b.id === activeSuccessBlockId) || null;
@@ -256,8 +448,11 @@ export const Builder = ({ form }) => {
     <div className="flex flex-col h-screen w-full overflow-hidden">
       <FormHeader
         formName={form?.name}
-        // onFormNameChange={setFormName}
         onTogglePreview={() => setIsPreview((v) => !v)}
+        isSaving={isSaving}
+        lastSaved={lastSaved}
+        hasUnsavedChanges={hasUnsavedChanges}
+        onManualSave={handleManualSave}
       />
 
       <div className="flex flex-1 overflow-hidden">
@@ -307,7 +502,7 @@ export const Builder = ({ form }) => {
             successBlocks={successBlocks}
             submitButtonText={submitButtonText}
             formDesign={formDesign}
-            formName={form?.name}
+            formSlug={form?.slug}
             onClose={() => setIsPreview(false)}
           />
         )}

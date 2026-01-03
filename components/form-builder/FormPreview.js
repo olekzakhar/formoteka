@@ -23,11 +23,10 @@ export const FormPreview = ({
   successBlocks,
   submitButtonText,
   formDesign,
-  formName = 'my-form',
+  formSlug = 'form',
   onClose,
 }) => {
   // Generate a fake form URL for preview
-  const formSlug = formName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
   const formUrl = `${BASE_URL}/${formSlug}`;
   const displayUrl = formUrl.replace(/^https?:\/\//, '');
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -51,10 +50,9 @@ export const FormPreview = ({
     
     // Collect form data from the form element
     const formElement = e.target;
-    
+
     // ========== FORM CONFIGURATION (the form structure itself) ==========
     const formConfiguration = {
-      formName,
       formSlug,
       formDesign,
       submitButtonText,
@@ -74,7 +72,7 @@ export const FormPreview = ({
 
     // Process each block to extract field values
     blocks.forEach((block) => {
-      if (['heading', 'paragraph', 'image', 'spacer'].includes(block.type)) {
+      if (['heading', 'paragraph', 'image', 'spacer', 'divider'].includes(block.type)) {
         return; // Skip non-input blocks
       }
 
@@ -150,7 +148,7 @@ export const FormPreview = ({
     console.log(JSON.stringify(formConfiguration, null, 2));
     
     console.log('\n');
-    
+
     console.log('╔════════════════════════════════════════════════════════════════╗');
     console.log('║           DATABASE SAVE DATA - FORM SUBMISSION                 ║');
     console.log('╠════════════════════════════════════════════════════════════════╣');

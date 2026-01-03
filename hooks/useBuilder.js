@@ -3,8 +3,8 @@
 import { useState, useCallback } from 'react';
 import { getDefaultBlock } from '@/data/block-definitions';
 
-export const useBuilder = () => {
-  const [blocks, setBlocks] = useState([]);
+export const useBuilder = (initialBlocks = []) => {
+  const [blocks, setBlocks] = useState(initialBlocks);
   const [activeBlockId, setActiveBlockId] = useState(null);
   const [activeTab, setActiveTab] = useState('add');
 
@@ -85,6 +85,7 @@ export const useBuilder = () => {
 
   return {
     blocks,
+    setBlocks,
     activeBlockId,
     activeTab,
     setActiveTab,

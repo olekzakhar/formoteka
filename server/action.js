@@ -144,9 +144,10 @@ export async function duplicateForm(supabase, formSlug, userId) {
         // Копіюємо всі інші поля, крім id, created_at, slug, name
         description: originalForm.description,
         settings: originalForm.settings,
-        fields: originalForm.fields,
+        form_data: originalForm.form_data,
+        success_message: originalForm.success_message,
         enabled: originalForm.enabled,
-        // Додайте інші поля, які потрібно скопіювати
+        is_public: originalForm.is_public,
       })
       .select()
       .single()
@@ -164,4 +165,56 @@ export async function duplicateForm(supabase, formSlug, userId) {
   }
   
   return { form: null, error: 'Не вдалося згенерувати унікальну назву' }
+}
+
+
+
+// Оновлення даних форми
+export async function updateFormData(supabase, formSlug, userId, updates) {
+  const updateData = {}
+  
+  // Get current data first to merge properly
+  const { data: currentForm } = await supabase
+    .from('forms')
+    .select('form_data, settings')
+    .eq('slug', formSlug)
+    .eq('user_id', userId)
+    .single()
+
+  if (updates.blocks !== undefined || updates.submitButtonText !== undefined) {
+    updateData.form_data = {
+      ...(currentForm?.form_data || {}),
+    }
+    if (updates.blocks !== undefined) {
+      updateData.form_data.blocks = updates.blocks
+    }
+    if (updates.submitButtonText !== undefined) {
+      updateData.form_data.submitButtonText = updates.submitButtonText
+    }
+  }
+  
+  if (updates.formDesign !== undefined) {
+    updateData.settings = {
+      ...(currentForm?.settings || {}),
+      formDesign: updates.formDesign
+    }
+  }
+  
+  if (updates.successBlocks !== undefined) {
+    updateData.success_message = updates.successBlocks
+  }
+
+  const { data, error } = await supabase
+    .from('forms')
+    .update(updateData)
+    .eq('slug', formSlug)
+    .eq('user_id', userId)
+    .select()
+    .single()
+
+  if (error) {
+    return { success: false, error: error.message }
+  }
+
+  return { success: true, data }
 }

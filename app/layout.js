@@ -6,6 +6,7 @@ import {
   SEO_TITLE,
   SEO_DESCRIPTION
 } from "@/constants";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -56,6 +57,7 @@ export default function RootLayout({ children, modal }) {
       <body className={`${dmSans.variable} antialiased`}>
         {children}
         {modal}
+        <GoogleAnalytics />
       </body>
     </html>
   );

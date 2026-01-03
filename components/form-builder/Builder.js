@@ -1,9 +1,9 @@
-// form-builder/FormBuilder
+// components/form-builder/Builder
 
 'use client'
 
 import { useState, useCallback } from 'react';
-import { useFormBuilder } from '@/hooks/useFormBuilder';
+import { useBuilder } from '@/hooks/useBuilder';
 import { FormCanvas } from './FormCanvas';
 import { SidePanel } from './SidePanel';
 import { FormHeader } from './FormHeader';
@@ -12,7 +12,7 @@ import { MobileSidePanelDrawer } from './MobileSidePanelDrawer';
 import { getDefaultBlock } from '@/data/block-definitions';
 import { useIsMobile } from '@/hooks/use-mobile';
 
-export const FormBuilder = ({ form }) => {
+export const Builder = ({ form }) => {
   const isMobile = useIsMobile();
   const [isPreview, setIsPreview] = useState(false);
   const [showBlockSettings, setShowBlockSettings] = useState(false);
@@ -46,7 +46,7 @@ export const FormBuilder = ({ form }) => {
     moveBlock,
     selectBlock,
     clearSelection,
-  } = useFormBuilder();
+  } = useBuilder();
 
   const activeBlock = blocks.find((b) => b.id === activeBlockId) || null;
   const activeSuccessBlock = successBlocks.find((b) => b.id === activeSuccessBlockId) || null;

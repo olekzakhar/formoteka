@@ -1,9 +1,9 @@
-// hooks/useFormBuilder
+// hooks/useBuilder
 
 import { useState, useCallback } from 'react';
 import { getDefaultBlock } from '@/data/block-definitions';
 
-export const useFormBuilder = () => {
+export const useBuilder = () => {
   const [blocks, setBlocks] = useState([]);
   const [activeBlockId, setActiveBlockId] = useState(null);
   const [activeTab, setActiveTab] = useState('add');

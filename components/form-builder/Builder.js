@@ -70,6 +70,7 @@ export const Builder = ({ form }) => {
 
   // Track if this is the initial load
   const isInitialLoad = useRef(true);
+  const isDataLoaded = useRef(false);
   const saveTimeoutRef = useRef(null);
   const lastSaveDataRef = useRef(null);
 
@@ -125,8 +126,7 @@ export const Builder = ({ form }) => {
   // Auto-save function (uses debounced values)
   const autoSave = useCallback(async () => {
     // Skip saving on initial load
-    if (isInitialLoad.current) {
-      isInitialLoad.current = false;
+    if (isInitialLoad.current || !isDataLoaded.current) {
       return;
     }
 
@@ -164,7 +164,8 @@ export const Builder = ({ form }) => {
 
   // Mark as having unsaved changes when state changes (immediate feedback)
   useEffect(() => {
-    if (!isInitialLoad.current) {
+    // Only track changes after data is loaded and initial load is complete
+    if (!isInitialLoad.current && isDataLoaded.current) {
       setHasUnsavedChanges(true);
     }
   }, [blocks, submitButtonText, formDesign, successBlocks]);
@@ -218,7 +219,7 @@ export const Builder = ({ form }) => {
       }
 
       // Initialize last save data reference
-      lastSaveDataRef.current = JSON.stringify({
+      const initialData = {
         blocks: formData.blocks || [],
         submitButtonText: formData.submitButtonText || 'Надіслати',
         formDesign: settings.formDesign || {
@@ -231,12 +232,15 @@ export const Builder = ({ form }) => {
           { id: 'success-heading', type: 'heading', label: 'Дякуємо!', textAlign: 'center' },
           { id: 'success-text', type: 'paragraph', label: 'Ми отримали вашу заявку.', textAlign: 'center' },
         ],
-      });
+      };
+      
+      lastSaveDataRef.current = JSON.stringify(initialData);
 
-      // Reset initial load flag after data is loaded
+      // Reset flags after data is loaded - use a longer timeout
       setTimeout(() => {
+        isDataLoaded.current = true;
         isInitialLoad.current = false;
-      }, 100);
+      }, 500);
     }
   }, [form, setBlocks]);
 

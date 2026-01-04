@@ -131,7 +131,7 @@ export const SidePanel = ({
           )}
         >
           <Settings className="w-4 h-4" />
-          Параметри
+          <span className="hidden lg:inline-block">Параметри</span>
         </button>
       </div>
 

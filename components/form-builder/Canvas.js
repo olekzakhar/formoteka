@@ -277,7 +277,7 @@ export const Canvas = ({
 
   return (
     <div
-      className="flex-1 h-full overflow-y-auto"
+      className="w-full h-full overflow-y-auto"
       onClick={handleClearAll}
       onDragEnterCapture={(e) => {
         e.preventDefault();
@@ -305,247 +305,252 @@ export const Canvas = ({
         }
       }}
     >
-      <div className="w-full max-w-4xl mx-auto py-6 px-6">
-        {/* Form Container */}
-        <div className={cn('rounded-2xl border-2 border-[#2f3032]/90!', formDesign.backgroundColor)}>
-          <div className="w-full pt-6 pb-10 px-4 sm:px-6">
-            <div className={cn('w-full max-w-[700px] mx-auto', formDesign.textColor, fontSizeClass[formDesign.fontSize])}>
-            {/* Blocks */}
-            <div className="space-y-2">
-              {blocks.length === 0 ? (
-                <div
-                  className={cn(
-                    'border-2 border-dashed rounded-lg p-12 text-center transition-smooth',
-                    dropIndex === 0
-                      ? 'border-primary bg-accent/50'
-                      : 'border-border hover:border-muted-foreground/50'
-                  )}
-                  onDragEnter={(e) => handleDragOver(e, 0)}
-                  onDragOver={(e) => handleDragOver(e, 0)}
-                  onDrop={(e) => handleDrop(e, 0)}
-                >
-                  <div className="w-16 h-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
-                    <Plus className="w-8 h-8 text-muted-foreground" />
-                  </div>
-                  <p className="text-muted-foreground mb-2">Ваша форма порожня</p>
-                  <p className="text-sm text-muted-foreground">Додайте або перетягніть сюди блоки з вкладки &quot;+ Додати&quot;</p>
-                </div>
-              ) : (
-                <div
-                  className="relative"
-                  onDragOver={(e) => {
-                    const bt = getDraggedBlockType(e);
-                    const fromIndex = getDraggedBlockIndex(e);
-                    const fromSuccessIndex = getDraggedSuccessBlockIndex(e);
-                    if (bt && fromIndex === null && fromSuccessIndex === null) {
-                      e.preventDefault();
-                      setIsExternalDragging(true);
-                    }
-                  }}
-                  onDrop={(e) => {
-                    const bt = getDraggedBlockType(e);
-                    const fromIndex = getDraggedBlockIndex(e);
-                    const fromSuccessIndex = getDraggedSuccessBlockIndex(e);
-                    if (bt && fromIndex === null && fromSuccessIndex === null) {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      onAddBlockAt(bt, dropIndex ?? blocks.length);
-                      setDropIndex(null);
-                      setIsExternalDragging(false);
-                    }
-                  }}
-                >
-                  <DropZone
-                    active={dropIndex === 0}
-                    isDragging={isDraggingBlocks}
+      <div className="flex gap-1">
+        <div className="w-full max-w-4xl mx-auto py-6 px-3 sm:px-6">
+          {/* Form Container */}
+          <div className={cn('rounded-2xl border-2 border-[#2f3032]/90!', formDesign.backgroundColor)}>
+            <div className="w-full pt-6 pb-10 px-4 sm:px-6">
+              <div className={cn('w-full max-w-[700px] mx-auto', formDesign.textColor, fontSizeClass[formDesign.fontSize])}>
+              {/* Blocks */}
+              <div className="space-y-2">
+                {blocks.length === 0 ? (
+                  <div
+                    className={cn(
+                      'border-2 border-dashed rounded-lg p-12 text-center transition-smooth',
+                      dropIndex === 0
+                        ? 'border-primary bg-accent/50'
+                        : 'border-border hover:border-muted-foreground/50'
+                    )}
+                    onDragEnter={(e) => handleDragOver(e, 0)}
                     onDragOver={(e) => handleDragOver(e, 0)}
-                    onDragLeave={handleDragLeave}
                     onDrop={(e) => handleDrop(e, 0)}
-                  />
-
-                  <div className="space-y-2">
-                    {blocks.map((block, index) => (
-                      <div key={block.id} className={cn(draggedBlockIndex === index ? 'opacity-50' : '')}>
-                        <BlockItem
-                          block={block}
-                          isActive={activeBlockId === block.id}
-                          onSelect={() => {
-                            onSelectSuccessBlock(null);
-                            onSelectBlock(block.id);
-                          }}
-                          onDelete={() => onDeleteBlock(block.id)}
-                          onDuplicate={() => onDuplicateBlock(block.id)}
-                          onOpenSettings={() => onOpenSettings(block.id)}
-                          onAddBlock={onOpenAddBlock}
-                          onUpdateBlock={(updates) => onUpdateBlock(block.id, updates)}
-                          dragHandleProps={{
-                            draggable: true,
-                            onDragStart: (e) => handleBlockDragStart(e, index),
-                            onDragEnd: handleBlockDragEnd,
-                          }}
-                        />
-
-                        {/* Drop zone after each block (no layout gap; hitbox appears only while dragging) */}
-                        <DropZone
-                          active={dropIndex === index + 1}
-                          isDragging={isDraggingBlocks}
-                          onDragOver={(e) => handleDragOver(e, index + 1)}
-                          onDragLeave={handleDragLeave}
-                          onDrop={(e) => handleDrop(e, index + 1)}
-                        />
-                      </div>
-                    ))}
+                  >
+                    <div className="w-16 h-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
+                      <Plus className="w-8 h-8 text-muted-foreground" />
+                    </div>
+                    <p className="text-muted-foreground mb-2">Ваша форма порожня</p>
+                    <p className="text-sm text-muted-foreground">Додайте або перетягніть сюди блоки з вкладки &quot;+ Додати&quot;</p>
                   </div>
-                </div>
-              )}
-            </div>
+                ) : (
+                  <div
+                    className="relative"
+                    onDragOver={(e) => {
+                      const bt = getDraggedBlockType(e);
+                      const fromIndex = getDraggedBlockIndex(e);
+                      const fromSuccessIndex = getDraggedSuccessBlockIndex(e);
+                      if (bt && fromIndex === null && fromSuccessIndex === null) {
+                        e.preventDefault();
+                        setIsExternalDragging(true);
+                      }
+                    }}
+                    onDrop={(e) => {
+                      const bt = getDraggedBlockType(e);
+                      const fromIndex = getDraggedBlockIndex(e);
+                      const fromSuccessIndex = getDraggedSuccessBlockIndex(e);
+                      if (bt && fromIndex === null && fromSuccessIndex === null) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onAddBlockAt(bt, dropIndex ?? blocks.length);
+                        setDropIndex(null);
+                        setIsExternalDragging(false);
+                      }
+                    }}
+                  >
+                    <DropZone
+                      active={dropIndex === 0}
+                      isDragging={isDraggingBlocks}
+                      onDragOver={(e) => handleDragOver(e, 0)}
+                      onDragLeave={handleDragLeave}
+                      onDrop={(e) => handleDrop(e, 0)}
+                    />
 
-            {/* Submit Button - Fixed at end */}
-            <div className="mt-6 group/submit relative inline-block">
-              {/* Settings icon on left */}
-              <div
-                className={cn(
-                  'absolute -left-9 top-1/2 -translate-y-1/2 z-20',
-                  'opacity-0 transition-smooth group-hover/submit:opacity-100'
+                    <div className="space-y-2">
+                      {blocks.map((block, index) => (
+                        <div key={block.id} className={cn(draggedBlockIndex === index ? 'opacity-50' : '')}>
+                          <BlockItem
+                            block={block}
+                            isActive={activeBlockId === block.id}
+                            onSelect={() => {
+                              onSelectSuccessBlock(null);
+                              onSelectBlock(block.id);
+                            }}
+                            onDelete={() => onDeleteBlock(block.id)}
+                            onDuplicate={() => onDuplicateBlock(block.id)}
+                            onOpenSettings={() => onOpenSettings(block.id)}
+                            onAddBlock={onOpenAddBlock}
+                            onUpdateBlock={(updates) => onUpdateBlock(block.id, updates)}
+                            dragHandleProps={{
+                              draggable: true,
+                              onDragStart: (e) => handleBlockDragStart(e, index),
+                              onDragEnd: handleBlockDragEnd,
+                            }}
+                          />
+
+                          {/* Drop zone after each block (no layout gap; hitbox appears only while dragging) */}
+                          <DropZone
+                            active={dropIndex === index + 1}
+                            isDragging={isDraggingBlocks}
+                            onDragOver={(e) => handleDragOver(e, index + 1)}
+                            onDragLeave={handleDragLeave}
+                            onDrop={(e) => handleDrop(e, index + 1)}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 )}
-              >
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSubmitButtonClick();
-                  }}
-                  className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-accent-foreground transition-smooth"
-                  title="Button settings"
-                >
-                  <SettingsIcon className="w-4 h-4" />
-                </button>
               </div>
-              {/* Button with hover/selected border */}
-              <div
-                className={cn(
-                  'rounded-lg transition-smooth',
-                  isSubmitButtonSelected 
-                    ? 'ring-2 ring-primary ring-offset-2' 
-                    : 'ring-0 group-hover/submit:ring-2 group-hover/submit:ring-border group-hover/submit:ring-offset-2'
-                )}
-              >
-                <Button
-                  variant="black"
-                  size="black"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSubmitButtonClick();
-                  }}
-                >
-                  {submitButtonText}
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Success Page Section */}
-        <div className={cn('mt-8 rounded-2xl border border-[#2f3032]/[0.05]! shadow-sm', formDesign.backgroundColor)}>
-          <div className="py-8">
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 rounded-full bg-accent mx-auto mb-4 flex items-center justify-center">
-                <CheckCircle className="w-8 h-8 text-primary" />
-              </div>
-            </div>
-
-            {/* Success Page Blocks */}
-            <div className="space-y-2 w-full max-w-[700px] mx-auto px-4 sm:px-6">
-              {successBlocks.length === 0 ? (
+              {/* Submit Button - Fixed at end */}
+              <div className="mt-6 group/submit relative inline-block">
+                {/* Settings icon on left */}
                 <div
                   className={cn(
-                    'border-2 border-dashed rounded-lg p-8 text-center transition-smooth',
-                    successDropIndex === 0
-                      ? 'border-primary bg-accent/50'
-                      : 'border-border hover:border-muted-foreground/50'
+                    'absolute -left-9 top-1/2 -translate-y-1/2 z-20',
+                    'opacity-0 transition-smooth group-hover/submit:opacity-100'
                   )}
-                  onDragEnter={(e) => handleSuccessDragOver(e, 0)}
-                  onDragOver={(e) => handleSuccessDragOver(e, 0)}
-                  onDrop={(e) => handleSuccessDrop(e, 0)}
                 >
-                  <p className="text-muted-foreground mb-2">Сторінка успіху порожня</p>
-                  <p className="text-sm text-muted-foreground">Додайте або перетягніть сюди блоки з вкладки &quot;+ Додати&quot;</p>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSubmitButtonClick();
+                    }}
+                    className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-accent-foreground transition-smooth"
+                    title="Button settings"
+                  >
+                    <SettingsIcon className="w-4 h-4" />
+                  </button>
                 </div>
-               ) : (
-                 <div
-                   className="relative"
-                   onDragOver={(e) => {
-                     const bt = getDraggedBlockType(e);
-                     const fromIndex = getDraggedBlockIndex(e);
-                     const fromSuccessIndex = getDraggedSuccessBlockIndex(e);
-                     if (bt && fromIndex === null && fromSuccessIndex === null) {
-                       e.preventDefault();
-                       setIsExternalDragging(true);
-                     }
-                   }}
-                   onDrop={(e) => {
-                     const bt = getDraggedBlockType(e);
-                     const fromIndex = getDraggedBlockIndex(e);
-                     const fromSuccessIndex = getDraggedSuccessBlockIndex(e);
-                     if (bt && fromIndex === null && fromSuccessIndex === null) {
-                       e.preventDefault();
-                       e.stopPropagation();
-                       onAddSuccessBlockAt(bt, successDropIndex ?? successBlocks.length);
-                       setSuccessDropIndex(null);
-                       setIsExternalDragging(false);
-                     }
-                   }}
-                 >
-                  <DropZone
-                    active={successDropIndex === 0}
-                    isDragging={isDraggingSuccessBlocks}
+                {/* Button with hover/selected border */}
+                <div
+                  className={cn(
+                    'rounded-lg transition-smooth',
+                    isSubmitButtonSelected 
+                      ? 'ring-2 ring-primary ring-offset-2' 
+                      : 'ring-0 group-hover/submit:ring-2 group-hover/submit:ring-border group-hover/submit:ring-offset-2'
+                  )}
+                >
+                  <Button
+                    variant="black"
+                    size="black"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSubmitButtonClick();
+                    }}
+                  >
+                    {submitButtonText}
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Success Page Section */}
+          <div className={cn('mt-8 rounded-2xl border border-[#2f3032]/[0.05]! shadow-sm', formDesign.backgroundColor)}>
+            <div className="py-8">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 rounded-full bg-accent mx-auto mb-4 flex items-center justify-center">
+                  <CheckCircle className="w-8 h-8 text-primary" />
+                </div>
+              </div>
+
+              {/* Success Page Blocks */}
+              <div className="space-y-2 w-full max-w-[700px] mx-auto px-4 sm:px-6">
+                {successBlocks.length === 0 ? (
+                  <div
+                    className={cn(
+                      'border-2 border-dashed rounded-lg p-8 text-center transition-smooth',
+                      successDropIndex === 0
+                        ? 'border-primary bg-accent/50'
+                        : 'border-border hover:border-muted-foreground/50'
+                    )}
+                    onDragEnter={(e) => handleSuccessDragOver(e, 0)}
                     onDragOver={(e) => handleSuccessDragOver(e, 0)}
-                    onDragLeave={handleSuccessDragLeave}
                     onDrop={(e) => handleSuccessDrop(e, 0)}
-                  />
-
-                  <div className="space-y-2">
-                    {successBlocks.map((block, index) => (
-                      <div
-                        key={block.id}
-                        className={cn(draggedSuccessBlockIndex === index ? 'opacity-50' : '')}
-                      >
-                        <BlockItem
-                          block={block}
-                          isActive={activeSuccessBlockId === block.id}
-                          onSelect={() => {
-                            onSelectBlock(null);
-                            onSelectSuccessBlock(block.id);
-                          }}
-                          onDelete={() => onDeleteSuccessBlock(block.id)}
-                          onDuplicate={() => onDuplicateSuccessBlock(block.id)}
-                          onOpenSettings={() => onOpenSuccessSettings(block.id)}
-                          onAddBlock={onOpenAddSuccessBlock}
-                          onUpdateBlock={(updates) => onUpdateSuccessBlock(block.id, updates)}
-                          dragHandleProps={{
-                            draggable: true,
-                            onDragStart: (e) => handleSuccessBlockDragStart(e, index),
-                            onDragEnd: handleSuccessBlockDragEnd,
-                          }}
-                        />
-
-                        <DropZone
-                          active={successDropIndex === index + 1}
-                          isDragging={isDraggingSuccessBlocks}
-                          onDragOver={(e) => handleSuccessDragOver(e, index + 1)}
-                          onDragLeave={handleSuccessDragLeave}
-                          onDrop={(e) => handleSuccessDrop(e, index + 1)}
-                        />
-                      </div>
-                    ))}
+                  >
+                    <p className="text-muted-foreground mb-2">Сторінка успіху порожня</p>
+                    <p className="text-sm text-muted-foreground">Додайте або перетягніть сюди блоки з вкладки &quot;+ Додати&quot;</p>
                   </div>
-                </div>
-              )}
+                ) : (
+                  <div
+                    className="relative"
+                    onDragOver={(e) => {
+                      const bt = getDraggedBlockType(e);
+                      const fromIndex = getDraggedBlockIndex(e);
+                      const fromSuccessIndex = getDraggedSuccessBlockIndex(e);
+                      if (bt && fromIndex === null && fromSuccessIndex === null) {
+                        e.preventDefault();
+                        setIsExternalDragging(true);
+                      }
+                    }}
+                    onDrop={(e) => {
+                      const bt = getDraggedBlockType(e);
+                      const fromIndex = getDraggedBlockIndex(e);
+                      const fromSuccessIndex = getDraggedSuccessBlockIndex(e);
+                      if (bt && fromIndex === null && fromSuccessIndex === null) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onAddSuccessBlockAt(bt, successDropIndex ?? successBlocks.length);
+                        setSuccessDropIndex(null);
+                        setIsExternalDragging(false);
+                      }
+                    }}
+                  >
+                    <DropZone
+                      active={successDropIndex === 0}
+                      isDragging={isDraggingSuccessBlocks}
+                      onDragOver={(e) => handleSuccessDragOver(e, 0)}
+                      onDragLeave={handleSuccessDragLeave}
+                      onDrop={(e) => handleSuccessDrop(e, 0)}
+                    />
+
+                    <div className="space-y-2">
+                      {successBlocks.map((block, index) => (
+                        <div
+                          key={block.id}
+                          className={cn(draggedSuccessBlockIndex === index ? 'opacity-50' : '')}
+                        >
+                          <BlockItem
+                            block={block}
+                            isActive={activeSuccessBlockId === block.id}
+                            onSelect={() => {
+                              onSelectBlock(null);
+                              onSelectSuccessBlock(block.id);
+                            }}
+                            onDelete={() => onDeleteSuccessBlock(block.id)}
+                            onDuplicate={() => onDuplicateSuccessBlock(block.id)}
+                            onOpenSettings={() => onOpenSuccessSettings(block.id)}
+                            onAddBlock={onOpenAddSuccessBlock}
+                            onUpdateBlock={(updates) => onUpdateSuccessBlock(block.id, updates)}
+                            dragHandleProps={{
+                              draggable: true,
+                              onDragStart: (e) => handleSuccessBlockDragStart(e, index),
+                              onDragEnd: handleSuccessBlockDragEnd,
+                            }}
+                          />
+
+                          <DropZone
+                            active={successDropIndex === index + 1}
+                            isDragging={isDraggingSuccessBlocks}
+                            onDragOver={(e) => handleSuccessDragOver(e, index + 1)}
+                            onDragLeave={handleSuccessDragLeave}
+                            onDrop={(e) => handleSuccessDrop(e, index + 1)}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
+        {/* Це пустий блок щоб блок канвас залишався по центру а це імітує sidepanel */}
+        {/* а 4px це додатковий відступ щоб канвас не впирався в sidepanel на меншій ширині */}
+        <div className="hidden md:block w-full max-w-[calc(290px-4px)] lg:max-w-[calc(370px-4px)]"></div>
       </div>
     </div>
-  );
-};
+  )
+}

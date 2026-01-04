@@ -459,7 +459,8 @@ export const Builder = ({ form }) => {
         onManualSave={handleManualSave}
       />
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="relative flex-1 overflow-hidden">
+        {/* Canvas - full width with responsive padding to account for floating panel */}
         <Canvas
           blocks={blocks}
           activeBlockId={activeBlockId}
@@ -489,8 +490,10 @@ export const Builder = ({ form }) => {
         />
 
         {/* Desktop side panel */}
-        <div className="hidden md:block">
-          {sidePanelContent}
+        <div className="hidden md:block absolute top-0 right-0 h-full z-10 pointer-events-none">
+          <div className="pointer-events-auto h-full">
+            {sidePanelContent}
+          </div>
         </div>
 
         {/* Mobile side panel drawer */}

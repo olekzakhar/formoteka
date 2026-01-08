@@ -20,7 +20,7 @@ export const getForm = cache(fetchForm)
 async function fetchForms(supabase, userId) {
   const { data: forms, error } = await supabase
     .from('forms')
-    .select()
+    .select('id, name, slug, order_count, last_order_at')
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
 

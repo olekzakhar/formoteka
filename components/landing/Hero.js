@@ -1,5 +1,6 @@
 // components/landing/Hero
 
+import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button-2";
 import { ArrowRight, CheckCircle2, Package, ShoppingBag } from "lucide-react";
@@ -40,9 +41,11 @@ const HeroSection = () => {
 
             {/* CTAs */}
             <div className="animate-fade-up-delay-3 flex flex-col sm:flex-row items-start gap-3">
-              <Button size="lg" className="group font-semibold px-6">
-                Створити форму
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              <Button asChild size="lg" className="group font-semibold px-6">
+                <Link href="/forms" className="flex">
+                  Створити форму
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                </Link>
               </Button>
               <Button variant="ghost" size="lg" className="text-muted-foreground">
                 Як це працює?
@@ -59,10 +62,10 @@ const HeroSection = () => {
                 <CheckCircle2 className="w-4 h-4 text-primary" />
                 <span>5 хвилин на створення</span>
               </div>
-              <div className="flex items-center gap-1.5">
+              {/* <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-primary" />
-                <span>Instagram, Telegram</span>
-              </div>
+                <span>Instagram Telegram</span>
+              </div> */}
             </div>
           </div>
 

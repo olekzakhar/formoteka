@@ -42,12 +42,12 @@ const Header = ({ isUser=false }) => {
           Спробувати
         </Button> */}
         {isUser
-          ? <Button className="rounded-full" size="sm">
+          ? <Button asChild className="rounded-full" size="sm">
               <Link href="/forms">
                 Керувати формами
               </Link>
             </Button>
-          : <Button className="rounded-full" size="sm">
+          : <Button asChild className="rounded-full" size="sm">
               <Link href="/forms">
                 Створити форму
               </Link>

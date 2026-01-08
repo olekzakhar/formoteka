@@ -329,7 +329,7 @@ export const Canvas = ({
                       <Plus className="w-8 h-8 text-muted-foreground" />
                     </div>
                     <p className="text-muted-foreground mb-2">Ваша форма порожня</p>
-                    <p className="text-sm text-muted-foreground">Додайте або перетягніть сюди блоки з вкладки &quot;+ Додати&quot;</p>
+                    <p className="text-sm text-muted-foreground">Додайте або перетягніть сюди блоки з вкладки &quot;Додати&quot;</p>
                   </div>
                 ) : (
                   <div
@@ -471,7 +471,7 @@ export const Canvas = ({
                     onDrop={(e) => handleSuccessDrop(e, 0)}
                   >
                     <p className="text-muted-foreground mb-2">Сторінка успіху порожня</p>
-                    <p className="text-sm text-muted-foreground">Додайте або перетягніть сюди блоки з вкладки &quot;+ Додати&quot;</p>
+                    <p className="text-sm text-muted-foreground">Додайте або перетягніть сюди блоки з вкладки &quot;Додати&quot;</p>
                   </div>
                 ) : (
                   <div

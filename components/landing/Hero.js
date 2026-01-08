@@ -28,15 +28,14 @@ const HeroSection = () => {
 
             {/* Main headline */}
             <h1 className="animate-fade-up-delay-1 text-4xl md:text-5xl lg:text-[3.25rem] font-extrabold text-foreground leading-[1.1] mb-5 tracking-tight">
-              Створюйте сторінку замовленя
+              Не втрачайте
               <br />
-              <span className="text-gradient">за хвилини, а не дні</span>
+              <span className="text-gradient">клієнтів у чатах</span>
             </h1>
 
             {/* Subheadline */}
             <p className="animate-fade-up-delay-2 text-base md:text-lg text-muted-foreground max-w-md mb-8 leading-relaxed">
-              Formoteka перетворює переписки на чіткі заявки. 
-              Клієнт заповнює форму — ти отримуєш готове замовлення.
+              Перетворюйте переписки з Instagram, Tiktok і месенджерів на чіткі замовлення, готові до оплати.
             </p>
 
             {/* CTAs */}

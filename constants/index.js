@@ -60,6 +60,6 @@ export const SIGN_UP_PATH = '/register'
 export const SEO_TITLE = "Formoteka — онлайн форма замовлення для Instagram та малого бізнесу";
 export const SEO_DESCRIPTION = "Створіть онлайн форму замовлення за 5 хвилин. Приймайте заявки з Instagram, Telegram і TikTok без хаосу в повідомленнях. Безкоштовно.";
 
-export const OG_TITLE = 'Jatke - WhatsApp Catalog for Small Business'
-export const OG_DESCRIPTION = 'Create a WhatsApp Catalog and online store for small businesses using Google Sheets. Easily grow your small ecommerce business with Jatke.'
+export const OG_TITLE = 'Formoteka — онлайн форма замовлення для Instagram та малого бізнесу'
+export const OG_DESCRIPTION = 'Створіть онлайн форму замовлення за 5 хвилин. Приймайте заявки з Instagram, Telegram і TikTok без хаосу в повідомленнях. Безкоштовно.'
 export const OG_IMAGE_URL = ''

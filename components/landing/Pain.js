@@ -6,7 +6,7 @@ const painPoints = [
   {
     icon: MessageCircle,
     title: "«Напишіть у директ»",
-    description: "І починається: директ, коментарі, Telegram, Viber. Клієнти скрізь, а ти — розриваєшся.",
+    description: "І починається: директ, коментарі, Instagram, Tiktok, Telegram, Viber. Клієнти скрізь, а ти — розриваєшся.",
   },
   {
     icon: Clock,

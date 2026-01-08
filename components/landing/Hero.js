@@ -17,9 +17,9 @@ const HeroSection = () => {
       <div className="absolute -bottom-20 -left-40 w-[400px] h-[400px] bg-primary/3 rounded-full blur-3xl" />
       
       <div className="container relative">
-        <div className="grid lg:grid-cols-2 gap-2 lg:gap-4 items-center">
+        <div className="grid lg:grid-cols-2 gap-2 lg:gap-4">
           {/* Left side - Content */}
-          <div className="max-w-xl">
+          <div className="max-w-xl pt-[26px]">
             {/* Badge */}
             <div className="animate-fade-up inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-6 tracking-wide uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />

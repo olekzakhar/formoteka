@@ -101,14 +101,14 @@ export default function FormCard({ form, userId }) {
     <div
       className="relative pl-8 pr-4 py-5 block bg-card rounded-lg hover:bg-card/50 hover:ring-1 hover:ring-block-hover/30
         shadow-sm hover:shadow-md transition-smooth">
-      <div className="flex justify-between items-center">
-        <div className="flex-1">
+      <div className="flex justify-between items-center min-w-0">
+        <div className="flex-1 min-w-0">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
                   href={`${BASE_URL}${FORMS_PATH}/${form?.slug}`}
-                  className="-mb-0.5 text-xl font-medium hover:opacity-80 transition-smooth"
+                  className="-mb-0.5 pr-2.5 block truncate text-xl font-medium hover:opacity-80 transition-smooth"
                 >
                   {form?.name}
                 </Link>
@@ -178,7 +178,7 @@ export default function FormCard({ form, userId }) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Переглянути
+              <span className="hidden sm:inline-block">Переглянути</span>
               <ExternalLink className="w-[13px] h-[13px]" />
             </Link>
           </Button>

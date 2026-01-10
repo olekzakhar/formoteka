@@ -1,31 +1,31 @@
-// app/login/page
+
+// app/(Auth)/reset-password/page
 
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
-import { FORMS_PATH } from '@/constants'
 
 // import MinHeader from '@/components/MinHeader'
-import LoginForm from '@/app/(Auth)/login/form'
+import ResetPasswordForm from './form'
 
 export const metadata = {
-  title: 'Login'
+  title: 'Reset password'
 }
 
-export default async function Login() {
+export default async function ResetPassword({ searchParams }) {
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  if (user) {
-    redirect(FORMS_PATH)
+  if (user && searchParams?.type !== 'recovery') {
+    redirect('/private')
   }
 
   return (
     <>
       {/* <MinHeader /> */}
       <main>
-        <LoginForm />
+        <ResetPasswordForm />
       </main>
-    </>
+    </> 
   )
 }

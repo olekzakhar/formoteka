@@ -44,9 +44,11 @@ export default function FormsCreateButton({ userId }) {
       variant="black"
       size="sm-black"
       onClick={handleCreateForm}
+      loading={isCreating}
       disabled={isCreating}
     >
-      {isCreating ? 'Створення...' : 'Створити форму'}
+      {/* {isCreating ? 'Створення...' : 'Створити форму'} */}
+      Створити форму
     </Button>
   )
 }

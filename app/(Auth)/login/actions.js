@@ -10,7 +10,7 @@
 // import { createClient } from '@/utils/supabase/server'
 
 // export async function signIn(formData) {
-//   const supabase = createClient()
+//   const supabase = await createClient()
 
 //   const { error } = await supabase.auth.signInWithPassword(formData)
 
@@ -25,7 +25,7 @@
 // }
 
 // export async function signUp(formData) {
-//   const supabase = createClient()
+//   const supabase = await createClient()
 
 //   // type-casting here for convenience
 //   // in practice, you should validate your inputs
@@ -53,7 +53,7 @@
 // }
 
 // export async function signInGoogle() {
-//   const supabase = createClient()
+//   const supabase = await createClient()
 
 //   const { data, error } = await supabase.auth.signInWithOAuth({
 //     provider: 'google',
@@ -76,7 +76,7 @@
 // }
 
 // export async function signOut() {
-//   const supabase = createClient()
+//   const supabase = await createClient()
 
 //   const { error } = await supabase.auth.signOut()
 
@@ -101,7 +101,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 import { FORMS_PATH } from '@/constants'
 
-export async function signIn(formData) {
+export async function login(formData) {
   const supabase = await createClient()
   const { error } = await supabase.auth.signInWithPassword(formData)
 
@@ -111,7 +111,7 @@ export async function signIn(formData) {
   redirect(FORMS_PATH)
 }
 
-export async function signUp(formData) {
+export async function register(formData) {
   const supabase = await createClient()
   const { error } = await supabase.auth.signUp({
     ...formData,

@@ -1,17 +1,16 @@
-// app/login/page
+// app/(Auth)/register/page
 
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 import { FORMS_PATH } from '@/constants'
 
-// import MinHeader from '@/components/MinHeader'
 import LoginForm from '@/app/(Auth)/login/form'
 
 export const metadata = {
-  title: 'Login'
+  title: 'Register'
 }
 
-export default async function Login() {
+export default async function Register() {
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
@@ -24,7 +23,7 @@ export default async function Login() {
     <>
       {/* <MinHeader /> */}
       <main>
-        <LoginForm />
+        <LoginForm loginForm={false} />
       </main>
     </>
   )

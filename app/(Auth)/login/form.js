@@ -12,22 +12,19 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 // import FormError from '@/components/form/Error'
 
-import { signIn, signUp } from '@/app/(Auth)/login/actions'
+import { login, register } from '@/app/(Auth)/login/actions'
 import GoogleButton from '@/components/ui/googleButton'
-// import { toast } from 'sonner'
+import { toast } from 'sonner'
 import { FORMS_PATH, SIGN_UP_PATH, SIGN_IN_PATH } from '@/constants'
 
-// import FormSent from '@/app/(Auth)/reset-password/form/sent'
+import FormSent from '@/app/(Auth)/reset-password/form/sent'
 
-export default function SignInForm({ signInForm=true }) {
+export default function LoginForm({ loginForm=true }) {
   const supabase = createClient()
   const router = useRouter()
-
-  // const [state, action, pending] = useActionState(signIn)
-
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState(null)
-  const [isLogin, setIsLogin] = useState(signInForm)
+  const [isLogin, setIsLogin] = useState(loginForm)
   const [success, setSuccess] = useState(false)
 
   useEffect(() => {
@@ -55,29 +52,18 @@ export default function SignInForm({ signInForm=true }) {
   const onSubmit = async (formData) => {
     setLoading(true)
 
-    // const response = isLogin
-    //   ? await signIn(formData)
-    //   : await signUp(formData)
-
-    // if (response?.error) {
-    //   toast.error('Error. Invalid email or password')
-    //   setLoading(false)
-    // }
-
     if (isLogin) {
-      const response = await signIn(formData)
-
-      // console.log('Log In Error: ', response.error, response.status)
+      const response = await login(formData)
 
       if (response?.error) {
-        // toast.error('Error. Invalid email or password')
+        toast.error('Помилка. Неправильний email або пароль')
         setLoading(false)
       }
     } else {
       const response = await signUp(formData)
 
       if (response?.error) {
-        // toast.error('Error. Try later')
+        toast.error('Помилка. Спробуйте пізніше')
         setLoading(false)
       } else {
         setEmail(formData.email)
@@ -92,9 +78,9 @@ export default function SignInForm({ signInForm=true }) {
       email
     })
 
-    // error
-    //   ? toast.error('Error. No verification link sent')
-    //   : toast.success('We re-sent you a verification link')
+    error
+      ? toast.error('Error. No verification link sent')
+      : toast.success('We re-sent you a verification link')
   }
 
   const handleBackLinkSuccess = () => {
@@ -105,16 +91,12 @@ export default function SignInForm({ signInForm=true }) {
   }
   
   return (
-    // bg-neutral-300/30
-    // bg-[#F1F1EF]
     <>
       {success
-        // ? <FormSent
-        //     resendEmail={handleResendSignUpEmail}
-        //     backLink={handleBackLinkSuccess}
-        //   />
-          // absolute top-[20%] left-1/2 -translate-x-1/2
-        ? <div>Form sent</div>
+        ? <FormSent
+            resendEmail={handleResendSignUpEmail}
+            backLink={handleBackLinkSuccess}
+          />
         : <div className="px-4">
             <div className="mt-8 mx-auto max-w-[402px] bg-white border border-[#E8E8E8] rounded-2xl">
               <form
@@ -192,13 +174,6 @@ export default function SignInForm({ signInForm=true }) {
                 <hr className="mt-4 border-[#E8E8E8]" />
 
                 <GoogleButton />
-
-                {/* <div className="my-3 text-center text-sm">or</div> */}
-
-
-                {/* <p className="mt-8 text-center text-sm text-zinc-600">
-                  By clicking continue, you agree to our <a className="underline underline-offset-4 hover:text-zinc-800" href="https://rapidforms.co/terms-of-service"> Terms of Service</a> and <a className="underline underline-offset-4 hover:text-zinc-800" href="https://rapidforms.co/privacy-policy">Privacy Policy</a>.
-                </p> */}
 
                 {isLogin
                   ? <p className="mt-8 text-center text-sm text-zinc-600">

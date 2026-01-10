@@ -1,3 +1,5 @@
+// constants/index
+
 export const fieldTypes = [
   {
     value: 'text',

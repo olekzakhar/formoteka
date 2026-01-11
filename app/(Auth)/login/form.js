@@ -10,7 +10,7 @@ import { createClient } from '@/utils/supabase/client'
 
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-// import FormError from '@/components/form/Error'
+import FormError from '@/components/form/Error'
 
 import { login, register } from '@/app/(Auth)/login/actions'
 import GoogleButton from '@/components/ui/googleButton'
@@ -120,7 +120,7 @@ export default function LoginForm({ loginForm=true }) {
                         }
                       })}
                       placeholder="Електронна пошта" />
-                    {/* <FormError field={errors?.email} /> */}
+                    <FormError field={errors?.email} />
 
                     <Input
                       type="password"
@@ -136,7 +136,7 @@ export default function LoginForm({ loginForm=true }) {
                         }
                       })}
                       placeholder="Пароль" />
-                      {/* <FormError field={errors?.password} /> */}
+                      <FormError field={errors?.password} />
                   </div>
 
                   {isLogin &&
@@ -155,7 +155,8 @@ export default function LoginForm({ loginForm=true }) {
                         type="submit"
                         variant="black"
                         // full
-                        // loading={loading}
+                        loading={loading}
+                        disabled={loading}
                       >
                         Увійти
                       </Button>
@@ -164,7 +165,8 @@ export default function LoginForm({ loginForm=true }) {
                         variant="black"
                         // full
                         className="mt-1"
-                        // loading={loading}
+                        loading={loading}
+                        disabled={loading}
                       >
                         Створити акаунт
                       </Button>

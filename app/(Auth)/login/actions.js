@@ -24,7 +24,7 @@
 //   redirect('/dashboard')
 // }
 
-// export async function signUp(formData) {
+// export async function register(formData) {
 //   const supabase = await createClient()
 
 //   // type-casting here for convenience

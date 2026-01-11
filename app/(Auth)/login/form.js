@@ -2,7 +2,7 @@
 
 'use client'
 
-import { useState, useActionState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
@@ -28,14 +28,17 @@ export default function LoginForm({ loginForm=true }) {
   const [success, setSuccess] = useState(false)
 
   useEffect(() => {
-    supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event == 'SIGNED_IN')
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN') {
         router.push(FORMS_PATH)
+      }
     })
-  })
+
+    return () => subscription.unsubscribe()
+  }, [supabase, router])
 
   const {
-    register,
+    register: registerField,
     unregister,
     formState: {
       errors,
@@ -60,7 +63,7 @@ export default function LoginForm({ loginForm=true }) {
         setLoading(false)
       }
     } else {
-      const response = await signUp(formData)
+      const response = await register(formData)
 
       if (response?.error) {
         toast.error('Помилка. Спробуйте пізніше')
@@ -112,7 +115,7 @@ export default function LoginForm({ loginForm=true }) {
                   <div className="flex flex-col gap-2">
                     <Input
                       type="email"
-                      {...register('email', {
+                      {...registerField('email', {
                         required: `Електронна адреса обовʼязкова`,
                         pattern: {
                           value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
@@ -124,7 +127,7 @@ export default function LoginForm({ loginForm=true }) {
 
                     <Input
                       type="password"
-                      {...register('password', {
+                      {...registerField('password', {
                         required: `Пароль обовʼязковий`,
                         minLength: {
                           value: 6,
@@ -154,7 +157,6 @@ export default function LoginForm({ loginForm=true }) {
                     ? <Button
                         type="submit"
                         variant="black"
-                        // full
                         loading={loading}
                         disabled={loading}
                       >
@@ -163,7 +165,6 @@ export default function LoginForm({ loginForm=true }) {
                     : <Button
                         type="submit"
                         variant="black"
-                        // full
                         className="mt-1"
                         loading={loading}
                         disabled={loading}

@@ -24,7 +24,7 @@ export default function BackLink({ path, pathName, className=undefined, backLink
               className
             )}>
             {arrowLeftIcon}
-            Back to {pathName}
+            Назад до {pathName}
           </Link>
       }
     </>

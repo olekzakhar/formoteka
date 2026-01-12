@@ -31,36 +31,36 @@ export default function FormUpdate({ formAction, loading = false }) {
           onSubmit={handleSubmit(formAction)}
           className="p-6 max-[400px]:px-4 flex flex-col flex-shrink-0 max-w-[400px]"
         >
-          <h1 className="text-2xl">Reset your password</h1>
-          <p className="mt-1 text-sm text-zinc-500">Enter your new password</p>
+          <h1 className="text-2xl">Скинути пароль</h1>
+          <p className="mt-1 text-sm text-zinc-500">Введіть новий пароль</p>
 
           <div className="mt-6">
             <div className="flex flex-col gap-2">
               <Input
                 type="password"
                 {...register('password', {
-                  required: 'Password is required',
+                  required: 'Пароль обов’язковий',
                   minLength: {
                     value: 6,
-                    message: "Password must be at least 6 characters long"
+                    message: "Мінімум 6 символів"
                   },
                   maxLength: {
                     value: 100,
                     message: 'Не більше 100 символів'
                   }
                 })}
-                placeholder="New password"
+                placeholder="Новий пароль"
               />
               <FormError field={errors?.password} />
 
               <Input
                 type="password"
                 {...register('confirm_password', {
-                  required: 'Please confirm your password',
+                  required: 'Підтвердіть пароль',
                   validate: (value) =>
-                    value === password || 'Passwords do not match',
+                    value === password || 'Паролі не співпадають',
                 })}
-                placeholder="Confirm password"
+                placeholder="Підтвердження пароля"
               />
               <FormError field={errors?.['confirm_password']} />
             </div>
@@ -72,13 +72,13 @@ export default function FormUpdate({ formAction, loading = false }) {
               // formAction={formAction}
               loading={loading}
             >
-              Reset Password
+              Скинути пароль
             </Button>
           </div>
 
           <BackLink
             path={SIGN_IN_PATH}
-            pathName="login"
+            pathName="входу"
             className="mt-4"
           />
         </form>

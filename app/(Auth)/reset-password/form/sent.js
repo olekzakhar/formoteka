@@ -5,6 +5,7 @@
 import Link from 'next/link'
 import BackLink from '@/components/BackLink'
 import { SIGN_IN_PATH } from '@/constants'
+import { Button } from '@/components/ui/button'
 
 export default function FormSent({ resendEmail, backLink=null }) {
   return (
@@ -12,26 +13,24 @@ export default function FormSent({ resendEmail, backLink=null }) {
     <div className="px-4">
       <div className="mt-8 mx-auto max-w-[402px] bg-white border border-[#E8E8E8] rounded-2xl">
         <form className="p-6 max-[400px]:px-4 flex flex-col flex-shrink-0 max-w-[400px]">
-          <h1 className="text-2xl">Check your email</h1>
-          <p className="mt-1 text-sm text-zinc-500">We sent you a verification link</p>
+          <h1 className="text-2xl">Перевірте пошту</h1>
+          <p className="mt-1 text-sm text-zinc-500">Ми надіслали вам посилання для підтвердження</p>
 
           <div className="mt-2">
-            <Link
-              href="mailto:"
-              target="_blank"
-              className="mt-4 btn btn-neutral min-h-10 h-10 max-h-10 bg-transparent border border-zinc-600/90 hover:border-zinc-900/90 hover:bg-zinc-800/90 text-zinc-900 hover:text-zinc-50 font-medium w-full"
-            >
-              Open email app
-            </Link>
+            <Button asChild className="mt-4 w-full" variant="secondary">
+              <Link href="mailto:" target="_blank">
+                Відкрити пошту
+              </Link>
+            </Button>
 
             <p className="mt-6 text-center text-sm text-zinc-600">
-              Didn&apos;t recieve the email?&nbsp;
+              Не отримали листа?&nbsp;
               <button
                 onClick={() => resendEmail()}
                 type="button"
                 className="underline underline-offset-4 hover:text-zinc-800 cursor-pointer transition-colors duration-150"
               >
-                Click to resend
+                Надіслати ще раз
               </button>
             </p>
           </div>
@@ -39,7 +38,7 @@ export default function FormSent({ resendEmail, backLink=null }) {
           <BackLink
             path={SIGN_IN_PATH}
             backLink={backLink}
-            pathName="login"
+            pathName="входу"
             className="mt-6"
           />
         </form>

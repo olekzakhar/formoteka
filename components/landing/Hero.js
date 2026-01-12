@@ -43,8 +43,10 @@ const HeroSection = () => {
             <div className="animate-fade-up-delay-3 flex flex-col sm:flex-row items-start gap-3">
               <Button asChild size="lg" className="group font-semibold px-6">
                 <Link href="/forms" className="flex">
-                  Створити форму
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                  Спробуйте
+                  <div className="ml-0.5 mt-[1.5px] p-[4px] bg-white/20 rounded-full -rotate-45">
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                  </div>
                 </Link>
               </Button>
               <Button variant="ghost" size="lg" className="text-muted-foreground">

@@ -1,0 +1,25 @@
+/* app/(Auth)/auth.css */
+
+@import "tailwindcss";
+
+:root:has([data-theme="auth"]) {
+  --secondary: 210 20% 96%;
+  --secondary-foreground: 220 25% 20%;
+}
+
+@theme inline {
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  
+  --font-sans: 'DM Sans', sans-serif;
+}
+
+/* Tailwind 4 Configuration */
+@theme {
+  /* Font Family */
+  --font-sans: "DM Sans", system-ui, sans-serif;
+  
+  /* Secondary */
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+}

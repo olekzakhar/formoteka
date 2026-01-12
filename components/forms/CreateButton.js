@@ -47,7 +47,7 @@ export default function FormsCreateButton({ userId }) {
       loading={isCreating}
       disabled={isCreating}
     >
-      {/* {isCreating ? 'Створення...' : 'Створити форму'} */}
+      {isCreating ? 'Створення...' : 'Створити форму'}
       Створити форму
     </Button>
   )

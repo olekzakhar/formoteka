@@ -1,3 +1,5 @@
+// components/form-builder/block/Item
+
 'use client'
 
 import { blockDefinitions } from '@/data/block-definitions';
@@ -120,23 +122,29 @@ export const BlockItem = ({
       const file = e.target.files?.[0];
       if (!file) return;
 
-      // Додаємо індекс до списку завантажуваних
-      setUploadingImages(prev => new Set(prev).add(index));
-
       const images = [...(block.images || [])];
       const oldFileName = images[index]; // Зберігаємо старе ім'я файлу для видалення
 
       try {
-        // Показуємо preview одразу
+        // СПОЧАТКУ створюємо preview і показуємо його
         const reader = new FileReader();
-        reader.onload = () => {
-          const updatedImages = [...(block.images || [])];
-          updatedImages[index] = reader.result;
-          onUpdateBlock({ images: updatedImages });
-        };
-        reader.readAsDataURL(file);
+        
+        // Використовуємо Promise щоб чекати завершення читання
+        const previewDataUrl = await new Promise((resolve, reject) => {
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
 
-        // Завантажуємо в R2
+        // Тепер показуємо preview (це data URL, відобразиться миттєво)
+        const updatedImagesWithPreview = [...(block.images || [])];
+        updatedImagesWithPreview[index] = previewDataUrl;
+        onUpdateBlock({ images: updatedImagesWithPreview });
+
+        // Додаємо індекс до списку завантажуваних (показуємо loader)
+        setUploadingImages(prev => new Set(prev).add(index));
+
+        // Тепер завантажуємо в R2 у фоні
         const formData = new FormData();
         formData.append('file', file);
         

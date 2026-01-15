@@ -1,7 +1,7 @@
 'use client'
 
 import { blockDefinitions } from '@/data/block-definitions';
-import { GripVertical, Copy, Trash2, Image, Image as ImageIcon } from 'lucide-react';
+import { GripVertical, Copy, Trash2, Image, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { cn } from '@/utils';
 import { useState, useRef, useEffect } from 'react';
 
@@ -22,6 +22,7 @@ export const BlockItem = ({
   const [isEditingPlaceholder, setIsEditingPlaceholder] = useState(false);
   const [editLabelValue, setEditLabelValue] = useState(block.label ?? '');
   const [editPlaceholderValue, setEditPlaceholderValue] = useState(block.placeholder ?? '');
+  const [uploadingImages, setUploadingImages] = useState(new Set());
   const labelInputRef = useRef(null);
   const placeholderInputRef = useRef(null);
   const textareaRef = useRef(null);
@@ -29,10 +30,18 @@ export const BlockItem = ({
 
   const showLabel = block.showLabel !== false;
 
-//   useEffect(() => {
-//   setEditLabelValue(block.label ?? '');
-//   setEditPlaceholderValue(block.placeholder ?? '');
-// }, [block.label, block.placeholder]);
+  // Функція для отримання повного URL зображення
+  const getImageUrl = (fileName) => {
+    if (!fileName) return '';
+    // Якщо це вже data URL (preview) - повертаємо як є
+    // if (fileName.startsWith('data:')) return fileName;
+    // Якщо це повний URL - повертаємо як є (для сумісності зі старими даними)
+    // if (fileName.startsWith('http')) return fileName;
+    // Інакше - це ім'я файлу, додаємо базовий URL
+    // const baseUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || 'https://cdn.formoteka.com';
+    const baseUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL
+    return `${baseUrl}/${fileName}`;
+  };
 
   // Auto-resize textarea for paragraph
   const autoResizeTextarea = () => {
@@ -103,20 +112,69 @@ export const BlockItem = ({
     }
   };
 
-  const handleImageUpload = (index) => {
+  const handleImageUpload = async (index) => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
-    input.onchange = (e) => {
-      const file = (e.target).files?.[0];
-      if (file) {
+    input.onchange = async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      // Додаємо індекс до списку завантажуваних
+      setUploadingImages(prev => new Set(prev).add(index));
+
+      const images = [...(block.images || [])];
+      const oldFileName = images[index]; // Зберігаємо старе ім'я файлу для видалення
+
+      try {
+        // Показуємо preview одразу
         const reader = new FileReader();
         reader.onload = () => {
-          const images = [...(block.images || [])];
-          images[index] = reader.result;
-          onUpdateBlock({ images });
+          const updatedImages = [...(block.images || [])];
+          updatedImages[index] = reader.result;
+          onUpdateBlock({ images: updatedImages });
         };
         reader.readAsDataURL(file);
+
+        // Завантажуємо в R2
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        // Якщо є старе зображення, передаємо тільки ім'я файлу для видалення
+        if (oldFileName && !oldFileName.startsWith('data:')) {
+          formData.append('oldFileName', oldFileName);
+        }
+
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error('Помилка завантаження');
+        }
+
+        const data = await response.json();
+
+        // Зберігаємо ТІЛЬКИ ім'я файлу, а не URL
+        const updatedImages = [...(block.images || [])];
+        updatedImages[index] = data.fileName;
+        onUpdateBlock({ images: updatedImages });
+
+      } catch (error) {
+        console.error('Помилка завантаження:', error);
+        // Повертаємо старе зображення при помилці
+        const revertImages = [...(block.images || [])];
+        revertImages[index] = oldFileName;
+        onUpdateBlock({ images: revertImages });
+        alert('Помилка завантаження зображення. Спробуйте ще раз.');
+      } finally {
+        // Видаляємо індекс зі списку завантажуваних
+        setUploadingImages(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(index);
+          return newSet;
+        });
       }
     };
     input.click();
@@ -155,6 +213,7 @@ export const BlockItem = ({
       <div className={cn('grid gap-3', gridClass)}>
         {Array.from({ length: count }).map((_, i) => {
           const hasImage = Boolean(images[i]);
+          const isUploading = uploadingImages.has(i);
           const pos = positions[i] || { x: 50, y: 50 };
 
           return (
@@ -173,27 +232,39 @@ export const BlockItem = ({
                 <>
                   <div className={cn('w-full h-full flex', alignClass)}>
                     <img
-                      src={images[i]}
+                      src={getImageUrl(images[i])}
                       alt={`Uploaded form image ${i + 1}`}
                       className={cn(
                         fit === 'cover' ? 'w-full h-full object-cover' : 'h-full object-contain',
-                        fit === 'contain' && radiusClass
+                        fit === 'contain' && radiusClass,
+                        isUploading && 'opacity-50'
                       )}
                       style={fit === 'cover' ? { objectPosition: `${pos.x}% ${pos.y}%` } : undefined}
                       draggable={false}
                       loading="lazy"
                     />
                   </div>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleImageUpload(i);
-                    }}
-                    className="absolute top-2 right-2 p-1.5 rounded-md bg-background/80 hover:bg-background text-foreground opacity-0 group-hover:opacity-100 transition-smooth shadow-sm"
-                    title="Change image"
-                  >
-                    <Image className="w-4 h-4" />
-                  </button>
+                  
+                  {/* Overlay при завантаженні */}
+                  {isUploading && (
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                      <Loader2 className="w-8 h-8 text-white animate-spin" />
+                    </div>
+                  )}
+
+                  {/* Кнопка заміни зображення */}
+                  {!isUploading && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleImageUpload(i);
+                      }}
+                      className="absolute top-2 right-2 p-1.5 rounded-md bg-background/80 hover:bg-background text-foreground opacity-0 group-hover:opacity-100 transition-smooth shadow-sm"
+                      title="Change image"
+                    >
+                      <Image className="w-4 h-4" />
+                    </button>
+                  )}
                 </>
               ) : (
                 <button

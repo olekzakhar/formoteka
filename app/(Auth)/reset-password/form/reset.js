@@ -50,7 +50,7 @@ export default function FormReset({ formAction }) {
               loading={isSubmitting}
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Надсилаємо...' : 'Скинути пароль'}
+              {isSubmitting ? 'Надсилаю...' : 'Скинути пароль'}
             </Button>
           </div>
 

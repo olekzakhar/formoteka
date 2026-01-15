@@ -80,6 +80,47 @@ export const Builder = ({ form }) => {
   const debouncedFormDesign = useDebounce(formDesign, 3000);
   const debouncedSuccessBlocks = useDebounce(successBlocks, 3000);
 
+  // Функція для видалення зображень з R2
+  const deleteImagesFromR2 = useCallback(async (fileNames) => {
+    // Фільтруємо тільки валідні імена файлів (не data URLs і не пусті)
+    const validFileNames = fileNames.filter(
+      fileName => fileName && 
+      !fileName.startsWith('data:') && 
+      !fileName.startsWith('http') // якщо збережені старі дані з URL
+    );
+    
+    if (validFileNames.length === 0) return;
+
+    try {
+      const results = await Promise.allSettled(
+        validFileNames.map(fileName =>
+          fetch('/api/upload', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ fileName }),
+          }).then(res => {
+            if (!res.ok) throw new Error(`Failed to delete ${fileName}`);
+            return fileName;
+          })
+        )
+      );
+
+      const successful = results.filter(r => r.status === 'fulfilled').length;
+      const failed = results.filter(r => r.status === 'rejected').length;
+
+      if (successful > 0) {
+        console.log(`✅ Видалено зображень: ${successful}`);
+      }
+      if (failed > 0) {
+        console.error(`❌ Не вдалося видалити: ${failed}`);
+      }
+    } catch (error) {
+      console.error('❌ Помилка видалення зображень:', error);
+    }
+  }, []);
+
   // Core save function that actually saves to database
   const saveToDatabase = useCallback(async (dataToSave) => {
     if (!form?.slug || !form?.user_id) return false;
@@ -316,6 +357,33 @@ export const Builder = ({ form }) => {
     });
   }, []);
 
+  // Оновлена функція видалення блоків з видаленням зображень
+  const handleDeleteBlock = useCallback(async (blockId) => {
+    const block = blocks.find(b => b.id === blockId);
+    
+    // Якщо це блок зображення і в ньому є зображення - видаляємо їх з R2
+    if (block?.type === 'image' && block.images?.length > 0) {
+      await deleteImagesFromR2(block.images);
+    }
+    
+    deleteBlock(blockId);
+    
+    if (activeBlockId === blockId) {
+      setShowBlockSettings(false);
+    }
+  }, [blocks, deleteBlock, activeBlockId, deleteImagesFromR2]);
+
+  // Оновлена функція видалення success блоків з видаленням зображень
+  const handleDeleteSuccessBlock = useCallback(async (blockId) => {
+    const block = successBlocks.find(b => b.id === blockId);
+    
+    if (block?.type === 'image' && block.images?.length > 0) {
+      await deleteImagesFromR2(block.images);
+    }
+    
+    deleteSuccessBlock(blockId);
+  }, [successBlocks, deleteSuccessBlock, deleteImagesFromR2]);
+
   const openBlockSettings = () => {
     setShowBlockSettings(true);
     setShowSubmitSettings(false);
@@ -470,7 +538,7 @@ export const Builder = ({ form }) => {
           activeSuccessBlockId={activeSuccessBlockId}
           onSelectBlock={handleSelectBlock}
           onClearSelection={handleClearSelection}
-          onDeleteBlock={deleteBlock}
+          onDeleteBlock={handleDeleteBlock}
           onDuplicateBlock={duplicateBlock}
           onOpenSettings={handleOpenSettings}
           onOpenAddBlock={handleOpenAddBlock}
@@ -480,7 +548,7 @@ export const Builder = ({ form }) => {
           onSubmitButtonClick={handleSubmitButtonClick}
           isSubmitButtonSelected={showSubmitSettings}
           onSelectSuccessBlock={handleSelectSuccessBlock}
-          onDeleteSuccessBlock={deleteSuccessBlock}
+          onDeleteSuccessBlock={handleDeleteSuccessBlock}
           onDuplicateSuccessBlock={duplicateSuccessBlock}
           onOpenSuccessSettings={handleOpenSuccessSettings}
           onAddSuccessBlockAt={handleAddSuccessBlockAt}

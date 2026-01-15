@@ -48,7 +48,6 @@ export default function FormsCreateButton({ userId }) {
       disabled={isCreating}
     >
       {isCreating ? 'Створення...' : 'Створити форму'}
-      Створити форму
     </Button>
   )
 }

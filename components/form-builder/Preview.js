@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { cn } from '@/utils';
 import { BlockProductsRenderer } from '@/components/form-builder/block/ProductsRenderer';
 import { BASE_URL } from '@/constants';
+import { sendEmail } from '@/server/emails';
 
 const fontSizeClass = {
   small: 'text-sm',
@@ -30,7 +31,21 @@ export const Preview = ({
   const formUrl = `${BASE_URL}/${formSlug}`;
   const displayUrl = formUrl.replace(/^https?:\/\//, '');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
+
+  // Функція для отримання повного URL зображення
+  const getImageUrl = (fileName) => {
+    if (!fileName) return '';
+    // Якщо це вже data URL (preview) - повертаємо як є
+    // if (fileName.startsWith('data:')) return fileName;
+    // Якщо це повний URL - повертаємо як є (для сумісності зі старими даними)
+    // if (fileName.startsWith('http')) return fileName;
+    // Інакше - це ім'я файлу, додаємо базовий URL
+    // const baseUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || 'https://cdn.formoteka.com';
+    const baseUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL
+    return `${baseUrl}/${fileName}`;
+  };
 
   const handleSelectProduct = (productId, quantity) => {
     setSelectedProducts((prev) => {
@@ -45,119 +60,132 @@ export const Preview = ({
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Collect form data from the form element
-    const formElement = e.target;
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
-    // ========== FORM CONFIGURATION (the form structure itself) ==========
-    const formConfiguration = {
-      formSlug,
-      formDesign,
-      submitButtonText,
-      blocks,
-      successBlocks,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    try {
+      // Collect form data from the form element
+      const formElement = e.target;
 
-    // ========== FORM SUBMISSION DATA (user's input) ==========
-    const submissionData = {
-      formSlug,
-      submittedAt: new Date().toISOString(),
-      fields: {},
-      products: []
-    };
+      // ========== FORM CONFIGURATION (the form structure itself) ==========
+      const formConfiguration = {
+        formSlug,
+        formDesign,
+        submitButtonText,
+        blocks,
+        successBlocks,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
 
-    // Process each block to extract field values
-    blocks.forEach((block) => {
-      if (['heading', 'paragraph', 'image', 'spacer', 'divider'].includes(block.type)) {
-        return; // Skip non-input blocks
+      // ========== FORM SUBMISSION DATA (user's input) ==========
+      const submissionData = {
+        formSlug,
+        submittedAt: new Date().toISOString(),
+        fields: {},
+        products: []
+      };
+
+      // Process each block to extract field values
+      blocks.forEach((block) => {
+        if (['heading', 'paragraph', 'image', 'spacer', 'divider'].includes(block.type)) {
+          return; // Skip non-input blocks
+        }
+
+        const fieldKey = block.id;
+        const fieldLabel = block.label || block.type;
+
+        if (block.type === 'products') {
+          // Handle products block
+          const productDetails = selectedProducts.map((sp) => {
+            const product = block.products?.find((p) => p.id === sp.productId);
+            return product ? {
+              productId: product.id,
+              productName: product.name,
+              sku: product.sku,
+              quantity: sp.quantity,
+              price: product.price,
+              subtotal: product.price * sp.quantity,
+            } : null;
+          }).filter(Boolean);
+          
+          submissionData.products = productDetails;
+        } else if (block.type === 'checkbox') {
+          // Handle checkbox (multiple values)
+          const checkedValues = [];
+          block.options?.forEach((option, idx) => {
+            const checkbox = formElement.querySelector(`#${block.id}-${idx}`);
+            if (checkbox?.checked) {
+              checkedValues.push(option);
+            }
+          });
+          submissionData.fields[fieldKey] = {
+            label: fieldLabel,
+            type: block.type,
+            value: checkedValues,
+            required: block.required || false,
+          };
+        } else if (block.type === 'radio') {
+          // Handle radio (single value from group)
+          const checkedRadio = formElement.querySelector(`input[name="${block.id}"]:checked`);
+          submissionData.fields[fieldKey] = {
+            label: fieldLabel,
+            type: block.type,
+            value: checkedRadio?.value || null,
+            required: block.required || false,
+          };
+        } else {
+          // Handle other input types (short-text, long-text, email, number, date, dropdown)
+          const input = formElement.querySelector(`[name="${block.id}"]`);
+          submissionData.fields[fieldKey] = {
+            label: fieldLabel,
+            type: block.type,
+            value: input?.value || null,
+            required: block.required || false,
+          };
+        }
+      });
+
+      // Calculate totals for products
+      if (submissionData.products.length > 0) {
+        submissionData.productsTotal = submissionData.products.reduce(
+          (sum, p) => sum + (p?.subtotal || 0),
+          0
+        );
       }
 
-      const fieldKey = block.id;
-      const fieldLabel = block.label || block.type;
+      // Log all data to console
+      console.log('╔════════════════════════════════════════════════════════════════╗');
+      console.log('║           DATABASE SAVE DATA - FORM CONFIGURATION              ║');
+      console.log('╠════════════════════════════════════════════════════════════════╣');
+      console.log('║ This is the form structure that should be saved to the         ║');
+      console.log('║ "forms" table in the database:                                 ║');
+      console.log('╚════════════════════════════════════════════════════════════════╝');
+      console.log(JSON.stringify(formConfiguration, null, 2));
+      
+      console.log('\n');
 
-      if (block.type === 'products') {
-        // Handle products block
-        const productDetails = selectedProducts.map((sp) => {
-          const product = block.products?.find((p) => p.id === sp.productId);
-          return product ? {
-            productId: product.id,
-            productName: product.name,
-            sku: product.sku,
-            quantity: sp.quantity,
-            price: product.price,
-            subtotal: product.price * sp.quantity,
-          } : null;
-        }).filter(Boolean);
-        
-        submissionData.products = productDetails;
-      } else if (block.type === 'checkbox') {
-        // Handle checkbox (multiple values)
-        const checkedValues = [];
-        block.options?.forEach((option, idx) => {
-          const checkbox = formElement.querySelector(`#${block.id}-${idx}`);
-          if (checkbox?.checked) {
-            checkedValues.push(option);
-          }
-        });
-        submissionData.fields[fieldKey] = {
-          label: fieldLabel,
-          type: block.type,
-          value: checkedValues,
-          required: block.required || false,
-        };
-      } else if (block.type === 'radio') {
-        // Handle radio (single value from group)
-        const checkedRadio = formElement.querySelector(`input[name="${block.id}"]:checked`);
-        submissionData.fields[fieldKey] = {
-          label: fieldLabel,
-          type: block.type,
-          value: checkedRadio?.value || null,
-          required: block.required || false,
-        };
-      } else {
-        // Handle other input types (short-text, long-text, email, number, date, dropdown)
-        const input = formElement.querySelector(`[name="${block.id}"]`);
-        submissionData.fields[fieldKey] = {
-          label: fieldLabel,
-          type: block.type,
-          value: input?.value || null,
-          required: block.required || false,
-        };
-      }
-    });
+      console.log('╔════════════════════════════════════════════════════════════════╗');
+      console.log('║           DATABASE SAVE DATA - FORM SUBMISSION                 ║');
+      console.log('╠════════════════════════════════════════════════════════════════╣');
+      console.log('║ This is the user submission that should be saved to the        ║');
+      console.log('║ "form_submissions" table in the database:                      ║');
+      console.log('╚════════════════════════════════════════════════════════════════╝');
+      console.log(JSON.stringify(submissionData, null, 2));
 
-    // Calculate totals for products
-    if (submissionData.products.length > 0) {
-      submissionData.productsTotal = submissionData.products.reduce(
-        (sum, p) => sum + (p?.subtotal || 0),
-        0
-      );
+      // Send email
+      await sendEmail();
+      
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('Failed to submit form. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
-
-    // Log all data to console
-    console.log('╔════════════════════════════════════════════════════════════════╗');
-    console.log('║           DATABASE SAVE DATA - FORM CONFIGURATION              ║');
-    console.log('╠════════════════════════════════════════════════════════════════╣');
-    console.log('║ This is the form structure that should be saved to the         ║');
-    console.log('║ "forms" table in the database:                                 ║');
-    console.log('╚════════════════════════════════════════════════════════════════╝');
-    console.log(JSON.stringify(formConfiguration, null, 2));
-    
-    console.log('\n');
-
-    console.log('╔════════════════════════════════════════════════════════════════╗');
-    console.log('║           DATABASE SAVE DATA - FORM SUBMISSION                 ║');
-    console.log('╠════════════════════════════════════════════════════════════════╣');
-    console.log('║ This is the user submission that should be saved to the        ║');
-    console.log('║ "form_submissions" table in the database:                      ║');
-    console.log('╚════════════════════════════════════════════════════════════════╝');
-    console.log(JSON.stringify(submissionData, null, 2));
-    
-    setIsSubmitted(true);
   };
 
   const renderImageGrid = (block) => {
@@ -209,7 +237,7 @@ export const Preview = ({
               {hasImage ? (
                 <div className={cn('w-full h-full flex', alignClass)}>
                   <img
-                    src={images[i]}
+                    src={getImageUrl(images[i])}
                     alt={`Form image ${i + 1}`}
                     className={cn(
                       fit === 'cover' ? 'w-full h-full object-cover' : 'h-full object-contain',
@@ -489,8 +517,10 @@ export const Preview = ({
                         variant="black"
                         size="black"
                         type="submit"
+                        loading={isSubmitting}
+                        disabled={isSubmitting}
                       >
-                        {submitButtonText}
+                        {isSubmitting ? 'Надсилаю...' : submitButtonText}
                         <ArrowRight className="w-4 h-4" />
                       </Button>
                     </div>

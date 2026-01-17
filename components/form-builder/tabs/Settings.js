@@ -123,11 +123,11 @@ const ImageSettings = ({ block, onUpdate }) => {
             </button>
           ))}
         </div>
-        {images.length > (block.imageCount || 1) && (
+        {/* {images.length > (block.imageCount || 1) && (
           <p className="text-xs text-amber-600">
             ⚠️ Reducing count will delete extra images
           </p>
-        )}
+        )} */}
       </div>
 
       {/* Image fit */}

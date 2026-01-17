@@ -176,11 +176,17 @@ export async function updateFormData(supabase, formSlug, userId, updates) {
   // Get current data first to merge properly
   const { data: currentForm } = await supabase
     .from('forms')
-    .select('form_data, settings')
+    .select('name, form_data, settings')
     .eq('slug', formSlug)
     .eq('user_id', userId)
     .single()
 
+  // Update form name if provided
+  if (updates.formName !== undefined) {
+    updateData.name = updates.formName
+  }
+
+  // Update form_data (blocks and submitButtonText)
   if (updates.blocks !== undefined || updates.submitButtonText !== undefined) {
     updateData.form_data = {
       ...(currentForm?.form_data || {}),
@@ -193,13 +199,26 @@ export async function updateFormData(supabase, formSlug, userId, updates) {
     }
   }
   
-  if (updates.formDesign !== undefined) {
+  // Update settings - NEW STRUCTURE: design, seo, delivery at root level
+  if (updates.formDesign !== undefined || updates.formSeo !== undefined || updates.deliveryTargets !== undefined) {
     updateData.settings = {
       ...(currentForm?.settings || {}),
-      formDesign: updates.formDesign
+    }
+
+    if (updates.formDesign !== undefined) {
+      updateData.settings.design = updates.formDesign
+    }
+
+    if (updates.formSeo !== undefined) {
+      updateData.settings.seo = updates.formSeo
+    }
+
+    if (updates.deliveryTargets !== undefined) {
+      updateData.settings.delivery = updates.deliveryTargets
     }
   }
   
+  // Update success message blocks
   if (updates.successBlocks !== undefined) {
     updateData.success_message = updates.successBlocks
   }

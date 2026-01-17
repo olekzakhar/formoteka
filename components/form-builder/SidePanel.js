@@ -1,8 +1,8 @@
-// form-builder/SidePanel
+// components/form-builder/SidePanel
 
 import { TabsAdd } from '@/components/form-builder/tabs/Add';
-import { TabsSettings } from '@/components/form-builder/tabs/Settings';
-import { TabsDesign, FormDesign } from '@/components/form-builder/tabs/Design';
+import { TabsBlockSettings } from '@/components/form-builder/tabs/BlockSettings';
+import { TabsDesign } from '@/components/form-builder/tabs/Design';
 import { SubmitButtonSettings } from '@/components/form-builder/SubmitButtonSettings';
 import { cn } from '@/utils';
 import { PaintbrushVertical, Settings, ArrowLeft, Plus } from 'lucide-react';
@@ -28,6 +28,12 @@ export const SidePanel = ({
   onUpdateSuccessBlock,
   formDesign,
   onUpdateDesign,
+  formSeo,
+  onUpdateSeo,
+  deliveryTargets,
+  onUpdateDeliveryTargets,
+  hasProductsBlock = false,
+  onOpenSubmitSettings,
 }) => {
   // Render Block Settings view (for form blocks)
   if (showBlockSettings && activeBlock) {
@@ -43,7 +49,7 @@ export const SidePanel = ({
           <span className="text-sm font-medium text-foreground">Параметри блоку</span>
         </div>
         <div className="flex-1 overflow-y-auto">
-          <TabsSettings block={activeBlock} onUpdate={onUpdateBlock} />
+          <TabsBlockSettings block={activeBlock} onUpdate={onUpdateBlock} />
         </div>
       </div>
     );
@@ -63,7 +69,7 @@ export const SidePanel = ({
           <span className="text-sm font-medium text-foreground">Success Block Settings</span>
         </div>
         <div className="flex-1 overflow-y-auto">
-          <TabsSettings block={activeSuccessBlock} onUpdate={onUpdateSuccessBlock} />
+          <TabsBlockSettings block={activeSuccessBlock} onUpdate={onUpdateSuccessBlock} />
         </div>
       </div>
     );
@@ -86,6 +92,11 @@ export const SidePanel = ({
           <SubmitButtonSettings
             buttonText={submitButtonText}
             onButtonTextChange={onSubmitButtonTextChange}
+            formDesign={formDesign}
+            onUpdateDesign={onUpdateDesign}
+            hasProductsBlock={hasProductsBlock}
+            totalQuantity={1}
+            totalAmount={9.99}
           />
         </div>
       </div>
@@ -142,9 +153,15 @@ export const SidePanel = ({
         ) : activeTab === 'design' ? (
           <TabsDesign design={formDesign} onUpdateDesign={onUpdateDesign} />
         ) : (
-          <div className="p-4">
-            <p className="text-sm text-muted-foreground">Налаштування форми скоро будуть...</p>
-          </div>
+          <TabsBlockSettings
+            formDesign={formDesign}
+            onUpdateDesign={onUpdateDesign}
+            seo={formSeo}
+            onUpdateSeo={onUpdateSeo}
+            delivery={deliveryTargets}
+            onUpdateDelivery={onUpdateDeliveryTargets}
+            onOpenSubmitSettings={onOpenSubmitSettings}
+          />
         )}
       </div>
     </div>

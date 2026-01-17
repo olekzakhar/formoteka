@@ -20,20 +20,18 @@ const ImageSettings = ({ block, onUpdate }) => {
   // Функція для отримання повного URL зображення
   const getImageUrl = (fileName) => {
     if (!fileName) return '';
-    // if (fileName.startsWith('data:')) return fileName;
-    // if (fileName.startsWith('http')) return fileName;
-    // const baseUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || 'https://cdn.formoteka.com';
-    const baseUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL
+    if (fileName.startsWith('data:')) return fileName;
+    if (fileName.startsWith('http')) return fileName;
+    const baseUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || 'https://cdn.formoteka.com';
     return `${baseUrl}/${fileName}`;
   };
 
   // Функція для видалення зображень з R2
   const deleteImagesFromR2 = async (fileNames) => {
     const validFileNames = fileNames.filter(
-      // fileName => fileName &&
-      fileName => fileName
-      // !fileName.startsWith('data:') && 
-      // !fileName.startsWith('http')
+      fileName => fileName &&
+      !fileName.startsWith('data:') && 
+      !fileName.startsWith('http')
     );
     
     if (validFileNames.length === 0) return;

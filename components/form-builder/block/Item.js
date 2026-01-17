@@ -36,12 +36,11 @@ export const BlockItem = ({
   const getImageUrl = (fileName) => {
     if (!fileName) return '';
     // Якщо це вже data URL (preview) - повертаємо як є
-    // if (fileName.startsWith('data:')) return fileName;
+    if (fileName.startsWith('data:')) return fileName;
     // Якщо це повний URL - повертаємо як є (для сумісності зі старими даними)
-    // if (fileName.startsWith('http')) return fileName;
+    if (fileName.startsWith('http')) return fileName;
     // Інакше - це ім'я файлу, додаємо базовий URL
-    // const baseUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || 'https://cdn.formoteka.com';
-    const baseUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL
+    const baseUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || 'https://cdn.formoteka.com';
     return `${baseUrl}/${fileName}`;
   };
 

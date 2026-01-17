@@ -84,7 +84,7 @@ export const Builder = ({ form }) => {
   const deleteImagesFromR2 = useCallback(async (fileNames) => {
     // Фільтруємо тільки валідні імена файлів (не data URLs і не пусті)
     const validFileNames = fileNames.filter(
-      fileName => fileName && 
+      fileName => fileName &&
       !fileName.startsWith('data:') && 
       !fileName.startsWith('http') // якщо збережені старі дані з URL
     );

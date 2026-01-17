@@ -9,20 +9,20 @@ import Logo from '@/components/Logo';
 import { cn } from '@/utils';
 
 export const Header = ({ 
-  formName, 
-  onTogglePreview, 
-  isSaving, 
-  lastSaved, 
+  formName,
+  setFormName,
+  onTogglePreview,
+  isSaving,
+  lastSaved,
   hasUnsavedChanges,
-  onManualSave 
+  onManualSave
 }) => {
   const [isEditingName, setIsEditingName] = useState(false);
-  const [editValue, setEditValue] = useState(formName);
   const inputRef = useRef(null);
 
   useEffect(() => {
-    setEditValue(formName);
-  }, [formName]);
+    setFormName(formName);
+  }, [formName, setFormName]);
 
   useEffect(() => {
     if (isEditingName && inputRef.current) {
@@ -31,11 +31,11 @@ export const Header = ({
   }, [isEditingName]);
 
   const handleSaveName = () => {
-    if (editValue.trim()) {
-      // onFormNameChange(editValue.trim());
-    } else {
-      setEditValue(formName);
+    const trimFormName = formName.trim()
+    if (trimFormName) {
+      setFormName(trimFormName)
     }
+
     setIsEditingName(false);
   };
 
@@ -64,13 +64,13 @@ export const Header = ({
             <input
               ref={inputRef}
               type="text"
-              value={editValue}
-              onChange={(e) => setEditValue(e.target.value)}
+              value={formName}
+              onChange={(e) => setFormName(e.target.value)}
               onBlur={handleSaveName}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleSaveName();
                 if (e.key === 'Escape') {
-                  setEditValue(formName);
+                  setFormName(formName);
                   setIsEditingName(false);
                 }
               }}

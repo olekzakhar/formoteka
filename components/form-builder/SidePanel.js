@@ -143,7 +143,7 @@ export const SidePanel = ({
           <TabsDesign design={formDesign} onUpdateDesign={onUpdateDesign} />
         ) : (
           <div className="p-4">
-            <p className="text-sm text-muted-foreground">Form settings coming soon...</p>
+            <p className="text-sm text-muted-foreground">Налаштування форми скоро будуть...</p>
           </div>
         )}
       </div>

@@ -16,6 +16,7 @@ import { createClient } from '@/utils/supabase/client';
 import { useDebounce } from '@/hooks/useDebounce';
 
 export const Builder = ({ form }) => {
+  const [formName, setFormName] = useState(form?.name ?? 'Без назви');
   const isMobile = useIsMobile();
   const [isPreview, setIsPreview] = useState(false);
   const [showBlockSettings, setShowBlockSettings] = useState(false);
@@ -38,14 +39,42 @@ export const Builder = ({ form }) => {
     savedSettings.formDesign || {
       backgroundColor: 'bg-white',
       textColor: 'text-foreground',
+      headingColor: 'text-foreground',
+      headingSize: 'medium',
       fontSize: 'medium',
       formDisabled: true,
+      stickyButton: false,
     }
   );
 
-  // Success page blocks state
+  const [formSeo, setFormSeo] = useState({
+    title: '',
+    description: '',
+  });
+
+  const [deliveryTargets, setDeliveryTargets] = useState({
+    mode: 'email',
+    email: '',
+    telegram: { enabled: true, handle: '' },
+    viber: { enabled: false, handle: '' },
+    instagram: { enabled: false, handle: '' },
+  });
+
+  // Success page blocks state with icon block as first element
   const [successBlocks, setSuccessBlocks] = useState(
     savedSuccessMessage.length > 0 ? savedSuccessMessage : [
+      { 
+        id: 'success-icon', 
+        type: 'icon', 
+        label: 'Icon',
+        iconName: 'CheckCircle',
+        iconSize: 32,
+        iconColor: '#22c55e',
+        iconBgColor: '#22c55e',
+        iconBgOpacity: 15,
+        iconBgPadding: 16,
+        iconBgShape: 'circle',
+      },
       { id: 'success-heading', type: 'heading', label: 'Дякуємо!', textAlign: 'center' },
       { id: 'success-text', type: 'paragraph', label: 'Ми отримали вашу заявку.', textAlign: 'center' },
     ]
@@ -441,6 +470,90 @@ export const Builder = ({ form }) => {
     setFormDesign((prev) => ({ ...prev, ...updates }));
   };
 
+  useEffect(() => {
+    // Apply SEO settings to the current document head (SPA).
+    const nextTitle = (formSeo.title || '').trim() || formName;
+    if (nextTitle) document.title = nextTitle;
+
+    const ensureMetaByName = (name) => {
+      let el = document.querySelector(`meta[name="${name}"]`);
+      if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute('name', name);
+        document.head.appendChild(el);
+      }
+      return el;
+    };
+
+    const ensureMetaByProp = (property) => {
+      let el = document.querySelector(`meta[property="${property}"]`);
+      if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute('property', property);
+        document.head.appendChild(el);
+      }
+      return el;
+    };
+
+    const desc = (formSeo.description || '').trim();
+    if (desc) {
+      ensureMetaByName('description').content = desc;
+      ensureMetaByProp('og:description').content = desc;
+    }
+
+    if (nextTitle) {
+      ensureMetaByProp('og:title').content = nextTitle;
+    }
+
+  }, [formSeo.title, formSeo.description, formName]);
+
+  // Auto-add/remove messenger-select block when delivery targets change
+  useEffect(() => {
+    if (deliveryTargets.mode !== 'messengers') {
+      // Remove messenger-select block if email mode
+      const messengerBlock = blocks.find(b => b.type === 'messenger-select');
+      if (messengerBlock) {
+        setBlocks(prev => prev.filter(b => b.type !== 'messenger-select'));
+      }
+      return;
+    }
+
+    const enabledMessengers = [];
+    if (deliveryTargets.telegram.enabled) {
+      enabledMessengers.push({ type: 'telegram', handle: deliveryTargets.telegram.handle });
+    }
+    if (deliveryTargets.viber.enabled) {
+      enabledMessengers.push({ type: 'viber', handle: deliveryTargets.viber.handle });
+    }
+    if (deliveryTargets.instagram.enabled) {
+      enabledMessengers.push({ type: 'instagram', handle: deliveryTargets.instagram.handle });
+    }
+
+    const existingMessengerBlock = blocks.find(b => b.type === 'messenger-select');
+
+    if (enabledMessengers.length >= 2) {
+      // Need messenger-select block
+      if (existingMessengerBlock) {
+        // Update existing block with new options
+        updateBlock(existingMessengerBlock.id, { messengerOptions: enabledMessengers });
+      } else {
+        // Add new messenger-select block before submit button (at end of blocks)
+        const newBlock = {
+          id: `block-${Date.now()}-messenger`,
+          type: 'messenger-select',
+          label: 'Choose how to receive response',
+          messengerOptions: enabledMessengers,
+        };
+        setBlocks(prev => [...prev, newBlock]);
+      }
+    } else {
+      // Remove messenger-select block if only 1 or 0 messengers
+      if (existingMessengerBlock) {
+        setBlocks(prev => prev.filter(b => b.type !== 'messenger-select'));
+      }
+    }
+  }, [deliveryTargets, blocks, updateBlock, setBlocks]);
+
   const handleSubmitButtonClick = () => {
     setShowSubmitSettings(true);
     setShowBlockSettings(false);
@@ -479,6 +592,8 @@ export const Builder = ({ form }) => {
     setActiveTab('add');
   };
 
+  const hasProductsBlock = blocks.some((b) => b.type === 'products');
+
   const sidePanelContent = (
     <SidePanel
       activeTab={activeTab}
@@ -513,13 +628,20 @@ export const Builder = ({ form }) => {
       }}
       formDesign={formDesign}
       onUpdateDesign={handleUpdateDesign}
+      formSeo={formSeo}
+      onUpdateSeo={(updates) => setFormSeo((prev) => ({ ...prev, ...updates }))}
+      deliveryTargets={deliveryTargets}
+      onUpdateDeliveryTargets={(updates) => setDeliveryTargets((prev) => ({ ...prev, ...updates }))}
+      hasProductsBlock={hasProductsBlock}
+      onOpenSubmitSettings={handleSubmitButtonClick}
     />
   );
 
   return (
     <div className="flex flex-col h-screen w-full overflow-hidden">
       <Header
-        formName={form?.name}
+        formName={formName}
+        setFormName={setFormName}
         onTogglePreview={() => setIsPreview((v) => !v)}
         isSaving={isSaving}
         lastSaved={lastSaved}

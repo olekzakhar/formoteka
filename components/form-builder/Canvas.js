@@ -281,9 +281,12 @@ export const Canvas = ({
   };
 
   const handleClearAll = () => {
-    onClearSelection();
-    onSelectSuccessBlock(null);
-  };
+    // Коли клікається на канвасі і відкрито Block Settings тоді буде ставати активною таба Додати а при інших умовах ні
+    // Викликаємо onClearSelection тільки якщо є активний блок або success блок
+    if (activeBlockId || activeSuccessBlockId) {
+      onClearSelection()
+    }
+  }
 
   const isDraggingBlocks = draggedBlockIndex !== null || isExternalDragging;
   const isDraggingSuccessBlocks = draggedSuccessBlockIndex !== null || isExternalDragging;

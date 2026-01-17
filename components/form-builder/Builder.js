@@ -34,9 +34,10 @@ export const Builder = ({ form }) => {
   // Initialize state with saved data
   const [submitButtonText, setSubmitButtonText] = useState(
     savedFormData.submitButtonText || 'Надіслати'
-  );
+  )
+
   const [formDesign, setFormDesign] = useState(
-    savedSettings.formDesign || {
+    savedSettings.design || {
       backgroundColor: 'bg-white',
       textColor: 'text-foreground',
       headingColor: 'text-foreground',
@@ -47,18 +48,22 @@ export const Builder = ({ form }) => {
     }
   );
 
-  const [formSeo, setFormSeo] = useState({
-    title: '',
-    description: '',
-  });
+  const [formSeo, setFormSeo] = useState(
+    savedSettings.seo || {
+      title: '',
+      description: ''
+    }
+  )
 
-  const [deliveryTargets, setDeliveryTargets] = useState({
-    mode: 'email',
-    email: '',
-    telegram: { enabled: true, handle: '' },
-    viber: { enabled: false, handle: '' },
-    instagram: { enabled: false, handle: '' },
-  });
+  const [deliveryTargets, setDeliveryTargets] = useState(
+    savedSettings.delivery || {
+      mode: 'email',
+      email: '',
+      telegram: { enabled: true, handle: '' },
+      viber: { enabled: false, handle: '' },
+      instagram: { enabled: false, handle: '' }
+    }
+  )
 
   // Success page blocks state with icon block as first element
   const [successBlocks, setSuccessBlocks] = useState(
@@ -104,10 +109,13 @@ export const Builder = ({ form }) => {
   const lastSaveDataRef = useRef(null);
 
   // Debounce with longer delay (3 seconds instead of 1)
+  const debouncedFormName = useDebounce(formName, 3000);
   const debouncedBlocks = useDebounce(blocks, 3000);
   const debouncedSubmitButtonText = useDebounce(submitButtonText, 3000);
   const debouncedFormDesign = useDebounce(formDesign, 3000);
   const debouncedSuccessBlocks = useDebounce(successBlocks, 3000);
+  const debouncedFormSeo = useDebounce(formSeo, 3000);
+  const debouncedDeliveryTargets = useDebounce(deliveryTargets, 3000);
 
   // Функція для видалення зображень з R2
   const deleteImagesFromR2 = useCallback(async (fileNames) => {
@@ -156,10 +164,13 @@ export const Builder = ({ form }) => {
 
     // Create data snapshot
     const currentData = dataToSave || {
+      formName: formName,
       blocks: blocks,
       submitButtonText: submitButtonText,
       formDesign: formDesign,
       successBlocks: successBlocks,
+      formSeo: formSeo,
+      deliveryTargets: deliveryTargets,
     };
 
     // Check if data actually changed (deep comparison)
@@ -191,7 +202,7 @@ export const Builder = ({ form }) => {
     } finally {
       setIsSaving(false);
     }
-  }, [form?.slug, form?.user_id, blocks, submitButtonText, formDesign, successBlocks, supabase]);
+  }, [form?.slug, form?.user_id, formName, blocks, submitButtonText, formDesign, successBlocks, formSeo, deliveryTargets, supabase]);
 
   // Auto-save function (uses debounced values)
   const autoSave = useCallback(async () => {
@@ -201,31 +212,37 @@ export const Builder = ({ form }) => {
     }
 
     const currentData = {
+      formName: debouncedFormName,
       blocks: debouncedBlocks,
       submitButtonText: debouncedSubmitButtonText,
       formDesign: debouncedFormDesign,
       successBlocks: debouncedSuccessBlocks,
+      formSeo: debouncedFormSeo,
+      deliveryTargets: debouncedDeliveryTargets,
     };
 
     await saveToDatabase(currentData);
-  }, [debouncedBlocks, debouncedSubmitButtonText, debouncedFormDesign, debouncedSuccessBlocks, saveToDatabase]);
+  }, [debouncedFormName, debouncedBlocks, debouncedSubmitButtonText, debouncedFormDesign, debouncedSuccessBlocks, debouncedFormSeo, debouncedDeliveryTargets, saveToDatabase]);
 
   // Manual save function (uses current values, not debounced)
   const handleManualSave = useCallback(async () => {
     if (!hasUnsavedChanges || isSaving) return;
 
     const currentData = {
+      formName: formName,
       blocks: blocks,
       submitButtonText: submitButtonText,
       formDesign: formDesign,
       successBlocks: successBlocks,
+      formSeo: formSeo,
+      deliveryTargets: deliveryTargets,
     };
 
     const success = await saveToDatabase(currentData);
     if (success) {
       console.log('✅ Manual save completed');
     }
-  }, [hasUnsavedChanges, isSaving, blocks, submitButtonText, formDesign, successBlocks, saveToDatabase]);
+  }, [hasUnsavedChanges, isSaving, formName, blocks, submitButtonText, formDesign, successBlocks, formSeo, deliveryTargets, saveToDatabase]);
 
   // Trigger auto-save when debounced values change
   useEffect(() => {
@@ -238,7 +255,7 @@ export const Builder = ({ form }) => {
     if (!isInitialLoad.current && isDataLoaded.current) {
       setHasUnsavedChanges(true);
     }
-  }, [blocks, submitButtonText, formDesign, successBlocks]);
+  }, [formName, blocks, submitButtonText, formDesign, successBlocks, formSeo, deliveryTargets]);
 
   // Save on page unload if there are unsaved changes
   useEffect(() => {
@@ -272,6 +289,11 @@ export const Builder = ({ form }) => {
       const settings = form.settings || {};
       const successMessage = form.success_message || [];
       
+      // Load form name
+      if (form.name) {
+        setFormName(form.name);
+      }
+      
       if (formData.blocks) {
         setBlocks(formData.blocks);
       }
@@ -283,25 +305,60 @@ export const Builder = ({ form }) => {
       if (formData.submitButtonText) {
         setSubmitButtonText(formData.submitButtonText);
       }
-      
-      if (settings.formDesign) {
-        setFormDesign(settings.formDesign);
+
+      if (settings.design) {
+        setFormDesign(settings.design);
+      }
+
+      if (settings.seo) {
+        setFormSeo(settings.seo);
+      }
+
+      if (settings.delivery) {
+        setDeliveryTargets(settings.delivery);
       }
 
       // Initialize last save data reference
       const initialData = {
+        formName: form.name || 'Без назви',
         blocks: formData.blocks || [],
         submitButtonText: formData.submitButtonText || 'Надіслати',
-        formDesign: settings.formDesign || {
+        formDesign: settings.design || {
           backgroundColor: 'bg-white',
           textColor: 'text-foreground',
+          headingColor: 'text-foreground',
+          headingSize: 'medium',
           fontSize: 'medium',
           formDisabled: true,
+          stickyButton: false,
         },
         successBlocks: successMessage.length > 0 ? successMessage : [
+          { 
+            id: 'success-icon', 
+            type: 'icon', 
+            label: 'Icon',
+            iconName: 'CheckCircle',
+            iconSize: 32,
+            iconColor: '#22c55e',
+            iconBgColor: '#22c55e',
+            iconBgOpacity: 15,
+            iconBgPadding: 16,
+            iconBgShape: 'circle',
+          },
           { id: 'success-heading', type: 'heading', label: 'Дякуємо!', textAlign: 'center' },
           { id: 'success-text', type: 'paragraph', label: 'Ми отримали вашу заявку.', textAlign: 'center' },
         ],
+        formSeo: settings.seo || {
+          title: '',
+          description: '',
+        },
+        deliveryTargets: settings.delivery || {
+          mode: 'email',
+          email: '',
+          telegram: { enabled: true, handle: '' },
+          viber: { enabled: false, handle: '' },
+          instagram: { enabled: false, handle: '' },
+        },
       };
       
       lastSaveDataRef.current = JSON.stringify(initialData);

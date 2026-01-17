@@ -2,6 +2,7 @@
 
 import { TabsAdd } from '@/components/form-builder/tabs/Add';
 import { TabsBlockSettings } from '@/components/form-builder/tabs/BlockSettings';
+import { TabsSettings } from '@/components/form-builder/tabs/Settings';
 import { TabsDesign } from '@/components/form-builder/tabs/Design';
 import { SubmitButtonSettings } from '@/components/form-builder/SubmitButtonSettings';
 import { cn } from '@/utils';
@@ -153,7 +154,7 @@ export const SidePanel = ({
         ) : activeTab === 'design' ? (
           <TabsDesign design={formDesign} onUpdateDesign={onUpdateDesign} />
         ) : (
-          <TabsBlockSettings
+          <TabsSettings
             formDesign={formDesign}
             onUpdateDesign={onUpdateDesign}
             seo={formSeo}

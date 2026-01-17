@@ -17,6 +17,74 @@ const ImageSettings = ({ block, onUpdate }) => {
   const fit = block.imageFit || 'cover';
   const align = block.imageAlign || 'center';
 
+  // Функція для отримання повного URL зображення
+  const getImageUrl = (fileName) => {
+    if (!fileName) return '';
+    // if (fileName.startsWith('data:')) return fileName;
+    // if (fileName.startsWith('http')) return fileName;
+    // const baseUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || 'https://cdn.formoteka.com';
+    const baseUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL
+    return `${baseUrl}/${fileName}`;
+  };
+
+  // Функція для видалення зображень з R2
+  const deleteImagesFromR2 = async (fileNames) => {
+    const validFileNames = fileNames.filter(
+      // fileName => fileName &&
+      fileName => fileName
+      // !fileName.startsWith('data:') && 
+      // !fileName.startsWith('http')
+    );
+    
+    if (validFileNames.length === 0) return;
+
+    try {
+      await Promise.allSettled(
+        validFileNames.map(fileName =>
+          fetch('/api/upload', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ fileName }),
+          })
+        )
+      );
+      // console.log(`✅ Видалено зображень: ${validFileNames.length}`);
+    } catch (error) {
+      // console.error('❌ Помилка видалення зображень:', error);
+    }
+  };
+
+  // Оновлена функція для зміни кількості зображень
+  const handleImageCountChange = (newCount) => {
+    const currentCount = block.imageCount || 1;
+    
+    // Якщо зменшуємо кількість - видаляємо зайві зображення
+    if (newCount < currentCount) {
+      const imagesToDelete = images.slice(newCount);
+      const positionsToKeep = positions.slice(0, newCount);
+      const imagesToKeep = images.slice(0, newCount);
+      
+      // ОДРАЗУ оновлюємо UI (синхронно)
+      onUpdate({ 
+        imageCount: newCount,
+        images: imagesToKeep,
+        imagePositions: positionsToKeep,
+      });
+      
+      // Видаляємо з R2 у фоні (асинхронно, не чекаємо)
+      if (imagesToDelete.length > 0) {
+        deleteImagesFromR2(imagesToDelete).catch(err => {
+          console.error('Помилка фонового видалення зображень:', err);
+        });
+      }
+    } else {
+      // Збільшуємо кількість - просто оновлюємо лічильник
+      onUpdate({ imageCount: newCount });
+    }
+  };
+
   const handlePositionDrag = (index, e) => {
     if (fit !== 'cover') return;
     
@@ -43,10 +111,10 @@ const ImageSettings = ({ block, onUpdate }) => {
           {[1, 2, 3, 4, 5].map((count) => (
             <button
               key={count}
-              onClick={() => onUpdate({ imageCount: count })}
+              onClick={() => handleImageCountChange(count)}
               className={cn(
                 'w-10 h-10 rounded-lg border text-sm font-medium transition-smooth',
-                block.imageCount === count
+                (block.imageCount || 1) === count
                   ? 'border-primary bg-primary text-primary-foreground'
                   : 'border-border text-foreground hover:border-primary/50'
               )}
@@ -55,6 +123,11 @@ const ImageSettings = ({ block, onUpdate }) => {
             </button>
           ))}
         </div>
+        {images.length > (block.imageCount || 1) && (
+          <p className="text-xs text-amber-600">
+            ⚠️ Reducing count will delete extra images
+          </p>
+        )}
       </div>
 
       {/* Image fit */}
@@ -175,6 +248,8 @@ const ImageSettings = ({ block, onUpdate }) => {
             {images.map((img, i) => {
               if (!img) return null;
               const pos = positions[i] || { x: 50, y: 50 };
+              const imgUrl = getImageUrl(img);
+              
               return (
                 <div key={i} className="space-y-1">
                   <span className="text-xs text-muted-foreground">Image {i + 1}</span>
@@ -191,7 +266,7 @@ const ImageSettings = ({ block, onUpdate }) => {
                     onClick={(e) => handlePositionDrag(i, e)}
                   >
                     <img
-                      src={img}
+                      src={imgUrl}
                       alt={`Image ${i + 1}`}
                       className="w-full h-full object-cover pointer-events-none"
                       style={{ objectPosition: `${pos.x}% ${pos.y}%` }}

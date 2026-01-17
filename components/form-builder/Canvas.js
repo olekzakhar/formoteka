@@ -1,8 +1,9 @@
 // components/form-builder/Canvas
 
 import { BlockItem } from '@/components/form-builder/block/Item';
-import { Plus, ArrowRight, CheckCircle, Settings as SettingsIcon } from 'lucide-react';
+import { Plus, ArrowRight, CheckCircle, Settings as SettingsIcon, Monitor, Smartphone } from 'lucide-react';
 import { cn } from '@/utils';
+import { FormDesign } from '@/components/form-builder/tabs/Design';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button'
 
@@ -10,6 +11,13 @@ const fontSizeClass = {
   small: 'text-sm',
   medium: 'text-base',
   large: 'text-lg',
+};
+
+const headingSizeClass = {
+  small: 'text-lg',
+  medium: 'text-xl',
+  large: 'text-2xl',
+  xlarge: 'text-3xl',
 };
 
 const DropZone = ({
@@ -83,6 +91,7 @@ export const Canvas = ({
   const [draggedBlockIndex, setDraggedBlockIndex] = useState(null);
   const [draggedSuccessBlockIndex, setDraggedSuccessBlockIndex] = useState(null);
   const [isExternalDragging, setIsExternalDragging] = useState(false);
+  const [previewMode, setPreviewMode] = useState('desktop');
   const dragGhostRef = useRef(null);
 
   useEffect(() => {
@@ -188,12 +197,16 @@ export const Canvas = ({
   };
 
   const handleBlockDragStart = (e, index) => {
+    const b = blocks[index];
+
     // Firefox requires at least one data item to be set.
     e.dataTransfer.setData('blockIndex', index.toString());
-    e.dataTransfer.setData('text/plain', blocks[index]?.label ?? 'Moving block');
+    e.dataTransfer.setData('blockId', b?.id ?? '');
+    e.dataTransfer.setData('blockType', b?.type ?? '');
+    e.dataTransfer.setData('text/plain', b?.label ?? 'Moving block');
     e.dataTransfer.effectAllowed = 'move';
 
-    setSmallDragGhost(e, blocks[index]?.label ?? 'Moving block');
+    setSmallDragGhost(e, b?.label ?? 'Moving block');
 
     setIsExternalDragging(false);
     setDraggedBlockIndex(index);
@@ -275,6 +288,9 @@ export const Canvas = ({
   const isDraggingBlocks = draggedBlockIndex !== null || isExternalDragging;
   const isDraggingSuccessBlocks = draggedSuccessBlockIndex !== null || isExternalDragging;
 
+  const textColorHex = formDesign.textColor.match(/text-\[(#[0-9A-Fa-f]{6})\]/)?.[1];
+  const bgColorHex = formDesign.backgroundColor.match(/bg-\[(#[0-9A-Fa-f]{6})\]/)?.[1];
+
   return (
     <div
       className="w-full h-full overflow-y-auto"
@@ -305,12 +321,61 @@ export const Canvas = ({
         }
       }}
     >
-      <div className="flex gap-1">
-        <div className="w-full max-w-4xl mx-auto py-6 px-3 sm:px-6">
+      <div className="flex gap-1 transition-all duration-300">
+        <div className={cn(
+          "w-full mx-auto pt-2 pb-6 px-3 sm:px-6",
+          previewMode === 'mobile' ? 'max-w-[375px]' : 'w-full max-w-4xl'
+        )}>
+          {/* Preview Mode Toggle */}
+          <div className="flex justify-center mb-2">
+            <div className="inline-flex bg-background rounded-lg p-1 border border-border">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPreviewMode('desktop');
+                }}
+                className={cn(
+                  'p-2 rounded-md transition-smooth',
+                  previewMode === 'desktop'
+                    ? 'bg-muted text-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+                title="Десктопна версія"
+              >
+                <Monitor className="w-4 h-4" />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPreviewMode('mobile');
+                }}
+                className={cn(
+                  'p-2 rounded-md transition-smooth',
+                  previewMode === 'mobile'
+                    ? 'bg-muted text-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+                title="Мобільна версія"
+              >
+                <Smartphone className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
           {/* Form Container */}
-          <div className={cn('rounded-2xl border-2 border-[#2f3032]/90!', formDesign.backgroundColor)}>
+          <div
+            className={cn('rounded-2xl border-2 border-[#2f3032]/90!', !bgColorHex && formDesign.backgroundColor)}
+            style={bgColorHex ? { backgroundColor: bgColorHex } : undefined}
+          >
             <div className="w-full pt-6 pb-10 px-4 sm:px-6">
-              <div className={cn('w-full max-w-[700px] mx-auto', formDesign.textColor, fontSizeClass[formDesign.fontSize])}>
+              <div
+                className={cn(
+                  'w-full max-w-[700px] mx-auto form-theme-scope',
+                  !textColorHex && formDesign.textColor,
+                  fontSizeClass[formDesign.fontSize]
+                )}
+                style={textColorHex ? { color: textColorHex } : undefined}
+              >
               {/* Blocks */}
               <div className="space-y-2">
                 {blocks.length === 0 ? (
@@ -365,99 +430,217 @@ export const Canvas = ({
                     />
 
                     <div className="space-y-2">
-                      {blocks.map((block, index) => (
-                        <div key={block.id} className={cn(draggedBlockIndex === index ? 'opacity-50' : '')}>
-                          <BlockItem
-                            block={block}
-                            isActive={activeBlockId === block.id}
-                            onSelect={() => {
-                              onSelectSuccessBlock(null);
-                              onSelectBlock(block.id);
-                            }}
-                            onDelete={() => onDeleteBlock(block.id)}
-                            onDuplicate={() => onDuplicateBlock(block.id)}
-                            onOpenSettings={() => onOpenSettings(block.id)}
-                            onAddBlock={onOpenAddBlock}
-                            onUpdateBlock={(updates) => onUpdateBlock(block.id, updates)}
-                            dragHandleProps={{
-                              draggable: true,
-                              onDragStart: (e) => handleBlockDragStart(e, index),
-                              onDragEnd: handleBlockDragEnd,
-                            }}
-                          />
+                      {blocks.map((block, index) => {
+                        const widthClass = {
+                          '1/1': 'w-full',
+                          '1/2': 'w-[calc(50%-0.5rem)]',
+                          '1/3': 'w-[calc(33.333%-0.67rem)]',
+                        }[block.blockWidth || '1/1'];
 
-                          {/* Drop zone after each block (no layout gap; hitbox appears only while dragging) */}
-                          <DropZone
-                            active={dropIndex === index + 1}
-                            isDragging={isDraggingBlocks}
-                            onDragOver={(e) => handleDragOver(e, index + 1)}
-                            onDragLeave={handleDragLeave}
-                            onDrop={(e) => handleDrop(e, index + 1)}
-                          />
-                        </div>
-                      ))}
+                        const verticalAlignClass = {
+                          top: 'self-start',
+                          center: 'self-center',
+                          bottom: 'self-end',
+                        }[block.blockVerticalAlign || 'top'];
+
+                        // Horizontal positioning for inline blocks (when a row has remaining free space)
+                        const horizontalAlignClass = block.blockWidth !== '1/1'
+                          ? {
+                              start: '',
+                              center: 'mx-auto',
+                              end: 'ml-auto',
+                            }[block.blockHorizontalAlign || 'start']
+                          : '';
+
+                        const getInsertIndexFromPointer = (e) => {
+                          const rect = (e.currentTarget).getBoundingClientRect();
+                          const isBefore = e.clientX < rect.left + rect.width / 2;
+                          return isBefore ? index : index + 1;
+                        };
+
+                        const handleInlineDragOver = (e) => {
+                          const insertIndex = getInsertIndexFromPointer(e);
+                          handleDragOver(e, insertIndex);
+                        };
+
+                        const handleInlineDrop = (e) => {
+                          const insertIndex = getInsertIndexFromPointer(e);
+                          handleDrop(e, insertIndex);
+                        };
+
+                        return (
+                          <div
+                            key={block.id}
+                            className={cn(
+                              widthClass,
+                              verticalAlignClass,
+                              horizontalAlignClass,
+                              draggedBlockIndex === index ? 'opacity-50' : ''
+                            )}
+                            onDragEnter={handleInlineDragOver}
+                            onDragOver={handleInlineDragOver}
+                            onDrop={handleInlineDrop}
+                          >
+                            <BlockItem
+                              block={block}
+                              isActive={activeBlockId === block.id}
+                              onSelect={() => {
+                                onSelectSuccessBlock(null);
+                                onSelectBlock(block.id);
+                              }}
+                              onDelete={() => onDeleteBlock(block.id)}
+                              onDuplicate={() => onDuplicateBlock(block.id)}
+                              onOpenSettings={() => onOpenSettings(block.id)}
+                              onAddBlock={onOpenAddBlock}
+                              onUpdateBlock={(updates) => onUpdateBlock(block.id, updates)}
+                              headingColor={formDesign.headingColor || 'text-foreground'}
+                              headingSize={headingSizeClass[formDesign.headingSize || 'medium']}
+                              dragHandleProps={{
+                                draggable: true,
+                                onDragStart: (e) => handleBlockDragStart(e, index),
+                                onDragEnd: handleBlockDragEnd,
+                              }}
+                            />
+
+                            {/* Drop zone after each block (only visible when dragging full-width blocks) */}
+                            {(block.blockWidth || '1/1') === '1/1' && (
+                              <DropZone
+                                active={dropIndex === index + 1}
+                                isDragging={isDraggingBlocks}
+                                onDragOver={(e) => handleDragOver(e, index + 1)}
+                                onDragLeave={handleDragLeave}
+                                onDrop={(e) => handleDrop(e, index + 1)}
+                              />
+                            )}
+                          </div>
+                        )
+                      })}
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* Submit Button - Fixed at end */}
-              <div className="mt-6 group/submit relative inline-block">
-                {/* Settings icon on left */}
-                <div
-                  className={cn(
-                    'absolute -left-9 top-1/2 -translate-y-1/2 z-20',
-                    'opacity-0 transition-smooth group-hover/submit:opacity-100'
-                  )}
-                >
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onSubmitButtonClick();
-                    }}
-                    className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-accent-foreground transition-smooth"
-                    title="Button settings"
+              {/* Submit Button - Fixed at end (only if not sticky) */}
+              {!formDesign.stickyButton && (
+                <div className="mt-6 group/submit relative inline-block">
+                  {/* Settings icon on left */}
+                  <div
+                    className={cn(
+                      'absolute -left-9 top-1/2 -translate-y-1/2 z-20',
+                      'opacity-0 transition-smooth group-hover/submit:opacity-100'
+                    )}
                   >
-                    <SettingsIcon className="w-4 h-4" />
-                  </button>
-                </div>
-                {/* Button with hover/selected border */}
-                <div
-                  className={cn(
-                    'rounded-lg transition-smooth',
-                    isSubmitButtonSelected 
-                      ? 'ring-2 ring-primary ring-offset-2' 
-                      : 'ring-0 group-hover/submit:ring-2 group-hover/submit:ring-border group-hover/submit:ring-offset-2'
-                  )}
-                >
-                  <Button
-                    variant="black"
-                    size="black"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onSubmitButtonClick();
-                    }}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSubmitButtonClick();
+                      }}
+                      className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-accent-foreground transition-smooth"
+                      title="Button settings"
+                    >
+                      <SettingsIcon className="w-4 h-4" />
+                    </button>
+                  </div>
+                  {/* Button with hover/selected border */}
+                  <div
+                    className={cn(
+                      'rounded-lg transition-smooth',
+                      isSubmitButtonSelected 
+                        ? 'ring-2 ring-primary ring-offset-2' 
+                        : 'ring-0 group-hover/submit:ring-2 group-hover/submit:ring-border group-hover/submit:ring-offset-2'
+                    )}
                   >
-                    {submitButtonText}
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
+                    <Button
+                      variant="black"
+                      size="black"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSubmitButtonClick();
+                      }}
+                    >
+                      {submitButtonText}
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              )}
               </div>
             </div>
           </div>
 
-          {/* Success Page Section */}
-          <div className={cn('mt-8 rounded-2xl border border-[#2f3032]/[0.05]! shadow-sm', formDesign.backgroundColor)}>
-            <div className="py-8">
-              <div className="text-center mb-6">
-                <div className="w-16 h-16 rounded-full bg-accent mx-auto mb-4 flex items-center justify-center">
-                  <CheckCircle className="w-8 h-8 text-primary" />
-                </div>
+          {/* Sticky Submit Button (when enabled) */}
+          {formDesign.stickyButton && (
+            <div className="mt-4 group/submit relative">
+              <div
+                className={cn(
+                  'absolute -left-9 top-1/2 -translate-y-1/2 z-20',
+                  'opacity-0 transition-smooth group-hover/submit:opacity-100'
+                )}
+              >
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSubmitButtonClick();
+                  }}
+                  className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-accent-foreground transition-smooth"
+                  title="Button settings"
+                >
+                  <SettingsIcon className="w-4 h-4" />
+                </button>
               </div>
+              <div
+                className={cn(
+                  'rounded-xl transition-smooth p-3 bg-card border border-border',
+                  isSubmitButtonSelected 
+                    ? 'ring-2 ring-primary ring-offset-2' 
+                    : 'ring-0 group-hover/submit:ring-2 group-hover/submit:ring-border group-hover/submit:ring-offset-2'
+                )}
+              >
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSubmitButtonClick();
+                  }}
+                  className={cn(
+                    'w-full flex items-center justify-between gap-2 px-4 py-3 rounded-xl font-medium transition-smooth',
+                    'bg-foreground text-background hover:bg-foreground/90',
+                    'focus:outline-none'
+                  )}
+                >
+                  {blocks.some((b) => b.type === 'products') ? (
+                    <>
+                      <span className="flex items-center justify-center w-7 h-7 rounded-full bg-muted-foreground/30 text-sm">1</span>
+                      <span className="flex-1 text-center">Order</span>
+                      <span className="text-sm font-medium">$0.00</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="flex-1 text-center">{submitButtonText}</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
 
+          {/* Success Page Section */}
+          <div
+            className={cn(
+              "mt-8 rounded-2xl border border-[#2f3032]/[0.05]! shadow-sm",
+              !bgColorHex && formDesign.backgroundColor)}
+            style={bgColorHex ? { backgroundColor: bgColorHex } : undefined}
+          >
+            <div className="py-8">
               {/* Success Page Blocks */}
-              <div className="space-y-2 w-full max-w-[700px] mx-auto px-4 sm:px-6">
+              <div
+                className={cn(
+                  "space-y-2 w-full max-w-[700px] mx-auto px-4 sm:px-6",
+                  !textColorHex && formDesign.textColor,
+                  fontSizeClass[formDesign.fontSize]
+                )}
+                style={textColorHex ? { color: textColorHex } : undefined}
+              >
                 {successBlocks.length === 0 ? (
                   <div
                     className={cn(
@@ -524,6 +707,8 @@ export const Canvas = ({
                             onOpenSettings={() => onOpenSuccessSettings(block.id)}
                             onAddBlock={onOpenAddSuccessBlock}
                             onUpdateBlock={(updates) => onUpdateSuccessBlock(block.id, updates)}
+                            headingColor={formDesign.headingColor || 'text-foreground'}
+                            headingSize={headingSizeClass[formDesign.headingSize || 'medium']}
                             dragHandleProps={{
                               draggable: true,
                               onDragStart: (e) => handleSuccessBlockDragStart(e, index),

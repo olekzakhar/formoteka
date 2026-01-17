@@ -159,22 +159,12 @@ export const Builder = ({ form }) => {
   }, []);
 
   // Core save function that actually saves to database
+  // FIXED: Removed all state dependencies to prevent infinite loops
   const saveToDatabase = useCallback(async (dataToSave) => {
     if (!form?.slug || !form?.user_id) return false;
 
-    // Create data snapshot
-    const currentData = dataToSave || {
-      formName: formName,
-      blocks: blocks,
-      submitButtonText: submitButtonText,
-      formDesign: formDesign,
-      successBlocks: successBlocks,
-      formSeo: formSeo,
-      deliveryTargets: deliveryTargets,
-    };
-
-    // Check if data actually changed (deep comparison)
-    const dataString = JSON.stringify(currentData);
+    // dataToSave now contains all the data we need
+    const dataString = JSON.stringify(dataToSave);
     if (lastSaveDataRef.current === dataString) {
       return false; // No changes, skip save
     }
@@ -183,7 +173,7 @@ export const Builder = ({ form }) => {
     setHasUnsavedChanges(false);
 
     try {
-      const result = await updateFormData(supabase, form.slug, form.user_id, currentData);
+      const result = await updateFormData(supabase, form.slug, form.user_id, dataToSave);
 
       if (result.success) {
         lastSaveDataRef.current = dataString;
@@ -202,27 +192,7 @@ export const Builder = ({ form }) => {
     } finally {
       setIsSaving(false);
     }
-  }, [form?.slug, form?.user_id, formName, blocks, submitButtonText, formDesign, successBlocks, formSeo, deliveryTargets, supabase]);
-
-  // Auto-save function (uses debounced values)
-  const autoSave = useCallback(async () => {
-    // Skip saving on initial load
-    if (isInitialLoad.current || !isDataLoaded.current) {
-      return;
-    }
-
-    const currentData = {
-      formName: debouncedFormName,
-      blocks: debouncedBlocks,
-      submitButtonText: debouncedSubmitButtonText,
-      formDesign: debouncedFormDesign,
-      successBlocks: debouncedSuccessBlocks,
-      formSeo: debouncedFormSeo,
-      deliveryTargets: debouncedDeliveryTargets,
-    };
-
-    await saveToDatabase(currentData);
-  }, [debouncedFormName, debouncedBlocks, debouncedSubmitButtonText, debouncedFormDesign, debouncedSuccessBlocks, debouncedFormSeo, debouncedDeliveryTargets, saveToDatabase]);
+  }, [form?.slug, form?.user_id, supabase]);
 
   // Manual save function (uses current values, not debounced)
   const handleManualSave = useCallback(async () => {
@@ -244,10 +214,34 @@ export const Builder = ({ form }) => {
     }
   }, [hasUnsavedChanges, isSaving, formName, blocks, submitButtonText, formDesign, successBlocks, formSeo, deliveryTargets, saveToDatabase]);
 
-  // Trigger auto-save when debounced values change
+  // FIXED: Auto-save effect - removed autoSave callback dependency
   useEffect(() => {
-    autoSave();
-  }, [autoSave]);
+    // Skip saving on initial load
+    if (isInitialLoad.current || !isDataLoaded.current) {
+      return;
+    }
+
+    const currentData = {
+      formName: debouncedFormName,
+      blocks: debouncedBlocks,
+      submitButtonText: debouncedSubmitButtonText,
+      formDesign: debouncedFormDesign,
+      successBlocks: debouncedSuccessBlocks,
+      formSeo: debouncedFormSeo,
+      deliveryTargets: debouncedDeliveryTargets,
+    };
+
+    saveToDatabase(currentData);
+  }, [
+    debouncedFormName, 
+    debouncedBlocks, 
+    debouncedSubmitButtonText, 
+    debouncedFormDesign, 
+    debouncedSuccessBlocks, 
+    debouncedFormSeo, 
+    debouncedDeliveryTargets,
+    saveToDatabase
+  ]);
 
   // Mark as having unsaved changes when state changes (immediate feedback)
   useEffect(() => {
@@ -564,14 +558,17 @@ export const Builder = ({ form }) => {
 
   }, [formSeo.title, formSeo.description, formName]);
 
-  // Auto-add/remove messenger-select block when delivery targets change
+  // FIXED: Auto-add/remove messenger-select block - removed blocks and updateBlock from dependencies
   useEffect(() => {
     if (deliveryTargets.mode !== 'messengers') {
       // Remove messenger-select block if email mode
-      const messengerBlock = blocks.find(b => b.type === 'messenger-select');
-      if (messengerBlock) {
-        setBlocks(prev => prev.filter(b => b.type !== 'messenger-select'));
-      }
+      setBlocks(prev => {
+        const hasMessengerBlock = prev.some(b => b.type === 'messenger-select');
+        if (hasMessengerBlock) {
+          return prev.filter(b => b.type !== 'messenger-select');
+        }
+        return prev;
+      });
       return;
     }
 
@@ -586,30 +583,34 @@ export const Builder = ({ form }) => {
       enabledMessengers.push({ type: 'instagram', handle: deliveryTargets.instagram.handle });
     }
 
-    const existingMessengerBlock = blocks.find(b => b.type === 'messenger-select');
-
     if (enabledMessengers.length >= 2) {
       // Need messenger-select block
-      if (existingMessengerBlock) {
-        // Update existing block with new options
-        updateBlock(existingMessengerBlock.id, { messengerOptions: enabledMessengers });
-      } else {
-        // Add new messenger-select block before submit button (at end of blocks)
-        const newBlock = {
-          id: `block-${Date.now()}-messenger`,
-          type: 'messenger-select',
-          label: 'Choose how to receive response',
-          messengerOptions: enabledMessengers,
-        };
-        setBlocks(prev => [...prev, newBlock]);
-      }
+      setBlocks(prev => {
+        const existingMessengerBlock = prev.find(b => b.type === 'messenger-select');
+        
+        if (existingMessengerBlock) {
+          // Update existing block with new options
+          return prev.map(block => 
+            block.id === existingMessengerBlock.id 
+              ? { ...block, messengerOptions: enabledMessengers }
+              : block
+          );
+        } else {
+          // Add new messenger-select block before submit button (at end of blocks)
+          const newBlock = {
+            id: `block-${Date.now()}-messenger`,
+            type: 'messenger-select',
+            label: 'Choose how to receive response',
+            messengerOptions: enabledMessengers,
+          };
+          return [...prev, newBlock];
+        }
+      });
     } else {
       // Remove messenger-select block if only 1 or 0 messengers
-      if (existingMessengerBlock) {
-        setBlocks(prev => prev.filter(b => b.type !== 'messenger-select'));
-      }
+      setBlocks(prev => prev.filter(b => b.type !== 'messenger-select'));
     }
-  }, [deliveryTargets, blocks, updateBlock, setBlocks]);
+  }, [deliveryTargets, setBlocks]);
 
   const handleSubmitButtonClick = () => {
     setShowSubmitSettings(true);

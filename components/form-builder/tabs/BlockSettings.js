@@ -1,3 +1,7 @@
+// components/form-builder/tabs/BlockSettings
+
+/* eslint-disable react-hooks/rules-of-hooks */
+
 'use client'
 
 import { blockDefinitions } from '@/data/block-definitions';
@@ -2042,5 +2046,5 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}

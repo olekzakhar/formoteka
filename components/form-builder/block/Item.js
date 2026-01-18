@@ -4,7 +4,7 @@
 
 import { blockDefinitions } from '@/data/block-definitions';
 import { GripVertical, Copy, Trash2, Image, Image as ImageIcon, Loader2 } from 'lucide-react';
-import { cn } from '@/utils';
+import { cn, getImageUrl } from '@/utils';
 import { useState, useRef, useEffect } from 'react';
 
 export const BlockItem = ({
@@ -31,18 +31,6 @@ export const BlockItem = ({
   const fileInputRef = useRef(null);
 
   const showLabel = block.showLabel !== false;
-
-  // Функція для отримання повного URL зображення
-  const getImageUrl = (fileName) => {
-    if (!fileName) return '';
-    // Якщо це вже data URL (preview) - повертаємо як є
-    if (fileName.startsWith('data:')) return fileName;
-    // Якщо це повний URL - повертаємо як є (для сумісності зі старими даними)
-    if (fileName.startsWith('http')) return fileName;
-    // Інакше - це ім'я файлу, додаємо базовий URL
-    const baseUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || 'https://cdn.formoteka.com';
-    return `${baseUrl}/${fileName}`;
-  };
 
   // Auto-resize textarea for paragraph
   const autoResizeTextarea = () => {
@@ -754,7 +742,7 @@ export const BlockItem = ({
           </div>
         );
       default:
-        return <div className="text-muted-foreground">Unknown block type</div>;
+        return <div className="text-muted-foreground">Невідомий тип блоку</div>;
     }
   };
 

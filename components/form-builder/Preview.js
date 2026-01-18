@@ -6,17 +6,33 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, CheckCircle, Image, ExternalLink, X } from 'lucide-react';
+import { ArrowRight, CheckCircle, Image, ExternalLink, X, Monitor, Smartphone } from 'lucide-react';
 import { useState } from 'react';
-import { cn } from '@/utils';
+import { cn, getImageUrl } from '@/utils';
+// import { TabsDesign } from '@/components/form-builder/tabs/Design';
 import { BlockProductsRenderer } from '@/components/form-builder/block/ProductsRenderer';
 import { BASE_URL } from '@/constants';
+import { BlockSlideshow } from '@/components/form-builder/block/Slideshow';
+import { BlockReviews } from '@/components/form-builder/block/Reviews';
+import { BlockFAQ } from '@/components/form-builder/block/FAQ';
+import { BlockMap } from '@/components/form-builder/block/Map';
+import { BlockIcon } from '@/components/form-builder/block/Icon';
+import { BlockAvatar } from '@/components/form-builder/block/Avatar';
+import { BlockMessengerSelect } from '@/components/form-builder/block/MessengerSelect';
+import { BlockList } from '@/components/form-builder/block/List';
 import { sendEmail } from '@/server/emails';
 
 const fontSizeClass = {
   small: 'text-sm',
   medium: 'text-base',
   large: 'text-lg',
+};
+
+const headingSizeClass = {
+  small: 'text-lg',
+  medium: 'text-xl',
+  large: 'text-2xl',
+  xlarge: 'text-3xl',
 };
 
 export const Preview = ({
@@ -33,18 +49,10 @@ export const Preview = ({
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
+  const [previewMode, setPreviewMode] = useState('desktop');
 
-  // Функція для отримання повного URL зображення
-  const getImageUrl = (fileName) => {
-    if (!fileName) return '';
-    // Якщо це вже data URL (preview) - повертаємо як є
-    if (fileName.startsWith('data:')) return fileName;
-    // Якщо це повний URL - повертаємо як є (для сумісності зі старими даними)
-    if (fileName.startsWith('http')) return fileName;
-    // Інакше - це ім'я файлу, додаємо базовий URL
-    const baseUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || 'https://cdn.formoteka.com';
-    return `${baseUrl}/${fileName}`;
-  };
+  const textColorHex = formDesign.textColor.match(/text-\[(#[0-9A-Fa-f]{6})\]/)?.[1];
+  const bgColorHex = formDesign.backgroundColor.match(/bg-\[(#[0-9A-Fa-f]{6})\]/)?.[1];
 
   const handleSelectProduct = (productId, quantity) => {
     setSelectedProducts((prev) => {
@@ -68,9 +76,10 @@ export const Preview = ({
     try {
       // Collect form data from the form element
       const formElement = e.target;
-
+      
       // ========== FORM CONFIGURATION (the form structure itself) ==========
       const formConfiguration = {
+        formName,
         formSlug,
         formDesign,
         submitButtonText,
@@ -88,9 +97,15 @@ export const Preview = ({
         products: []
       };
 
+      // Блоки які не є полями введення, щоб через них форма не проходила у петлі
       // Process each block to extract field values
       blocks.forEach((block) => {
-        if (['heading', 'paragraph', 'image', 'spacer', 'divider'].includes(block.type)) {
+        if ([
+          'heading', 'paragraph', 'image',
+          'spacer', 'divider', 'avatar',
+          'slideshow', 'reviews', 'map',
+          'faq', 'icon', 'list'
+        ].includes(block.type)) {
           return; // Skip non-input blocks
         }
 
@@ -166,7 +181,7 @@ export const Preview = ({
       console.log(JSON.stringify(formConfiguration, null, 2));
       
       console.log('\n');
-
+      
       console.log('╔════════════════════════════════════════════════════════════════╗');
       console.log('║           DATABASE SAVE DATA - FORM SUBMISSION                 ║');
       console.log('╠════════════════════════════════════════════════════════════════╣');
@@ -176,12 +191,12 @@ export const Preview = ({
       console.log(JSON.stringify(submissionData, null, 2));
 
       // Send email
-      await sendEmail();
+      // await sendEmail();
       
       setIsSubmitted(true);
     } catch (error) {
-      console.error('Error submitting form:', error);
-      alert('Failed to submit form. Please try again.');
+      // console.error('Error submitting form:', error);
+      alert('Не вдалося надіслати форму. Спробуйте ще раз.');
     } finally {
       setIsSubmitting(false);
     }
@@ -290,6 +305,30 @@ export const Preview = ({
       case 'image':
         return renderImageGrid(block);
 
+      case 'slideshow':
+        return <BlockSlideshow block={block} isPreview />;
+
+      case 'reviews':
+        return <BlockReviews block={block} isPreview />;
+
+      case 'faq':
+        return <BlockFAQ block={block} isPreview />;
+
+      case 'map':
+        return <BlockMap block={block} isPreview />;
+
+      case 'icon':
+        return <BlockIcon block={block} />;
+
+      case 'list':
+        return <BlockList block={block} isPreview />;
+
+      case 'avatar':
+        return <BlockAvatar block={block} />;
+
+      case 'messenger-select':
+        return <BlockMessengerSelect block={block} isPreview />;
+
       case 'products':
         return (
           <div className="space-y-2">
@@ -310,12 +349,18 @@ export const Preview = ({
 
       case 'heading':
         const headingAlign = block.textAlign === 'center' ? 'text-center' : block.textAlign === 'right' ? 'text-right' : 'text-left';
-        return <h2 className={cn("text-xl font-semibold", headingAlign)}>{block.label}</h2>;
+        const hColor = formDesign.headingColor || 'text-foreground';
+        const hSize = headingSizeClass[formDesign.headingSize || 'medium'];
+        return <h2 className={cn("font-semibold", hSize, hColor, headingAlign)}>{block.label}</h2>;
 
       case 'paragraph':
         const paragraphAlign =
           block.textAlign === 'center' ? 'text-center' : block.textAlign === 'right' ? 'text-right' : 'text-left';
-        return <p className={cn('text-muted-foreground whitespace-pre-wrap break-words', paragraphAlign)}>{block.label}</p>;
+        return (
+          <div style={block.textColor ? { color: block.textColor } : undefined}>
+            <p className={cn('whitespace-pre-wrap break-words', 'opacity-80', paragraphAlign)}>{block.label}</p>
+          </div>
+        );
 
       case 'short-text':
       case 'email':
@@ -445,6 +490,18 @@ export const Preview = ({
     }
   };
 
+  // Calculate product totals for sticky button
+  const hasProductsBlock = blocks.some((b) => b.type === 'products');
+  const totalQuantity = selectedProducts.reduce((sum, sp) => sum + sp.quantity, 0);
+  const totalAmount = selectedProducts.reduce((sum, sp) => {
+    const productBlock = blocks.find((b) => b.type === 'products');
+    const product = productBlock?.products?.find((p) => p.id === sp.productId);
+    return sum + (product?.price ?? 0) * sp.quantity;
+  }, 0);
+
+  const showProductInfo = formDesign.stickyButton && hasProductsBlock && totalQuantity > 0;
+  const displayButtonText = formDesign.stickyButton && hasProductsBlock ? 'Order' : submitButtonText;
+
   return (
     <div className="fixed inset-0 z-[100]" onClick={onClose}>
       {/* Backdrop */}
@@ -453,14 +510,19 @@ export const Preview = ({
       {/* Content - centered with margins subtracted from viewport height */}
       <div className="relative h-full w-full flex items-center justify-center p-8">
         <div 
-          className="w-[70vw] max-w-[960px] min-w-[320px] flex flex-col"
+          className={cn(
+            "flex flex-col transition-all duration-300",
+            previewMode === 'mobile' 
+              ? 'w-[375px] max-w-[375px]' 
+              : 'w-[70vw] max-w-[960px] min-w-[320px]'
+          )}
           style={{ height: 'calc(100vh - 64px)' }}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Modal container with header inside */}
-          <div className="flex flex-col rounded-2xl overflow-hidden shadow-2xl h-full">
-            {/* Top bar with form URL and close button - inside the modal */}
-            <div className="bg-[#F3F4F6] px-4 py-2.5 flex items-center justify-between border-b">
+          <div className="flex flex-col rounded-2xl overflow-hidden shadow-2xl h-full relative">
+            {/* Top bar with form URL, preview mode toggle, and close button */}
+            <div className="bg-[#F3F4F6] px-4 py-2.5 flex items-center justify-between border-b border-border gap-3">
               <button
                 onClick={onClose}
                 className="p-1 rounded-md hover:bg-muted transition-colors"
@@ -468,6 +530,35 @@ export const Preview = ({
               >
                 <X className="w-4 h-4 text-muted-foreground" />
               </button>
+              
+              {/* Preview Mode Toggle */}
+              <div className="inline-flex bg-background/50 rounded-lg p-0.5">
+                <button
+                  onClick={() => setPreviewMode('desktop')}
+                  className={cn(
+                    'p-1.5 rounded-md transition-all',
+                    previewMode === 'desktop'
+                      ? 'bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  )}
+                  title="Desktop view"
+                >
+                  <Monitor className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setPreviewMode('mobile')}
+                  className={cn(
+                    'p-1.5 rounded-md transition-all',
+                    previewMode === 'mobile'
+                      ? 'bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  )}
+                  title="Mobile view"
+                >
+                  <Smartphone className="w-4 h-4" />
+                </button>
+              </div>
+
               <Link
                 href={formUrl}
                 target="_blank"
@@ -481,13 +572,18 @@ export const Preview = ({
 
             {/* Form content */}
             <div
-              className={cn(
-                'flex-1 overflow-auto',
-                formDesign.backgroundColor
-              )}
+              className={cn('flex-1 overflow-auto', !bgColorHex && formDesign.backgroundColor)}
+              style={bgColorHex ? { backgroundColor: bgColorHex } : undefined}
             >
               <div className="w-full pt-6 pb-10 px-4 sm:px-6">
-                <div className={cn('w-full max-w-[700px] mx-auto', formDesign.textColor, fontSizeClass[formDesign.fontSize])}>
+                <div
+                  className={cn(
+                    'w-full max-w-[700px] mx-auto',
+                    !textColorHex && formDesign.textColor,
+                    fontSizeClass[formDesign.fontSize]
+                  )}
+                  style={textColorHex ? { color: textColorHex } : undefined}
+                >
                 {blocks.length === 0 && !isSubmitted ? (
                   <div className="flex items-center justify-center h-64">
                     <p className="text-muted-foreground">No blocks to preview. Add some blocks first.</p>
@@ -507,30 +603,93 @@ export const Preview = ({
                     </div>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-0">
-                    {blocks.map((block) => (
-                      <div key={block.id} className="py-2">{renderBlock(block)}</div>
-                    ))}
-                    <div className="pt-4">
-                      <Button
-                        variant="black"
-                        size="black"
-                        type="submit"
-                        loading={isSubmitting}
-                        disabled={isSubmitting}
-                      >
-                        {isSubmitting ? 'Надсилаю...' : submitButtonText}
-                        <ArrowRight className="w-4 h-4" />
-                      </Button>
-                    </div>
+                  <form onSubmit={handleSubmit} className={cn("flex flex-wrap gap-4 items-start", formDesign.stickyButton && "pb-24")}>
+                    {blocks.map((block) => {
+                      const widthClass = {
+                        '1/1': 'w-full',
+                        '1/2': 'w-[calc(50%-0.5rem)]',
+                        '1/3': 'w-[calc(33.333%-0.67rem)]',
+                      }[block.blockWidth || '1/1'];
+
+                      const verticalAlignClass = {
+                        top: 'self-start',
+                        center: 'self-center',
+                        bottom: 'self-end',
+                      }[block.blockVerticalAlign || 'top'];
+
+                      // Horizontal positioning for inline blocks (when a row has remaining free space)
+                      const horizontalAlignClass = block.blockWidth !== '1/1'
+                        ? {
+                            start: '',
+                            center: 'mx-auto',
+                            end: 'ml-auto',
+                          }[block.blockHorizontalAlign || 'start']
+                        : '';
+
+                      return (
+                        <div
+                          key={block.id}
+                          className={cn(widthClass, verticalAlignClass, horizontalAlignClass, 'py-2')}
+                        >
+                          {renderBlock(block)}
+                        </div>
+                      );
+                    })}
+                    {!formDesign.stickyButton && (
+                      <div className="pt-4">
+                        <Button
+                          variant="black"
+                          size="black"
+                          type="submit"
+                          loading={isSubmitting}
+                          disabled={isSubmitting}
+                        >
+                          {isSubmitting ? 'Надсилаю...' : submitButtonText}
+                          <ArrowRight className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    )}
                   </form>
                 )}
                 </div>
               </div>
             </div>
+
+            {/* Sticky Submit Button */}
+            {formDesign.stickyButton && !isSubmitted && blocks.length > 0 && (
+              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background via-background to-transparent">
+                <div className="max-w-[700px] mx-auto">
+                  <Button
+                    type="button"
+                    onClick={handleSubmit}
+                    className={cn(
+                      'w-full flex items-center justify-between gap-2 px-4 py-4 rounded-xl font-medium',
+                      'bg-foreground text-background hover:bg-foreground/90',
+                      'focus:outline-none'
+                    )}
+                  >
+                    {showProductInfo ? (
+                      <>
+                        <span className="flex items-center justify-center w-7 h-7 rounded-full bg-muted-foreground/30 text-sm">
+                          {totalQuantity}
+                        </span>
+                        <span className="flex-1 text-center">{displayButtonText}</span>
+                        <span className="text-sm font-medium">${totalAmount.toFixed(2)}</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="w-7" />
+                        <span className="flex-1 text-center">{displayButtonText}</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

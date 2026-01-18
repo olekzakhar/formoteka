@@ -12,8 +12,15 @@ export const blockDefinitions = [
   { type: 'date', label: 'Дата', icon: 'Calendar', category: 'input' },
   { type: 'spacer', label: 'Простір', icon: 'Minus', category: 'layout' },
   { type: 'image', label: 'Зображення', icon: 'Image', category: 'content' },
+  { type: 'avatar', label: 'Аватар', icon: 'User', category: 'content' },
+  { type: 'slideshow', label: 'Слайдер', icon: 'GalleryHorizontal', category: 'content' },
+  { type: 'map', label: 'Мапа', icon: 'MapPin', category: 'content' },
   { type: 'divider', label: 'Розділювач', icon: 'SeparatorHorizontal', category: 'layout' },
-];
+  { type: 'reviews', label: 'Відгуки', icon: 'Star', category: 'content' },
+  { type: 'faq', label: 'Питання / відповіді', icon: 'HelpCircle', category: 'content' },
+  { type: 'icon', label: 'Іконка', icon: 'Smile', category: 'content' },
+  { type: 'list', label: 'Список', icon: 'List', category: 'content' },
+]
 
 export const getDefaultBlock = (type) => {
   const defaults = {
@@ -30,7 +37,37 @@ export const getDefaultBlock = (type) => {
     products: { label: 'Продукти', products: [], productsLayout: 'grid-2', showLabel: true },
     spacer: { label: 'Простір', height: 32 },
     image: { label: 'Зображення', imageCount: 1, images: [] },
+    avatar: { 
+      label: 'Аватар', 
+      avatarSize: 64, 
+      avatarAlign: 'center', 
+      avatarRadius: 'circle',
+      avatarPosition: { x: 50, y: 50 }
+    },
+    slideshow: { label: 'Слайдер', slideshowImages: [], slideshowHeight: 200, slideshowGap: 12 },
+    map: { label: 'Мапа', mapQuery: 'New York, NY', mapZoom: 14, mapHeight: 320, mapCenterLat: 40.7128, mapCenterLng: -74.006 },
     divider: { label: 'Розділювач', dividerColor: '#e5e7eb', dividerThickness: 1, dividerWidth: 100, dividerStyle: 'solid' },
-  };
-  return defaults[type] || { label: 'New Block' };
-};
+    reviews: { label: 'Відгуки', reviews: [], reviewsLayout: 'cards', reviewsShowAvatar: true },
+    faq: { label: 'Питання / відповіді', faqItems: [] },
+    icon: { 
+      label: 'Іконка', 
+      iconName: 'CheckCircle', 
+      iconSize: 32, 
+      iconColor: '#22c55e', 
+      iconBgColor: '#22c55e', 
+      iconBgOpacity: 15, 
+      iconBgPadding: 16, 
+      iconBgShape: 'circle', 
+      iconBgRadius: 8 
+    },
+    'messenger-select': { label: 'Оберіть месенджер', messengerOptions: [] },
+    list: {
+      label: 'Список',
+      listItems: ['Item 1', 'Item 2', 'Item 3'],
+      listIcon: 'Check',
+      listIconColor: '#22c55e',
+      listStyle: 'icon',
+    },
+  }
+  return defaults[type] || { label: 'Новий блок' }
+}

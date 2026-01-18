@@ -1,6 +1,6 @@
 import * as LucideIcons from 'lucide-react';
 
-export const IconBlock = ({ block }) => {
+export const BlockIcon = ({ block }) => {
   const iconName = block.iconName || 'CheckCircle';
   const size = block.iconSize ?? 32;
   const color = block.iconColor || '#22c55e';

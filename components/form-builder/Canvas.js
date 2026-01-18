@@ -373,7 +373,7 @@ export const Canvas = ({
             <div className="w-full pt-6 pb-10 px-4 sm:px-6">
               <div
                 className={cn(
-                  'w-full max-w-[700px] mx-auto form-theme-scope',
+                  'w-full max-w-[700px] mx-auto',
                   !textColorHex && formDesign.textColor,
                   fontSizeClass[formDesign.fontSize]
                 )}

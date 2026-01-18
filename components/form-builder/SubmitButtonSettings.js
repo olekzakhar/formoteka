@@ -2,19 +2,95 @@ import { cn } from '@/utils'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 
-export const SubmitButtonSettings = ({ buttonText, onButtonTextChange }) => {
+export const SubmitButtonSettings = ({
+  buttonText,
+  onButtonTextChange,
+  formDesign,
+  onUpdateDesign,
+  hasProductsBlock = false,
+  totalQuantity = 0,
+  totalAmount = 0,
+}) => {
+  const showProductInfo = formDesign.stickyButton && hasProductsBlock && totalQuantity > 0;
+  const displayButtonText = formDesign.stickyButton && hasProductsBlock ? 'Замовити' : buttonText;
+
   return (
     <div className="p-4 space-y-6 animate-fade-in">
       {/* Preview */}
       <div className="p-4 bg-muted/50 rounded-lg">
         <p className="text-xs text-muted-foreground mb-3">Перегляд</p>
-        <Button
-          variant="black"
-          size="black"
-        >
-          {buttonText}
-          <ArrowRight className="w-4 h-4" />
-        </Button>
+        
+        {formDesign.stickyButton ? (
+          <div className="relative bg-card rounded-xl border border-border overflow-hidden w-full">
+            {/* Mock content area */}
+            <div className="h-24 bg-muted/30 flex items-center justify-center">
+              <span className="text-xs text-muted-foreground">Вміст форми</span>
+            </div>
+            
+            {/* Sticky button preview */}
+            <div className="p-3 border-t border-border">
+              <Button
+                variant="black"
+                size="black"
+                className="w-full flex items-center justify-between"
+              >
+                {showProductInfo && (
+                  <span className="flex items-center justify-center w-7 h-7 rounded-full bg-muted-foreground/30 text-sm">
+                    {totalQuantity}
+                  </span>
+                )}
+                <span className="flex-1 text-center">{displayButtonText}</span>
+                {showProductInfo ? (
+                  <span className="text-sm font-medium">${totalAmount.toFixed(2)}</span>
+                ) : (
+                  <ArrowRight className="w-4 h-4" />
+                )}
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <Button
+            variant="black"
+            size="black"
+          >
+            {buttonText}
+            <ArrowRight className="w-4 h-4" />
+          </Button>
+        )}
+      </div>
+
+      {/* Sticky Button Toggle */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <label className="text-sm font-medium text-foreground">Закріплена кнопка</label>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Закріплено внизу екрана
+            </p>
+          </div>
+          <button
+            onClick={() => onUpdateDesign({ stickyButton: !formDesign.stickyButton })}
+            className={cn(
+              'relative w-11 h-6 rounded-full transition-smooth',
+              formDesign.stickyButton ? 'bg-primary' : 'bg-muted'
+            )}
+          >
+            <span
+              className={cn(
+                'absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-background shadow-soft transition-smooth',
+                formDesign.stickyButton && 'translate-x-5'
+              )}
+            />
+          </button>
+        </div>
+        
+        {formDesign.stickyButton && (
+          <div className="p-3 bg-accent/50 rounded-lg">
+            <p className="text-xs text-muted-foreground">
+              Коли є блок Продукти, кнопка показує загальну кількість і суму.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Button text */}
@@ -31,6 +107,11 @@ export const SubmitButtonSettings = ({ buttonText, onButtonTextChange }) => {
             'transition-smooth'
           )}
         />
+        {formDesign.stickyButton && hasProductsBlock && (
+          <p className="text-xs text-muted-foreground">
+            Після вибору товарів текст кнопки автоматично змінюється на “Замовити”.
+          </p>
+        )}
       </div>
 
       <div className="p-3 bg-muted/50 rounded-lg">

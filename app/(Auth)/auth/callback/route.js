@@ -1,4 +1,4 @@
-// app/auth/callback/route.js
+// app/auth/callback/route
 
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'

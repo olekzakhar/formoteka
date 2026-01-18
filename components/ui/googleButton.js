@@ -80,7 +80,8 @@ export default function GoogleButton() {
   return (
     <button
       type="button"
-      disabled={loading}
+      disabled={true}
+      // disabled={loading}
       onClick={handleSignIn}
       className="mt-4 text-sm font-medium h-10 px-4 py-2 rounded-lg w-full flex items-center justify-center gap-x-3 bg-transparent text-zinc-900 border border-zinc-600/90 hover:bg-zinc-900/90 hover:text-zinc-50 hover:border-zinc-900/90 transition-colors duration-150 disabled:cursor-not-allowed"
     >

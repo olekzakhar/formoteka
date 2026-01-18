@@ -167,7 +167,8 @@ export default function LoginForm({ loginForm=true }) {
                         variant="black"
                         className="mt-1"
                         loading={loading}
-                        disabled={loading}
+                        disabled={true}
+                        // disabled={loading}
                       >
                         Створити акаунт
                       </Button>

@@ -6,6 +6,14 @@ import { blockDefinitions } from '@/data/block-definitions';
 import { GripVertical, Copy, Trash2, Image, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { cn, getImageUrl } from '@/utils';
 import { useState, useRef, useEffect } from 'react';
+import { BlockSlideshow } from '@/components/form-builder/block/Slideshow';
+import { BlockReviews } from '@/components/form-builder/block/Reviews';
+import { BlockFAQ } from '@/components/form-builder/block/FAQ';
+import { BlockMap } from '@/components/form-builder/block/Map';
+import { BlockIcon } from '@/components/form-builder/block/Icon';
+import { BlockAvatar } from '@/components/form-builder/block/Avatar';
+import { BlockMessengerSelect } from '@/components/form-builder/block/MessengerSelect';
+import { BlockList } from '@/components/form-builder/block/List';
 
 export const BlockItem = ({
   block,
@@ -18,6 +26,8 @@ export const BlockItem = ({
   onUpdateBlock,
   draggableProps,
   dragHandleProps,
+  headingColor = 'text-foreground',
+  headingSize = 'text-xl',
 }) => {
   const definition = blockDefinitions.find((d) => d.type === block.type);
   const [isEditingLabel, setIsEditingLabel] = useState(false);
@@ -31,6 +41,11 @@ export const BlockItem = ({
   const fileInputRef = useRef(null);
 
   const showLabel = block.showLabel !== false;
+
+  useEffect(() => {
+    setEditLabelValue(block.label);
+    setEditPlaceholderValue(block.placeholder || '');
+  }, [block.label, block.placeholder]);
 
   // Auto-resize textarea for paragraph
   const autoResizeTextarea = () => {
@@ -239,7 +254,7 @@ export const BlockItem = ({
                       loading="lazy"
                     />
                   </div>
-                  
+
                   {/* Overlay при завантаженні */}
                   {isUploading && (
                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
@@ -314,6 +329,56 @@ export const BlockItem = ({
         );
       case 'image':
         return renderImageGrid();
+      case 'slideshow':
+        return <BlockSlideshow block={block} onUpdateBlock={onUpdateBlock} />;
+      case 'reviews':
+        return <BlockReviews block={block} onUpdateBlock={onUpdateBlock} />;
+      case 'faq':
+        return <BlockFAQ block={block} onUpdateBlock={onUpdateBlock} />;
+      case 'map':
+        return <BlockMap block={block} onUpdateBlock={onUpdateBlock} onRequestSelect={onSelect} />;
+      case 'icon':
+        return <BlockIcon block={block} />;
+      case 'list':
+        return <BlockList block={block} onUpdateBlock={onUpdateBlock} isEditable />;
+      case 'avatar':
+        const hasAvatarImage = Boolean(block.avatarImage);
+        return (
+          <div className="relative group/avatar">
+            <BlockAvatar block={block} />
+            {/* Upload button overlay - only show when no image */}
+            {!hasAvatarImage && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const input = document.createElement('input');
+                  input.type = 'file';
+                  input.accept = 'image/*';
+                  input.onchange = (ev) => {
+                    const file = (ev.target).files?.[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onload = () => {
+                        onUpdateBlock({ avatarImage: reader.result });
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  };
+                  input.click();
+                }}
+                className={cn(
+                  'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10',
+                  'p-2 rounded-full bg-background/90 border border-border shadow-md',
+                  'text-muted-foreground hover:text-foreground hover:bg-background',
+                  'opacity-0 group-hover/avatar:opacity-100 transition-smooth'
+                )}
+                title="Upload image"
+              >
+                <ImageIcon className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+        );
       case 'heading':
         const headingAlignClass = block.textAlign === 'center' ? 'text-center' : block.textAlign === 'right' ? 'text-right' : 'text-left';
         return isEditingLabel ? (
@@ -324,11 +389,11 @@ export const BlockItem = ({
             onChange={(e) => setEditLabelValue(e.target.value)}
             onBlur={handleSaveLabel}
             onKeyDown={handleLabelKeyDown}
-            className={cn("text-xl font-semibold text-foreground bg-transparent outline-none w-full", headingAlignClass)}
+            className={cn("font-semibold bg-transparent outline-none w-full", headingSize, headingColor, headingAlignClass)}
           />
         ) : (
           <h3
-            className={cn("text-xl font-semibold text-foreground cursor-text", headingAlignClass)}
+            className={cn("font-semibold cursor-text", headingSize, headingColor, headingAlignClass)}
             onClick={(e) => {
               e.stopPropagation();
               onSelect();
@@ -363,15 +428,16 @@ export const BlockItem = ({
               }
             }}
             className={cn(
-              'text-muted-foreground bg-transparent outline-none w-full resize-none overflow-hidden block',
+              'bg-transparent outline-none w-full resize-none overflow-hidden block',
               'leading-normal p-0 m-0 whitespace-pre-wrap break-words',
+              'opacity-80',
               paragraphAlignClass
             )}
             style={{ lineHeight: '1.5' }}
           />
         ) : (
           <p
-            className={cn('text-muted-foreground cursor-text whitespace-pre-wrap break-words', paragraphAlignClass)}
+            className={cn('cursor-text whitespace-pre-wrap break-words', 'opacity-80', paragraphAlignClass)}
             onClick={(e) => {
               e.stopPropagation();
               onSelect();
@@ -741,10 +807,15 @@ export const BlockItem = ({
             />
           </div>
         );
+      case 'messenger-select':
+        return <BlockMessengerSelect block={block} />;
       default:
         return <div className="text-muted-foreground">Невідомий тип блоку</div>;
     }
   };
+
+  // messenger-select: draggable only (no duplicate/delete)
+  const showDuplicateDelete = block.type !== 'messenger-select';
 
   return (
     <div
@@ -784,32 +855,42 @@ export const BlockItem = ({
         >
           <GripVertical className="w-4 h-4 pointer-events-none" />
         </div>
-        {/* Duplicate */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onDuplicate();
-          }}
-          className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-accent-foreground transition-smooth"
-          title="Duplicate"
-        >
-          <Copy className="w-4 h-4" />
-        </button>
-        {/* Delete */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete();
-          }}
-          className="p-1.5 rounded-md hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-smooth"
-          title="Delete"
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
+
+        {showDuplicateDelete && (
+          <>
+            {/* Duplicate */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDuplicate();
+              }}
+              className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-accent-foreground transition-smooth"
+              title="Duplicate"
+            >
+              <Copy className="w-4 h-4" />
+            </button>
+            {/* Delete */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete();
+              }}
+              className="p-1.5 rounded-md hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-smooth"
+              title="Delete"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          </>
+        )}
       </div>
 
       {/* Block content */}
-      <div className="w-full">{renderBlockContent()}</div>
+      <div
+        className="w-full"
+        style={block.textColor ? { color: block.textColor } : undefined}
+      >
+        {renderBlockContent()}
+      </div>
     </div>
-  );
-};
+  )
+}

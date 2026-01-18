@@ -32,7 +32,7 @@ const BlockMapContainer = ({
   isPreview = false,
   onRequestSelect,
 }) => {
-  const center = useMemo<[number, number]>(() => {
+  const center = useMemo(() => {
     if (block.mapCenterLat != null && block.mapCenterLng != null) {
       return [block.mapCenterLat, block.mapCenterLng];
     }

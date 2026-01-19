@@ -107,10 +107,10 @@ async function handleFormSubmission(data) {
     //     products_total: data.submissionData.productsTotal,
     //   })
 
-    if (insertError) {
-      // console.error('Error saving submission:', insertError)
-      throw insertError
-    }
+    // if (insertError) {
+    //   console.error('Error saving submission:', insertError)
+    //   throw insertError
+    // }
 
     // TODO: Відправити email якщо потрібно
     // await sendEmail({

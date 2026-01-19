@@ -2,36 +2,36 @@
 
 'use client'
 
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { ArrowRight, CheckCircle, Image } from 'lucide-react';
-import { useState } from 'react';
-import { cn, getImageUrl } from '@/utils';
-import { BlockProductsRenderer } from '@/components/form-builder/block/ProductsRenderer';
-import { BlockSlideshow } from '@/components/form-builder/block/Slideshow';
-import { BlockReviews } from '@/components/form-builder/block/Reviews';
-import { BlockFAQ } from '@/components/form-builder/block/FAQ';
-import { BlockMap } from '@/components/form-builder/block/Map';
-import { BlockIcon } from '@/components/form-builder/block/Icon';
-import { BlockAvatar } from '@/components/form-builder/block/Avatar';
-import { BlockMessengerSelect } from '@/components/form-builder/block/MessengerSelect';
-import { BlockList } from '@/components/form-builder/block/List';
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
+import { ArrowRight, CheckCircle, Image } from 'lucide-react'
+import { useState } from 'react'
+import { cn, getImageUrl } from '@/utils'
+import { BlockProductsRenderer } from '@/components/form-builder/block/ProductsRenderer'
+import { BlockSlideshow } from '@/components/form-builder/block/Slideshow'
+import { BlockReviews } from '@/components/form-builder/block/Reviews'
+import { BlockFAQ } from '@/components/form-builder/block/FAQ'
+import { BlockMap } from '@/components/form-builder/block/Map'
+import { BlockIcon } from '@/components/form-builder/block/Icon'
+import { BlockAvatar } from '@/components/form-builder/block/Avatar'
+import { BlockMessengerSelect } from '@/components/form-builder/block/MessengerSelect'
+import { BlockList } from '@/components/form-builder/block/List'
 
 const fontSizeClass = {
   small: 'text-sm',
   medium: 'text-base',
   large: 'text-lg',
-};
+}
 
 const headingSizeClass = {
   small: 'text-lg',
   medium: 'text-xl',
   large: 'text-2xl',
   xlarge: 'text-3xl',
-};
+}
 
 export const FormRenderer = ({
   blocks,
@@ -43,35 +43,40 @@ export const FormRenderer = ({
   isPreview = false,
   onSubmitSuccess,
 }) => {
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [selectedProducts, setSelectedProducts] = useState([])
 
-  const textColorHex = formDesign.textColor?.match(/text-\[(#[0-9A-Fa-f]{6})\]/)?.[1];
-  const bgColorHex = formDesign.backgroundColor?.match(/bg-\[(#[0-9A-Fa-f]{6})\]/)?.[1];
+  const textColorHex = formDesign.textColor?.match(/text-\[(#[0-9A-Fa-f]{6})\]/)?.[1]
+  const bgColorHex = formDesign.backgroundColor?.match(/bg-\[(#[0-9A-Fa-f]{6})\]/)?.[1]
 
   const handleSelectProduct = (productId, quantity) => {
     setSelectedProducts((prev) => {
       if (quantity === 0) {
-        return prev.filter((p) => p.productId !== productId);
+        return prev.filter((p) => p.productId !== productId)
       }
-      const existing = prev.find((p) => p.productId === productId);
+
+      const existing = prev.find((p) => p.productId === productId)
       if (existing) {
-        return prev.map((p) => (p.productId === productId ? { ...p, quantity } : p));
+        return prev.map((p) => (p.productId === productId ? { ...p, quantity } : p))
       }
-      return [...prev, { productId, quantity }];
-    });
-  };
+
+      return [...prev, { productId, quantity }]
+    })
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (isSubmitting) return;
-    setIsSubmitting(true);
+    // Підтримка і <form onSubmit>, і button onClick (без event)
+    if (e?.preventDefault) e.preventDefault()
+
+    if (isSubmitting) return
+    setIsSubmitting(true)
 
     try {
-      const formElement = e.target;
-      
+      const formElement = e?.target?.tagName === 'FORM'
+        ? e.target
+        : document.querySelector(`form[data-form-slug="${formSlug}"]`)
+
       // Form configuration
       const formConfiguration = {
         formName,
@@ -82,15 +87,15 @@ export const FormRenderer = ({
         successBlocks,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-      };
+      }
 
       // Submission data
       const submissionData = {
         formSlug,
         submittedAt: new Date().toISOString(),
         fields: {},
-        products: []
-      };
+        products: [],
+      }
 
       // Process each block to extract field values
       blocks.forEach((block) => {
@@ -100,90 +105,92 @@ export const FormRenderer = ({
           'slideshow', 'reviews', 'map',
           'faq', 'icon', 'list'
         ].includes(block.type)) {
-          return;
+          return
         }
 
-        const fieldKey = block.id;
-        const fieldLabel = block.label || block.type;
+        const fieldKey = block.id
+        const fieldLabel = block.label || block.type
 
         if (block.type === 'products') {
           const productDetails = selectedProducts.map((sp) => {
-            const product = block.products?.find((p) => p.id === sp.productId);
-            return product ? {
-              productId: product.id,
-              productName: product.name,
-              sku: product.sku,
-              quantity: sp.quantity,
-              price: product.price,
-              subtotal: product.price * sp.quantity,
-            } : null;
-          }).filter(Boolean);
-          
-          submissionData.products = productDetails;
+            const product = block.products?.find((p) => p.id === sp.productId)
+            return product
+              ? {
+                  productId: product.id,
+                  productName: product.name,
+                  sku: product.sku,
+                  quantity: sp.quantity,
+                  price: product.price,
+                  subtotal: product.price * sp.quantity,
+                }
+              : null
+          }).filter(Boolean)
+
+          submissionData.products = productDetails
         } else if (block.type === 'checkbox') {
-          const checkedValues = [];
+          const checkedValues = []
           block.options?.forEach((option, idx) => {
-            const checkbox = formElement.querySelector(`#${block.id}-${idx}`);
+            const checkbox = formElement?.querySelector?.(`#${block.id}-${idx}`)
             if (checkbox?.checked) {
-              checkedValues.push(option);
+              checkedValues.push(option)
             }
-          });
+          })
           submissionData.fields[fieldKey] = {
             label: fieldLabel,
             type: block.type,
             value: checkedValues,
             required: block.required || false,
-          };
+          }
         } else if (block.type === 'radio') {
-          const checkedRadio = formElement.querySelector(`input[name="${block.id}"]:checked`);
+          const checkedRadio = formElement?.querySelector?.(`input[name="${block.id}"]:checked`)
           submissionData.fields[fieldKey] = {
             label: fieldLabel,
             type: block.type,
             value: checkedRadio?.value || null,
             required: block.required || false,
-          };
+          }
         } else {
-          const input = formElement.querySelector(`[name="${block.id}"]`);
+          const input = formElement?.querySelector?.(`[name="${block.id}"]`)
           submissionData.fields[fieldKey] = {
             label: fieldLabel,
             type: block.type,
             value: input?.value || null,
             required: block.required || false,
-          };
+          }
         }
-      });
+      })
 
       if (submissionData.products.length > 0) {
         submissionData.productsTotal = submissionData.products.reduce(
           (sum, p) => sum + (p?.subtotal || 0),
           0
-        );
+        )
       }
 
       if (isPreview) {
-        console.log('Form Configuration:', formConfiguration);
-        console.log('Submission Data:', submissionData);
+        console.log('Form Configuration:', formConfiguration)
+        console.log('Submission Data:', submissionData)
       }
 
       if (onSubmitSuccess) {
-        await onSubmitSuccess({ formConfiguration, submissionData });
+        await onSubmitSuccess({ formConfiguration, submissionData })
       }
-      
-      setIsSubmitted(true);
+
+      setIsSubmitted(true)
     } catch (error) {
-      alert('Не вдалося надіслати форму. Спробуйте ще раз.');
+      alert('Не вдалося надіслати форму. Спробуйте ще раз.')
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   const renderImageGrid = (block) => {
-    const count = block.imageCount || 1;
-    const images = block.images || [];
-    const positions = block.imagePositions || [];
-    const fit = block.imageFit || 'cover';
-    const align = block.imageAlign || 'center';
-    const radius = block.imageRadius || 'small';
+    const count = block.imageCount || 1
+    const images = block.images || []
+    const positions = block.imagePositions || []
+    const fit = block.imageFit || 'cover'
+    const align = block.imageAlign || 'center'
+    const radius = block.imageRadius || 'small'
 
     const gridClass = {
       1: 'grid-cols-1',
@@ -191,26 +198,26 @@ export const FormRenderer = ({
       3: 'grid-cols-3',
       4: 'grid-cols-2',
       5: 'grid-cols-3',
-    }[count];
+    }[count]
 
     const alignClass = {
       left: 'justify-start',
       center: 'justify-center',
       right: 'justify-end',
-    }[align];
+    }[align]
 
     const radiusClass = {
       none: 'rounded-none',
       small: 'rounded-lg',
       medium: 'rounded-2xl',
       full: 'rounded-[2rem]',
-    }[radius];
+    }[radius]
 
     return (
       <div className={cn('grid gap-3', gridClass)}>
         {Array.from({ length: count }).map((_, i) => {
-          const hasImage = Boolean(images[i]);
-          const pos = positions[i] || { x: 50, y: 50 };
+          const hasImage = Boolean(images[i])
+          const pos = positions[i] || { x: 50, y: 50 }
 
           return (
             <div
@@ -244,14 +251,14 @@ export const FormRenderer = ({
                 </>
               )}
             </div>
-          );
+          )
         })}
       </div>
-    );
-  };
+    )
+  }
 
   const renderBlock = (block) => {
-    const showLabel = block.showLabel !== false;
+    const showLabel = block.showLabel !== false
 
     switch (block.type) {
       case 'divider':
@@ -262,47 +269,57 @@ export const FormRenderer = ({
               style={{
                 width: `${block.dividerWidth || 100}%`,
                 height: `${block.dividerThickness || 1}px`,
-                backgroundColor: block.dividerStyle === 'solid' ? (block.dividerColor || '#e5e7eb') : 'transparent',
-                backgroundImage: block.dividerStyle === 'dashed' 
-                  ? `repeating-linear-gradient(to right, ${block.dividerColor || '#e5e7eb'} 0, ${block.dividerColor || '#e5e7eb'} 8px, transparent 8px, transparent 14px)`
-                  : block.dividerStyle === 'dotted'
-                    ? `repeating-linear-gradient(to right, ${block.dividerColor || '#e5e7eb'} 0, ${block.dividerColor || '#e5e7eb'} ${(block.dividerThickness || 1) * 2}px, transparent ${(block.dividerThickness || 1) * 2}px, transparent ${(block.dividerThickness || 1) * 4}px)`
-                    : 'none',
+                backgroundColor:
+                  block.dividerStyle === 'solid'
+                    ? block.dividerColor || '#e5e7eb'
+                    : 'transparent',
+                backgroundImage:
+                  block.dividerStyle === 'dashed'
+                    ? `repeating-linear-gradient(to right, ${block.dividerColor || '#e5e7eb'} 0, ${
+                        block.dividerColor || '#e5e7eb'
+                      } 8px, transparent 8px, transparent 14px)`
+                    : block.dividerStyle === 'dotted'
+                      ? `repeating-linear-gradient(to right, ${block.dividerColor || '#e5e7eb'} 0, ${
+                          block.dividerColor || '#e5e7eb'
+                        } ${(block.dividerThickness || 1) * 2}px, transparent ${
+                          (block.dividerThickness || 1) * 2
+                        }px, transparent ${(block.dividerThickness || 1) * 4}px)`
+                      : 'none',
                 borderRadius: block.dividerStyle === 'dotted' ? `${(block.dividerThickness || 1) / 2}px` : '0',
               }}
             />
           </div>
-        );
+        )
 
       case 'spacer':
-        return <div style={{ height: `${block.height || 32}px` }} />;
+        return <div style={{ height: `${block.height || 32}px` }} />
 
       case 'image':
-        return renderImageGrid(block);
+        return renderImageGrid(block)
 
       case 'slideshow':
-        return <BlockSlideshow block={block} isPreview={isPreview} />;
+        return <BlockSlideshow block={block} isPreview={isPreview} />
 
       case 'reviews':
-        return <BlockReviews block={block} isPreview={isPreview} />;
+        return <BlockReviews block={block} isPreview={isPreview} />
 
       case 'faq':
-        return <BlockFAQ block={block} isPreview={isPreview} />;
+        return <BlockFAQ block={block} isPreview={isPreview} />
 
       case 'map':
-        return <BlockMap block={block} isPreview={isPreview} />;
+        return <BlockMap block={block} isPreview={isPreview} />
 
       case 'icon':
-        return <BlockIcon block={block} />;
+        return <BlockIcon block={block} />
 
       case 'list':
-        return <BlockList block={block} isPreview={isPreview} />;
+        return <BlockList block={block} isPreview={isPreview} />
 
       case 'avatar':
-        return <BlockAvatar block={block} />;
+        return <BlockAvatar block={block} />
 
       case 'messenger-select':
-        return <BlockMessengerSelect block={block} isPreview={isPreview} />;
+        return <BlockMessengerSelect block={block} isPreview={isPreview} />
 
       case 'products':
         return (
@@ -320,22 +337,29 @@ export const FormRenderer = ({
               isPreview={isPreview}
             />
           </div>
-        );
+        )
 
-      case 'heading':
-        const headingAlign = block.textAlign === 'center' ? 'text-center' : block.textAlign === 'right' ? 'text-right' : 'text-left';
-        const hColor = formDesign.headingColor || 'text-foreground';
-        const hSize = headingSizeClass[formDesign.headingSize || 'medium'];
-        return <h2 className={cn("font-semibold", hSize, hColor, headingAlign)}>{block.label}</h2>;
+      case 'heading': {
+        const headingAlign =
+          block.textAlign === 'center' ? 'text-center' : block.textAlign === 'right' ? 'text-right' : 'text-left'
+        const hColor = formDesign.headingColor || 'text-foreground'
+        const hSize = headingSizeClass[formDesign.headingSize || 'medium']
+        return <h2 className={cn('font-semibold', hSize, hColor, headingAlign)}>{block.label}</h2>
+      }
 
-      case 'paragraph':
+      case 'paragraph': {
         const paragraphAlign =
-          block.textAlign === 'center' ? 'text-center' : block.textAlign === 'right' ? 'text-right' : 'text-left';
+          block.textAlign === 'center'
+            ? 'text-center'
+            : block.textAlign === 'right'
+                ? 'text-right'
+                : 'text-left'
         return (
           <div style={block.textColor ? { color: block.textColor } : undefined}>
             <p className={cn('whitespace-pre-wrap break-words', 'opacity-80', paragraphAlign)}>{block.label}</p>
           </div>
-        );
+        )
+      }
 
       case 'short-text':
       case 'email':
@@ -356,7 +380,7 @@ export const FormRenderer = ({
               required={block.required}
             />
           </div>
-        );
+        )
 
       case 'long-text':
         return (
@@ -369,7 +393,7 @@ export const FormRenderer = ({
             )}
             <Textarea name={block.id} className="w-full" placeholder={block.placeholder} required={block.required} />
           </div>
-        );
+        )
 
       case 'date':
         return (
@@ -382,7 +406,7 @@ export const FormRenderer = ({
             )}
             <Input name={block.id} className="max-w-[300px]" type="date" required={block.required} />
           </div>
-        );
+        )
 
       case 'dropdown':
         return (
@@ -399,7 +423,9 @@ export const FormRenderer = ({
               defaultValue=""
               required={block.required}
             >
-              <option value="" disabled>{block.placeholder || 'Select an option'}</option>
+              <option value="" disabled>
+                {block.placeholder || 'Select an option'}
+              </option>
               {block.options?.map((option, idx) => (
                 <option key={idx} value={option}>
                   {option}
@@ -407,7 +433,7 @@ export const FormRenderer = ({
               ))}
             </select>
           </div>
-        );
+        )
 
       case 'checkbox':
         return (
@@ -429,7 +455,7 @@ export const FormRenderer = ({
               ))}
             </div>
           </div>
-        );
+        )
 
       case 'radio':
         return (
@@ -458,30 +484,44 @@ export const FormRenderer = ({
               ))}
             </div>
           </div>
-        );
+        )
 
       default:
-        return null;
+        return null
     }
-  };
+  }
 
   // Calculate product totals
-  const hasProductsBlock = blocks.some((b) => b.type === 'products');
-  const totalQuantity = selectedProducts.reduce((sum, sp) => sum + sp.quantity, 0);
+  const hasProductsBlock = blocks.some((b) => b.type === 'products')
+  const totalQuantity = selectedProducts.reduce((sum, sp) => sum + sp.quantity, 0)
   const totalAmount = selectedProducts.reduce((sum, sp) => {
-    const productBlock = blocks.find((b) => b.type === 'products');
-    const product = productBlock?.products?.find((p) => p.id === sp.productId);
-    return sum + (product?.price ?? 0) * sp.quantity;
-  }, 0);
+    const productBlock = blocks.find((b) => b.type === 'products')
+    const product = productBlock?.products?.find((p) => p.id === sp.productId)
+    return sum + (product?.price ?? 0) * sp.quantity
+  }, 0)
 
-  const showProductInfo = formDesign.stickyButton && hasProductsBlock && totalQuantity > 0;
-  const displayButtonText = formDesign.stickyButton && hasProductsBlock ? 'Order' : submitButtonText;
+  const showProductInfo = formDesign.stickyButton && hasProductsBlock && totalQuantity > 0
+  const displayButtonText = formDesign.stickyButton && hasProductsBlock ? 'Order' : submitButtonText
+
+  // ✅ В preview краще sticky, на slug — fixed
+  const stickyWrapperClass = isPreview ? 'sticky bottom-0' : 'fixed bottom-0 left-0 right-0'
 
   return (
-    <div
-      className={cn('min-h-screen', !bgColorHex && formDesign.backgroundColor)}
-      style={bgColorHex ? { backgroundColor: bgColorHex } : undefined}
-    >
+    <div className={cn('relative w-full', !isPreview ? 'min-h-screen' : 'min-h-full')}>
+      {/* ✅ Background layer:
+          - slug: fixed (covers overscroll)
+          - preview: absolute (stays inside modal)
+      */}
+      <div
+        className={cn(
+          isPreview
+            ? 'absolute inset-0 -z-10'
+            : 'fixed inset-0 -z-10',
+          !bgColorHex && formDesign.backgroundColor
+        )}
+        style={bgColorHex ? { backgroundColor: bgColorHex } : undefined}
+      />
+
       <div className="w-full pt-6 pb-10 px-4 sm:px-6">
         <div
           className={cn(
@@ -509,27 +549,32 @@ export const FormRenderer = ({
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className={cn("flex flex-wrap gap-4 items-start", formDesign.stickyButton && "pb-24")}>
+            <form
+              data-form-slug={formSlug}
+              onSubmit={handleSubmit}
+              className={cn('flex flex-wrap gap-4 items-start', formDesign.stickyButton && 'pb-24')}
+            >
               {blocks.map((block) => {
                 const widthClass = {
                   '1/1': 'w-full',
                   '1/2': 'w-[calc(50%-0.5rem)]',
                   '1/3': 'w-[calc(33.333%-0.67rem)]',
-                }[block.blockWidth || '1/1'];
+                }[block.blockWidth || '1/1']
 
                 const verticalAlignClass = {
                   top: 'self-start',
                   center: 'self-center',
                   bottom: 'self-end',
-                }[block.blockVerticalAlign || 'top'];
+                }[block.blockVerticalAlign || 'top']
 
-                const horizontalAlignClass = block.blockWidth !== '1/1'
-                  ? {
-                      start: '',
-                      center: 'mx-auto',
-                      end: 'ml-auto',
-                    }[block.blockHorizontalAlign || 'start']
-                  : '';
+                const horizontalAlignClass =
+                  block.blockWidth !== '1/1'
+                    ? {
+                        start: '',
+                        center: 'mx-auto',
+                        end: 'ml-auto',
+                      }[block.blockHorizontalAlign || 'start']
+                    : ''
 
                 return (
                   <div
@@ -538,16 +583,17 @@ export const FormRenderer = ({
                   >
                     {renderBlock(block)}
                   </div>
-                );
+                )
               })}
+
               {!formDesign.stickyButton && (
                 <div className="pt-4">
                   <Button
+                    type="submit"
                     variant="black"
                     size="black"
-                    type="submit"
-                    loading={isSubmitting}
                     disabled={isSubmitting}
+                    loading={isSubmitting}
                   >
                     {isSubmitting ? 'Надсилаю...' : submitButtonText}
                     <ArrowRight className="w-4 h-4" />
@@ -561,15 +607,17 @@ export const FormRenderer = ({
 
       {/* Sticky Submit Button */}
       {formDesign.stickyButton && !isSubmitted && blocks.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background via-background to-transparent">
-          <div className="max-w-[700px] mx-auto">
-            <Button
+        <div className={cn(stickyWrapperClass, 'p-4')}>
+          <div className="w-full max-w-[700px] mx-auto">
+            <button
               type="button"
               onClick={handleSubmit}
+              disabled={isSubmitting}
               className={cn(
                 'w-full flex items-center justify-between gap-2 px-4 py-4 rounded-xl font-medium',
                 'bg-foreground text-background hover:bg-foreground/90',
-                'focus:outline-none'
+                'focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed',
+                'transition-all duration-200'
               )}
             >
               {showProductInfo ? (
@@ -587,7 +635,7 @@ export const FormRenderer = ({
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
-            </Button>
+            </button>
           </div>
         </div>
       )}

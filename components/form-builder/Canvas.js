@@ -1,6 +1,6 @@
 // components/form-builder/Canvas
 
-import { BlockItem } from '@/components/form-builder/block/Item';
+import { BlocksEditor } from '@/components/form-builder/BlocksEditor';
 import { Plus, ArrowRight, CheckCircle, Settings as SettingsIcon, Monitor, Smartphone } from 'lucide-react';
 import { cn } from '@/utils';
 import { FormDesign } from '@/components/form-builder/tabs/Design';
@@ -484,7 +484,7 @@ export const Canvas = ({
                             onDragOver={handleInlineDragOver}
                             onDrop={handleInlineDrop}
                           >
-                            <BlockItem
+                            <BlocksEditor
                               block={block}
                               isActive={activeBlockId === block.id}
                               onSelect={() => {
@@ -698,7 +698,7 @@ export const Canvas = ({
                           key={block.id}
                           className={cn(draggedSuccessBlockIndex === index ? 'opacity-50' : '')}
                         >
-                          <BlockItem
+                          <BlocksEditor
                             block={block}
                             isActive={activeSuccessBlockId === block.id}
                             onSelect={() => {

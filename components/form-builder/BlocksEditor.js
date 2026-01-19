@@ -15,7 +15,7 @@ import { BlockAvatar } from '@/components/form-builder/block/Avatar';
 import { BlockMessengerSelect } from '@/components/form-builder/block/MessengerSelect';
 import { BlockList } from '@/components/form-builder/block/List';
 
-export const BlockItem = ({
+export const BlocksEditor = ({
   block,
   isActive,
   onSelect,

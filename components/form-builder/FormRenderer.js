@@ -11,6 +11,7 @@ import { ArrowRight, CheckCircle, Image } from 'lucide-react'
 import { useState } from 'react'
 import { cn, getImageUrl } from '@/utils'
 import { BlockProductsRenderer } from '@/components/form-builder/block/ProductsRenderer'
+import { OrderButton } from '@/components/ui/OrderButton'
 import { BlockSlideshow } from '@/components/form-builder/block/Slideshow'
 import { BlockReviews } from '@/components/form-builder/block/Reviews'
 import { BlockFAQ } from '@/components/form-builder/block/FAQ'
@@ -609,16 +610,12 @@ export const FormRenderer = ({
       {formDesign.stickyButton && !isSubmitted && blocks.length > 0 && (
         <div className={cn(stickyWrapperClass, 'p-4')}>
           <div className="w-full max-w-[700px] mx-auto">
-            <button
+            {/* <Button
               type="button"
+              variant="order"
+              size="order"
               onClick={handleSubmit}
               disabled={isSubmitting}
-              className={cn(
-                'w-full flex items-center justify-between gap-2 px-4 py-4 rounded-xl font-medium',
-                'bg-foreground text-background hover:bg-foreground/90',
-                'focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed',
-                'transition-all duration-200'
-              )}
             >
               {showProductInfo ? (
                 <>
@@ -635,7 +632,17 @@ export const FormRenderer = ({
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
-            </button>
+            </Button> */}
+
+
+            <OrderButton
+              hasProducts={showProductInfo}
+              quantityProducts={totalQuantity}
+              totalAmount={totalAmount.toFixed(2)}
+              submitButtonText={displayButtonText}
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+            />
           </div>
         </div>
       )}

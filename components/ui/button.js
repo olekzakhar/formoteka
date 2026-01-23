@@ -19,6 +19,7 @@ const buttonVariants = cva(
         ghost: "hover:bg-muted text-muted-foreground hover:text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         soft: "bg-primary/10 text-primary hover:bg-primary/15",
+        order: "w-full flex items-center justify-between gap-2 font-medium bg-foreground text-background hover:bg-foreground/90 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-smooth"
       },
       size: {
         default: "h-10 px-5 py-2",
@@ -28,6 +29,7 @@ const buttonVariants = cva(
         lg: "h-12 rounded-xl px-6 py-3",
         xl: "h-14 rounded-xl px-8 py-4 text-base",
         icon: "h-10 w-10",
+        order: "px-4 mx-auto max-w-[396px] min-h-12 h-full max-h-12 rounded-xl"
       },
     },
     defaultVariants: {

@@ -3,9 +3,10 @@
 import { BlocksEditor } from '@/components/form-builder/BlocksEditor';
 import { Plus, ArrowRight, CheckCircle, Settings as SettingsIcon, Monitor, Smartphone } from 'lucide-react';
 import { cn } from '@/utils';
-import { FormDesign } from '@/components/form-builder/tabs/Design';
+// import { FormDesign } from '@/components/form-builder/tabs/Design';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button'
+import { OrderButton } from '@/components/ui/OrderButton'
 
 const fontSizeClass = {
   small: 'text-sm',
@@ -599,16 +600,13 @@ export const Canvas = ({
                     : 'ring-0 group-hover/submit:ring-2 group-hover/submit:ring-border group-hover/submit:ring-offset-2'
                 )}
               >
-                <button
+                {/* <Button
+                  variant="order"
+                  size="order"
                   onClick={(e) => {
                     e.stopPropagation();
                     onSubmitButtonClick();
                   }}
-                  className={cn(
-                    'w-full flex items-center justify-between gap-2 px-4 py-3 rounded-xl font-medium transition-smooth',
-                    'bg-foreground text-background hover:bg-foreground/90',
-                    'focus:outline-none'
-                  )}
                 >
                   {blocks.some((b) => b.type === 'products') ? (
                     <>
@@ -622,7 +620,18 @@ export const Canvas = ({
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
-                </button>
+                </Button> */}
+
+                <OrderButton
+                  hasProducts={blocks.some((b) => b.type === 'products')}
+                  quantityProducts={1}
+                  totalAmount="0.00"
+                  submitButtonText={submitButtonText}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSubmitButtonClick();
+                  }}
+                />
               </div>
             </div>
           )}

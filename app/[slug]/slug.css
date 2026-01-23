@@ -256,10 +256,10 @@
 }
 
 [data-theme="slug"] .bg-input {
-  background: rgba(255,255,255, 0.5);
+  background: rgba(255,255,255, 0.45);
   /* box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 1px 0px, rgba(60, 58, 52, 0.16) 0px 0px 0px 1px, rgba(60, 58, 52, 0.08) 0px 2px 5px 0px; */
 }
 
 [data-theme="slug"] .border-input {
-  border-color: rgba(0,0,0, 0.21);
+  border-color: rgba(0,0,0, 0.11);
 }

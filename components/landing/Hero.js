@@ -28,23 +28,22 @@ const HeroSection = () => {
             </div>
 
             {/* Main headline */}
-            <h1 className="animate-fade-up-delay-1 text-4xl md:text-5xl lg:text-[3.25rem] font-extrabold text-foreground leading-[1.1] mb-5 tracking-tight">
-              Не втрачайте
-              <br />
-              <span className="text-gradient">клієнтів</span>
+            <h1 className="animate-fade-up-delay-1 text-4xl md:text-5xl font-extrabold text-foreground leading-[1.1] mb-5 tracking-tight">
+              Одна сторінка замість
+              <span className="text-gradient"> 100 повідомлень у діректі</span>
             </h1>
 
             {/* Subheadline */}
             <p className="animate-fade-up-delay-2 text-base md:text-lg text-muted-foreground max-w-md mb-8 leading-relaxed">
-              Форма замовлення, яка перетворює інтерес клієнта на чітке замовлення.
+              Приймайте замовлення без сайту, дзвінків і хаосу — клієнт сам заповнює все потрібне
             </p>
 
             {/* CTAs */}
             <div className="animate-fade-up-delay-3 flex flex-col sm:flex-row items-start gap-3">
-              <Button asChild size="lg" className="group font-semibold px-6">
+              <Button asChild size="lg" className="group font-semibold px-6 pr-[22px]">
                 <Link href="/forms" className="flex">
                   Спробуйте
-                  <div className="ml-0.5 mt-[1.5px] p-[4px] bg-white/20 rounded-full -rotate-45">
+                  <div className="ml-0.5 mt-[1px] p-[4px] bg-white/20 rounded-full -rotate-45">
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                   </div>
                 </Link>

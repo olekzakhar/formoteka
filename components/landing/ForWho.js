@@ -48,7 +48,7 @@ const ForWhoSection = () => {
               key={index}
               className="group flex gap-4 p-6 rounded-2xl bg-card border border-border/50 hover:border-accent/30 hover:shadow-soft transition-all duration-300"
             >
-              <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center flex-shrink-0 group-hover:bg-accent/20 transition-colors">
+              <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0 group-hover:bg-accent/20 transition-colors">
                 <Check className="w-5 h-5 text-accent" />
               </div>
               <div>

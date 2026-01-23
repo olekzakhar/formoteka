@@ -1,30 +1,30 @@
 // components/landing/Footer
 
-import { Sparkles } from "lucide-react";
+import Link from "next/link"
+import { BASE_URL } from "@/constants"
+import Logo from "@/components/Logo"
 
 const Footer = () => {
   return (
     <footer className="py-8">
       <div className="container">
         <div className="relative z-[60] flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-          <a href="#" className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md gradient-hero flex items-center justify-center">
-              <Sparkles className="w-3 h-3 text-primary-foreground" />
-            </div>
-            <span className="font-semibold text-foreground">Formoteka</span>
-          </a>
+          <Link
+            href={BASE_URL}
+            className="ml-1.5 flex items-center gap-2 group text-[#14171F]"
+          >
+            <Logo height={20} />
+          </Link>
 
           <nav className="flex items-center gap-6 text-xs">
             <a href="#" className="hover:text-foreground transition-colors">Про сервіс</a>
             <a href="#" className="hover:text-foreground transition-colors">Тарифи</a>
             <a href="#" className="hover:text-foreground transition-colors">Контакти</a>
           </nav>
-
-          <span className="text-xs">© Formoteka</span>
         </div>
       </div>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

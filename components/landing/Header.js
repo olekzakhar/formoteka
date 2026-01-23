@@ -8,7 +8,7 @@ import Logo from "@/components/Logo";
 
 const Header = ({ isUser=false }) => {
   return (
-    <header className="fixed top-4 left-1/2 -translate-x-1/2 w-full max-w-1/2 rounded-full z-50 bg-black/[0.06] backdrop-blur-lg ring-1 ring-inset ring-black/[0.04]">
+    <header className="fixed top-4 left-1/2 -translate-x-1/2 w-full max-w-[800px] rounded-full z-50 bg-black/[0.06] backdrop-blur-lg ring-1 ring-inset ring-black/[0.04]">
       <div className="container px-3.5 flex items-center justify-between h-14">
         {/* <a href="#" className="flex items-center gap-2 group">
           <div className="w-9 h-9 rounded-lg gradient-hero flex items-center justify-center shadow-soft group-hover:shadow-glow transition-shadow duration-300">

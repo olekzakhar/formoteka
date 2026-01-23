@@ -42,33 +42,33 @@ const ComparisonSection = () => {
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto space-y-4">
+        <div className="max-w-[820px] mx-auto space-y-4">
           {comparisons.map((item, index) => (
             <div 
               key={index}
-              className="group flex flex-col md:flex-row items-stretch md:items-center gap-4 p-4 md:p-6 rounded-2xl bg-card border border-border/50 hover:shadow-soft transition-all duration-300"
+              className="group flex flex-col md:flex-row items-center gap-4 p-4 md:p-6 rounded-2xl bg-card border border-border/50 hover:shadow-soft transition-all duration-300"
             >
               {/* Before */}
-              <div className="flex-1 flex items-center gap-3">
+              <div className="flex items-center gap-3 md:w-[420px] md:justify-end">
+                <span className="text-muted-foreground line-through decoration-destructive/30 md:text-right">
+                  {item.before}
+                </span>
                 <div className="w-8 h-8 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0">
                   <X className="w-4 h-4 text-destructive" />
                 </div>
-                <span className="text-muted-foreground line-through decoration-destructive/30">
-                  {item.before}
-                </span>
               </div>
 
               {/* Arrow */}
-              <div className="hidden md:flex items-center justify-center px-4">
+              <div className="hidden md:flex items-center justify-center w-16 flex-shrink-0">
                 <ArrowRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
               </div>
 
               {/* After */}
-              <div className="flex-1 flex items-center gap-3">
+              <div className="flex items-center gap-3 md:w-[420px]">
                 <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
                   <Check className="w-4 h-4 text-accent" />
                 </div>
-                <span className="text-foreground font-medium">
+                <span className="text-foreground font-semibold">
                   {item.after}
                 </span>
               </div>
@@ -77,7 +77,7 @@ const ComparisonSection = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default ComparisonSection;
+export default ComparisonSection

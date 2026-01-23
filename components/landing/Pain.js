@@ -54,8 +54,8 @@ const PainSection = () => {
               key={index}
               className="group p-6 rounded-2xl bg-card border border-border/50 hover:border-primary/20 hover:shadow-soft transition-all duration-300"
             >
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
-                <point.icon className="w-6 h-6 text-primary" />
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
+                <point.icon className="w-5 h-5 text-primary" />
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-2">
                 {point.title}

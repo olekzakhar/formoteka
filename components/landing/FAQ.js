@@ -55,15 +55,15 @@ const FAQSection = () => {
           </p>
         </div>
 
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-2xl mx-auto">
           <Accordion type="single" collapsible className="space-y-4">
             {faqs.map((faq, index) => (
               <AccordionItem 
                 key={index} 
                 value={`item-${index}`}
-                className="bg-card border border-border/50 rounded-2xl px-6 data-[state=open]:shadow-soft transition-shadow"
+                className="bg-card border border-border/50 rounded-xl px-5 data-[state=open]:shadow-soft transition-shadow"
               >
-                <AccordionTrigger className="text-left text-foreground font-semibold hover:no-underline py-5">
+                <AccordionTrigger className="text-left text-foreground font-semibold hover:no-underline py-3.5">
                   {faq.question}
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground pb-5 leading-relaxed">

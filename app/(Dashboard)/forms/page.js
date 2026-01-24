@@ -121,7 +121,7 @@ export default async function Forms() {
         </div>
       </header>
 
-      <main className="p-8 pt-14">
+      <main className="p-3 pt-8 sm:p-6 sm:pt-12 md:p-8 md:pt-14">
         <div className="max-w-[700px] mx-auto">
           <div className="mb-6 px-3 flex items-center justify-between">
             <div>

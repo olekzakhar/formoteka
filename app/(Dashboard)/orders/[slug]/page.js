@@ -44,7 +44,7 @@ export default async function Forms({ params }) {
         </div>
       </header>
 
-      <main className="p-8 pt-14">
+      <main className="p-0 py-3 pt-8 sm:pt-12 lg:p-8 md:pt-14">
         <OrdersList name={form?.name} />
       </main>
     </>

@@ -102,13 +102,13 @@ export default function FormCard({ form, userId }) {
       className="relative pl-8 pr-4 py-5 block bg-card rounded-lg hover:bg-card/50 hover:ring-1 hover:ring-block-hover/30
         shadow-sm hover:shadow-md transition-smooth">
       <div className="flex justify-between items-center min-w-0">
-        <div className="flex-1 min-w-0">
+        <div className="relative flex-1 min-w-0">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
                   href={`${BASE_URL}${FORMS_PATH}/${form?.slug}`}
-                  className="-mb-0.5 pr-2.5 block truncate text-xl font-medium hover:opacity-80 transition-smooth"
+                  className="-mb-0.5 pb-[26px] pr-2.5 block truncate text-xl font-medium hover:opacity-80 transition-smooth"
                 >
                   {form?.name}
                 </Link>
@@ -134,7 +134,7 @@ export default function FormCard({ form, userId }) {
                 z-10 pointer-events-none transition-opacity duration-200" />
           </div> */}
 
-          <div className="mt-1.5 flex items-center gap-[18px]">
+          <div className="absolute bottom-0 left-0 mt-1.5 flex items-center whitespace-nowrap gap-2.5 sm:gap-[18px]">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -160,7 +160,7 @@ export default function FormCard({ form, userId }) {
             {/* <div className="mt-0.5 text-[13px] text-[#6b7280]">Остання 15 хвилин тому</div> */}
             {form?.order_count && form?.last_order_at
               ? <div className="mt-0.5 text-[13px] text-[#6b7280]">
-                  Остання {timeAgo(form?.last_order_at)}
+                  <span className="hidden sm:inline">Остання</span> {timeAgo(form?.last_order_at)}
                 </div>
               : <></>
             }

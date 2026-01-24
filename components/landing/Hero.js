@@ -29,13 +29,13 @@ const HeroSection = () => {
 
             {/* Main headline */}
             <h1 className="animate-fade-up-delay-1 text-4xl md:text-5xl font-extrabold text-foreground leading-[1.1] mb-5 tracking-tight">
-              Одна сторінка замість
-              <span className="text-gradient"> 100 повідомлень у діректі</span>
+              Онлайн конструктор форм
+              <span className="text-gradient"> для заявок і замовлень</span>
             </h1>
 
             {/* Subheadline */}
             <p className="animate-fade-up-delay-2 text-base md:text-lg text-muted-foreground max-w-md mb-8 leading-relaxed">
-              Приймайте замовлення без сайту, дзвінків і хаосу — клієнт сам заповнює все потрібне
+              Форма, де клієнт одразу заповнює потрібні дані. Без сайту і складних налаштувань.
             </p>
 
             {/* CTAs */}

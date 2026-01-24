@@ -7,7 +7,7 @@ import { Maximize2, Trash2, X, Calendar } from 'lucide-react';
 import OrderModal from '@/components/orders/OrderModal';
 
 // Тестові дані
-const mockSubmissions = [
+const mockOrders = [
   {
     id: 1,
     submittedAt: 'Jan 23, 02:19 PM',
@@ -97,14 +97,14 @@ const mockSubmissions = [
 
 export default function OrdersList({ slug }) {
   const [activeTab, setActiveTab] = useState('all')
-  const [selectedSubmission, setSelectedSubmission] = useState(null)
+  const [selectedOrder, setSelectedOrder] = useState(null)
   
-  const submissions = mockSubmissions;
-  const totalCount = submissions.length;
+  const orders = mockOrders;
+  const totalCount = orders.length;
   
   // Отримуємо всі унікальні поля
-  const allFields = submissions.length > 0 
-    ? Object.keys(submissions[0].fields)
+  const allFields = orders.length > 0 
+    ? Object.keys(orders[0].fields)
     : [];
 
   return (
@@ -174,17 +174,17 @@ export default function OrdersList({ slug }) {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {submissions.map((submission) => (
+              {orders.map((order) => (
                 <tr 
-                  key={submission.id} 
+                  key={order.id} 
                   className="hover:bg-gray-50 group"
                 >
                   <td className="px-4 py-3 text-sm text-gray-900 whitespace-nowrap border-r border-gray-200">
                     <div className="flex items-center gap-2">
-                      <span>{submission.submittedAt}</span>
+                      <span>{order.submittedAt}</span>
                       <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
                         <button
-                          onClick={() => setSelectedSubmission(submission)}
+                          onClick={() => setSelectedOrder(order)}
                           className="p-1 hover:bg-gray-200 rounded transition-colors"
                           title="Переглянути заявку"
                         >
@@ -204,7 +204,7 @@ export default function OrdersList({ slug }) {
                       key={index} 
                       className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap border-r border-gray-200 last:border-r-0"
                     >
-                      {submission.fields[field] || '-'}
+                      {order.fields[field] || '-'}
                     </td>
                   ))}
                 </tr>
@@ -215,10 +215,10 @@ export default function OrdersList({ slug }) {
       </div>
 
       {/* Modal для перегляду заявки */}
-      {selectedSubmission && (
+      {selectedOrder && (
         <OrderModal
-          selectedSubmission={selectedSubmission}
-          setSelectedSubmission={setSelectedSubmission} />
+          selectedOrder={selectedOrder}
+          setSelectedOrder={setSelectedOrder} />
       )}
     </div>
   )

@@ -125,7 +125,7 @@ const ProductForm = ({
 
         {/* Min Quantity */}
         <div className="space-y-2">
-          <Label>Minimum Quantity / Submission</Label>
+          <Label>Minimum Quantity / Order</Label>
           <p className="text-xs text-muted-foreground flex items-start gap-1">
             <Info className="w-3 h-3 mt-0.5 shrink-0" />
             If this product is selected, the submitter must order at least the minimum quantity or more.
@@ -141,7 +141,7 @@ const ProductForm = ({
 
         {/* Max Quantity */}
         <div className="space-y-2">
-          <Label>Maximum Quantity / Submission</Label>
+          <Label>Maximum Quantity / Order</Label>
           <p className="text-xs text-muted-foreground flex items-start gap-1">
             <Info className="w-3 h-3 mt-0.5 shrink-0" />
             If this product is selected, the submitter can only order the maximum quantity or less.

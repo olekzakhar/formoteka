@@ -88,41 +88,41 @@ import { createClient } from '@/utils/supabase/server'
 import { getForm } from '@/server/action'
 import { FormRenderer } from '@/components/form-builder/FormRenderer'
 
-// Server Action для обробки submission
-async function handleFormSubmission(data) {
+// Server Action для обробки order
+async function handleFormOrder(data) {
   'use server'
   
   try {
     const supabase = await createClient()
     
-    // Зберігаємо submission в БД
-    console.log('submissionData', data)
+    // Зберігаємо order в БД
+    console.log('orderData', data)
     // const { error: insertError } = await supabase
-    //   .from('form_submissions')
+    //   .from('form_orders')
     //   .insert({
-    //     form_slug: data.submissionData.formSlug,
-    //     submitted_at: data.submissionData.submittedAt,
-    //     fields: data.submissionData.fields,
-    //     products: data.submissionData.products,
-    //     products_total: data.submissionData.productsTotal,
+    //     form_slug: data.orderData.formSlug,
+    //     submitted_at: data.orderData.submittedAt,
+    //     fields: data.orderData.fields,
+    //     products: data.orderData.products,
+    //     products_total: data.orderData.productsTotal,
     //   })
 
     // if (insertError) {
-    //   console.error('Error saving submission:', insertError)
+    //   console.error('Error saving order:', insertError)
     //   throw insertError
     // }
 
     // TODO: Відправити email якщо потрібно
     // await sendEmail({
     //   to: form.notification_email,
-    //   subject: `New submission for ${form.name}`,
-    //   data: data.submissionData,
+    //   subject: `New order for ${form.name}`,
+    //   data: data.orderData,
     // })
 
     console.log('Form submitted successfully:', data)
     return { success: true }
   } catch (err) {
-    console.error('Submission error:', err)
+    console.error('Order error:', err)
     return { success: false, error: err.message }
   }
 }
@@ -176,7 +176,7 @@ export default async function SlugTemplate({ params }) {
         formSlug={slug}
         formName={form.name}
         isPreview={false}
-        onSubmitSuccess={handleFormSubmission}
+        onSubmitSuccess={handleFormOrder}
       />
       
       {/* Брендинг */}

@@ -35,12 +35,12 @@ export const Preview = ({
     console.log('\n')
 
     console.log('╔════════════════════════════════════════════════════════════════╗')
-    console.log('║           DATABASE SAVE DATA - FORM SUBMISSION                 ║')
+    console.log('║           DATABASE SAVE DATA - FORM ORDER                      ║')
     console.log('╠════════════════════════════════════════════════════════════════╣')
-    console.log('║ This is the user submission that should be saved to the        ║')
-    console.log('║ "form_submissions" table in the database:                      ║')
+    console.log('║ This is the user order that should be saved to the             ║')
+    console.log('║ "form_orders" table in the database:                           ║')
     console.log('╚════════════════════════════════════════════════════════════════╝')
-    console.log(JSON.stringify(data.submissionData, null, 2))
+    console.log(JSON.stringify(data.orderData, null, 2))
   }
 
   return (

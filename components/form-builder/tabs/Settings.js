@@ -37,7 +37,7 @@ export const TabsSettings = ({
       <div className="flex items-center justify-between">
         <div>
           <label className="text-sm font-medium text-foreground">Disable form</label>
-          <p className="text-xs text-muted-foreground mt-0.5">When enabled, form submissions are disabled</p>
+          <p className="text-xs text-muted-foreground mt-0.5">When enabled, form orders are disabled</p>
         </div>
         <button
           onClick={() => onUpdateDesign({ formDisabled: !formDesign.formDisabled })}
@@ -100,7 +100,7 @@ export const TabsSettings = ({
         </AccordionItem>
 
         <AccordionItem value="delivery" className="border border-border rounded-lg px-3 mt-3">
-          <AccordionTrigger className="hover:no-underline">Send submissions to</AccordionTrigger>
+          <AccordionTrigger className="hover:no-underline">Send orders to</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-4 pb-3">
               {/* Radio group for Email vs Messengers */}

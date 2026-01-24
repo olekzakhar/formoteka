@@ -90,8 +90,8 @@ export const FormRenderer = ({
         updatedAt: new Date().toISOString(),
       }
 
-      // Submission data
-      const submissionData = {
+      // Order data
+      const orderData = {
         formSlug,
         submittedAt: new Date().toISOString(),
         fields: {},
@@ -127,7 +127,7 @@ export const FormRenderer = ({
               : null
           }).filter(Boolean)
 
-          submissionData.products = productDetails
+          orderData.products = productDetails
         } else if (block.type === 'checkbox') {
           const checkedValues = []
           block.options?.forEach((option, idx) => {
@@ -136,7 +136,7 @@ export const FormRenderer = ({
               checkedValues.push(option)
             }
           })
-          submissionData.fields[fieldKey] = {
+          orderData.fields[fieldKey] = {
             label: fieldLabel,
             type: block.type,
             value: checkedValues,
@@ -144,7 +144,7 @@ export const FormRenderer = ({
           }
         } else if (block.type === 'radio') {
           const checkedRadio = formElement?.querySelector?.(`input[name="${block.id}"]:checked`)
-          submissionData.fields[fieldKey] = {
+          orderData.fields[fieldKey] = {
             label: fieldLabel,
             type: block.type,
             value: checkedRadio?.value || null,
@@ -152,7 +152,7 @@ export const FormRenderer = ({
           }
         } else {
           const input = formElement?.querySelector?.(`[name="${block.id}"]`)
-          submissionData.fields[fieldKey] = {
+          orderData.fields[fieldKey] = {
             label: fieldLabel,
             type: block.type,
             value: input?.value || null,
@@ -161,8 +161,8 @@ export const FormRenderer = ({
         }
       })
 
-      if (submissionData.products.length > 0) {
-        submissionData.productsTotal = submissionData.products.reduce(
+      if (orderData.products.length > 0) {
+        orderData.productsTotal = orderData.products.reduce(
           (sum, p) => sum + (p?.subtotal || 0),
           0
         )
@@ -170,11 +170,11 @@ export const FormRenderer = ({
 
       if (isPreview) {
         console.log('Form Configuration:', formConfiguration)
-        console.log('Submission Data:', submissionData)
+        console.log('Order Data:', orderData)
       }
 
       if (onSubmitSuccess) {
-        await onSubmitSuccess({ formConfiguration, submissionData })
+        await onSubmitSuccess({ formConfiguration, orderData })
       }
 
       setIsSubmitted(true)

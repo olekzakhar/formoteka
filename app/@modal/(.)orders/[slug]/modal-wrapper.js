@@ -9,7 +9,7 @@ export default function OrdersModalWrapper({ children }) {
   const router = useRouter()
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center">
+    <div className="fixed px-2 inset-0 z-50 flex items-start justify-center">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/55"

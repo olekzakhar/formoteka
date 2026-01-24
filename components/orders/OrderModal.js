@@ -6,7 +6,7 @@ import { X } from 'lucide-react'
 export default function OrderModal({ selectedOrder, setSelectedOrder }) {
   return (
     <div 
-      className="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center p-4 z-50"
+      className="px-2 pt-[5.2%] sm:pt-[2.5%] pb-5 fixed inset-0 bg-black/20 bg-opacity-50 flex justify-center z-50"
       onClick={() => setSelectedOrder(null)}
     >
       <div 

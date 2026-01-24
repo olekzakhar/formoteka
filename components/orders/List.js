@@ -95,7 +95,7 @@ const mockOrders = [
   }
 ];
 
-export default function OrdersList({ slug }) {
+export default function OrdersList({ name }) {
   const [activeTab, setActiveTab] = useState('all')
   const [selectedOrder, setSelectedOrder] = useState(null)
   
@@ -113,7 +113,7 @@ export default function OrdersList({ slug }) {
       <div className="mb-6 pl-1">
         <h1 className="text-3xl font-bold mb-2">Заявки</h1>
         <div className="text-sm text-gray-600 mb-6">
-          Форма: {slug}
+          Форма: <span className="font-bold">{name}</span>
         </div>
         
         {/* Tabs */}
@@ -126,7 +126,7 @@ export default function OrdersList({ slug }) {
                 : 'border-transparent! text-gray-500 hover:text-gray-700'
             }`}
           >
-            All <span className="ml-1 text-gray-500">{totalCount}</span>
+            Всі <span className="ml-1 text-gray-500">{totalCount}</span>
           </button>
           {/* <button
             onClick={() => setActiveTab('completed')}

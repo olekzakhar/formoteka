@@ -1,11 +1,14 @@
+// app/(Dashboard)/orders/[slug]/page
+
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 // import { getForms } from '@/server/action'
+import { getForm } from '@/server/action'
 // import FormCard from '@/components/FormCard'
 // import { Button } from '@/components/ui/button'
-import UserMenu from '@/components/UserMenu'
 import { BASE_URL, FORMS_PATH } from '@/constants'
+import UserMenu from '@/components/UserMenu'
 import Logo from '@/components/Logo'
 import OrdersList from '@/components/orders/List'
 
@@ -15,6 +18,8 @@ export default async function Forms({ params }) {
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) redirect('/login')
+
+  const { form, error } = await getForm(supabase, slug)
 
   // Fetch forms on the server
   // const { forms, error } = await getForms(supabase, user.id)
@@ -40,7 +45,7 @@ export default async function Forms({ params }) {
       </header>
 
       <main className="p-8 pt-14">
-        <OrdersList slug={slug} />
+        <OrdersList name={form?.name} />
       </main>
     </>
   )

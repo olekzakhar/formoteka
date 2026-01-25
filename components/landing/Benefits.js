@@ -1,66 +1,73 @@
 // components/landing/Benefits
 
-import { MessageSquareOff, Eye, Timer, ListChecks, Brain, Wifi } from "lucide-react";
+import {
+  MessageSquareOff,
+  Eye,
+  Timer,
+  ListChecks,
+  Brain,
+  Wifi,
+} from "lucide-react";
 
 const benefits = [
   {
     icon: MessageSquareOff,
-    title: "Менше повідомлень",
-    description: "Більше не треба відповідати на «скільки коштує?» — все є у формі.",
+    title: "Менше переписок",
+    description: "Основні питання закриваються формою, а не повідомленнями.",
   },
   {
     icon: Eye,
-    title: "Більше ясності",
-    description: "Бачиш усі замовлення в одному місці. Нічого не губиться.",
+    title: "Однакові заявки",
+    description: "Кожне замовлення має ту саму структуру і поля.",
   },
   {
     icon: Timer,
-    title: "Економія часу",
-    description: "Замість 10 повідомлень — одна форма. Замість години — 5 хвилин.",
+    title: "Швидше прийом замовлень",
+    description: "Одна форма замість серії уточнень у чаті.",
   },
   {
     icon: ListChecks,
-    title: "Контроль над замовленнями",
-    description: "Знаєш, хто що замовив, коли і куди доставити.",
+    title: "Менше помилок",
+    description: "Дані не губляться і не плутаються між повідомленнями.",
   },
   {
     icon: Brain,
-    title: "Спокій у голові",
-    description: "Не треба тримати все в памʼяті. Система памʼятає за тебе.",
+    title: "Менше навантаження",
+    description: "Не потрібно тримати деталі в памʼяті або нотатках.",
   },
   {
     icon: Wifi,
-    title: "Бізнес працює офлайн",
-    description: "Клієнти заповнюють форму, навіть коли ти спиш або відпочиваєш.",
+    title: "Асинхронна робота",
+    description: "Заявки приходять без постійної присутності в чаті.",
   },
-];
+]
 
 const BenefitsSection = () => {
   return (
-    <section id="benefits" className="py-20 md:py-28 bg-background">
+    <section id="pain" className="py-20 md:py-28 bg-background">
       <div className="container">
         <div className="max-w-2xl mx-auto text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Що ти отримуєш
+            Що дає форма замість чатів
           </h2>
           <p className="text-lg text-muted-foreground">
-            Не функції, а відчуття. Не фічі, а результат.
+            Коротко про результат для процесу, без маркетингу.
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {benefits.map((benefit, index) => (
             <div 
               key={index}
-              className="group text-center p-8 rounded-2xl gradient-card border border-border/50 hover:shadow-soft transition-all duration-300"
+              className="group p-6 rounded-2xl bg-card border border-border/50 hover:border-primary/20 hover:shadow-soft transition-all duration-300"
             >
-              <div className="w-12 h-12 rounded-2xl gradient-hero flex items-center justify-center mx-auto mb-6 shadow-glow group-hover:scale-105 transition-transform">
-                <benefit.icon className="w-6 h-6 text-primary-foreground" />
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
+                <benefit.icon className="w-5 h-5 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold text-foreground mb-3">
+              <h3 className="text-lg font-semibold text-foreground mb-2">
                 {benefit.title}
               </h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-muted-foreground text-sm leading-relaxed">
                 {benefit.description}
               </p>
             </div>
@@ -71,4 +78,4 @@ const BenefitsSection = () => {
   );
 };
 
-export default BenefitsSection;
+export default BenefitsSection

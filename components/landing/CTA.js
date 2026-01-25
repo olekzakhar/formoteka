@@ -1,14 +1,11 @@
 // components/landing/CTA
 
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
 
 const CTASection = () => {
   return (
     <section className="py-16 md:py-24 gradient-subtle relative overflow-hidden">
-      <div className="absolute top-0 left-1/3 w-[400px] h-[400px] bg-primary/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-1/3 w-[300px] h-[300px] bg-primary/3 rounded-full blur-3xl" />
-      
       <div className="container relative">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-4 tracking-tight">
@@ -21,13 +18,17 @@ const CTASection = () => {
             Створи форму за 5 хвилин. Безкоштовно. Без складних налаштувань.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Button size="lg" className="group font-semibold px-6">
-              Створити форму
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-            </Button>
-            <Button variant="ghost" size="lg" className="text-muted-foreground">
-              Дізнатись більше
+          <div className="animate-fade-up-delay-3 flex flex-col sm:flex-row justify-center items-start gap-3">
+            <Button
+              asChild
+              size="black"
+              variant="black"
+              className="group font-semibold text-sm px-[22px] h-[42px]"
+            >
+              <Link href="/forms" className="flex gap-3.5">
+                <div className="animate-pulse w-2 h-2 bg-[#7CE0C4] rounded-full"></div>
+                Створити форму
+              </Link>
             </Button>
           </div>
 
@@ -37,7 +38,7 @@ const CTASection = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default CTASection;
+export default CTASection

@@ -2,60 +2,57 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-// import { FileText } from "lucide-react";
 import { BASE_URL } from "@/constants";
 import Logo from "@/components/Logo";
 
 const Header = ({ isUser=false }) => {
   return (
-    <header className="fixed top-4 left-1/2 -translate-x-1/2 w-full max-w-[800px] rounded-full z-50 bg-black/[0.06] backdrop-blur-lg ring-1 ring-inset ring-black/[0.04]">
-      <div className="container px-3.5 flex items-center justify-between h-14">
-        {/* <a href="#" className="flex items-center gap-2 group">
-          <div className="w-9 h-9 rounded-lg gradient-hero flex items-center justify-center shadow-soft group-hover:shadow-glow transition-shadow duration-300">
-            <FileText className="w-5 h-5 text-primary-foreground" />
-          </div>
-          <span className="text-xl font-bold text-foreground">Formoteka</span>
-        </a> */}
-        <Link
-          href={BASE_URL}
-          className="ml-1.5 flex items-center gap-2 group text-[#14171F]"
-        >
-          <Logo />
-        </Link>
-        
-        <nav className="hidden md:flex items-center gap-8">
-          <a href="#pain" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium">
-            Ситуація
-          </a>
-          <a href="#benefits" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium">
-            Переваги
-          </a>
-          <a href="#for-who" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium">
-            Кому підійде
-          </a>
-          <a href="#faq" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium">
-            FAQ
-          </a>
-        </nav>
+    <header className="fixed top-[6px] left-1/2 px-3 pb-2 -translate-x-1/2 w-full border-b border-b-black/[0.05]! rounded-b-3xl z-50">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-12">
+          <Link
+            href={BASE_URL}
+            className="ml-1.5 flex items-center gap-2 group text-[#14171F]"
+          >
+            <Logo />
+          </Link>
+          
+          <nav className="pt-[5px] hidden md:flex items-center gap-5 text-sm font-medium text-[#475467] transition-colors duration-200 ease-in-out">
+            <a href="#pain" className="hover:text-[#101828]">
+              Ціни
+            </a>
+            <a href="#benefits" className="hover:text-[#101828]">
+              Демо
+            </a>
+          </nav>
+        </div>
 
-        {/* <Button className="rounded-full" size="sm">
-          Спробувати
-        </Button> */}
         {isUser
-          ? <Button asChild className="rounded-full" size="sm">
+          ? <Button
+              asChild
+              className="rounded-full h-8 bg-transparent border-[1.5px] border-black! text-black font-semibold
+                shadow-[2px_2px_0_#000] transition-colors duration-200 ease-in-out"
+              size="sm"
+              variant="secondary"
+            >
               <Link href="/forms">
                 Керувати формами
               </Link>
             </Button>
-          : <Button asChild className="rounded-full" size="sm">
+          : <Button
+              asChild
+              className="rounded-full h-8 bg-black/[0.06] hover:bg-black/[0.08] border border-[#2F3032]/[0.05]! font-medium transition-colors duration-200 ease-in-out"
+              size="sm"
+              variant="outline"
+            >
               <Link href="/forms">
-                Створити форму
+                Увійти
               </Link>
             </Button>
         }
       </div>
     </header>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

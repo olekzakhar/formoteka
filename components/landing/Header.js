@@ -17,7 +17,7 @@ const Header = ({ isUser=false }) => {
             <Logo />
           </Link>
           
-          <nav className="pt-[5px] hidden md:flex items-center gap-5 text-sm font-medium text-[#475467] transition-colors duration-200 ease-in-out">
+          <nav className="pt-[5px] hidden md:flex items-center gap-5 text-sm font-medium text-[#1C1C1C]/80 transition-colors duration-200 ease-in-out">
             <a href="#pain" className="hover:text-[#101828]">
               Ціни
             </a>
@@ -27,29 +27,17 @@ const Header = ({ isUser=false }) => {
           </nav>
         </div>
 
-        {isUser
-          ? <Button
-              asChild
-              className="rounded-full h-8 bg-transparent border-[1.5px] border-black! text-black font-semibold
-                shadow-[2px_2px_0_#000] transition-colors duration-200 ease-in-out"
-              size="sm"
-              variant="secondary"
-            >
-              <Link href="/forms">
-                Керувати формами
-              </Link>
-            </Button>
-          : <Button
-              asChild
-              className="rounded-full h-8 bg-black/[0.06] hover:bg-black/[0.08] border border-[#2F3032]/[0.05]! font-medium transition-colors duration-200 ease-in-out"
-              size="sm"
-              variant="outline"
-            >
-              <Link href="/forms">
-                Увійти
-              </Link>
-            </Button>
-        }
+        <Button
+          asChild
+          className="rounded-full h-8 bg-transparent hover:bg-white/20 border-[1.5px] border-black! text-black font-semibold
+            shadow-[2px_2px_0_#000] transition-colors duration-200 ease-in-out"
+          size="sm"
+          variant="secondary"
+        >
+          <Link href="/forms">
+            {isUser ? 'Керувати формами' : 'Увійти'}
+          </Link>
+        </Button>
       </div>
     </header>
   )

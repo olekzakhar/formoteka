@@ -33,7 +33,7 @@ const HeroSection = () => {
               asChild
               size="black"
               variant="black"
-              className="group font-semibold text-sm px-[22px] h-[42px] bg-[#101828]"
+              className="group font-semibold text-sm px-[22px] h-[42px] bg-black hover:bg-black/80"
             >
               <Link href="/forms" className="flex gap-3.5">
                 <div className="animate-pulse w-2 h-2 bg-[#7CE0C4] rounded-full"></div>
@@ -67,7 +67,7 @@ const HeroSection = () => {
 
         {/* Preview card */}
         <div className="mt-16 relative w-full max-w-3xl mx-auto">
-          <div className="relative bg-background rounded-2xl shadow-elevated border border-border/60 p-5 md:p-6">
+          <div className="relative bg-white rounded-2xl shadow-elevated border border-border/60 p-5 md:p-6">
             <div className="grid md:grid-cols-2 gap-10">
               {/* Before */}
               <div className="space-y-2.5">

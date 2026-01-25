@@ -104,6 +104,9 @@ export const SidePanel = ({
     );
   }
 
+  const activeTabClasses = 'border-b-2 bg-primary/[0.2] border-black/[0.8]! text-black/[0.8]'
+  const noActiveTabClasses = 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+
   // Render main tabs (Add + Design + Settings)
   return (
     <div className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shrink-0 overflow-hidden')}>
@@ -114,8 +117,8 @@ export const SidePanel = ({
           className={cn(
             'flex-1 flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium transition-smooth',
             activeTab === 'add'
-              ? 'text-primary border-b-2 border-primary! bg-accent/70'
-              : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+              ? activeTabClasses
+              : noActiveTabClasses
           )}
         >
           <Plus className="w-4 h-4" />
@@ -126,8 +129,8 @@ export const SidePanel = ({
           className={cn(
             'flex-1 flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium transition-smooth',
             activeTab === 'design'
-              ? 'text-primary border-b-2 border-primary! bg-accent/70'
-              : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+              ? activeTabClasses
+              : noActiveTabClasses
           )}
         >
           <PaintbrushVertical className="w-4 h-4" />
@@ -138,8 +141,8 @@ export const SidePanel = ({
           className={cn(
             'flex-1 flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium transition-smooth',
             activeTab === 'settings'
-              ? 'text-primary border-b-2 border-primary! bg-accent/70'
-              : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+              ? activeTabClasses
+              : noActiveTabClasses
           )}
         >
           <Settings className="w-4 h-4" />

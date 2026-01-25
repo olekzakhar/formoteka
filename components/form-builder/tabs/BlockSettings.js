@@ -13,6 +13,7 @@ import { BlockProductsSettings } from '@/components/form-builder/block/ProductsS
 import { availableIcons } from '@/components/form-builder/block/Icon';
 import { listIconOptions } from '@/components/form-builder/block/List';
 import * as LucideIcons from 'lucide-react';
+import { Button } from '@/components/ui/button'
 
 // Slideshow position settings component with proper drag handling
 const SlideshowPositionSettings = ({ block, onUpdate }) => {
@@ -137,21 +138,17 @@ const ImageSettings = ({ block, onUpdate }) => {
     <div className="space-y-4">
       {/* Number of images */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Number of Images</label>
+        <label className="text-sm font-medium text-foreground">Кількість зображень</label>
         <div className="flex gap-2">
           {[1, 2, 3, 4, 5].map((count) => (
-            <button
+            <Button
               key={count}
               onClick={() => handleImageCountChange(count)}
-              className={cn(
-                'w-10 h-10 rounded-lg border text-sm font-medium transition-smooth',
-                (block.imageCount || 1) === count
-                  ? 'border-primary bg-primary text-primary-foreground'
-                  : 'border-border text-foreground hover:border-primary/50'
-              )}
+              size="black-editor"
+              variant={(block.imageCount || 1) === count ? 'black-editor' : 'outline'}
             >
               {count}
-            </button>
+            </Button>
           ))}
         </div>
         {/* {images.length > (block.imageCount || 1) && (
@@ -163,39 +160,34 @@ const ImageSettings = ({ block, onUpdate }) => {
 
       {/* Image fit */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Image Fit</label>
+        <label className="text-sm font-medium text-foreground">Підлаштування зображення</label>
         <div className="flex gap-2">
-          <button
+          <Button
             onClick={() => onUpdate({ imageFit: 'cover' })}
-            className={cn(
-              'flex-1 px-3 py-2 rounded-lg border text-sm font-medium transition-smooth',
-              fit === 'cover'
-                ? 'border-primary bg-primary text-primary-foreground'
-                : 'border-border text-foreground hover:border-primary/50'
-            )}
+            size="black-editor"
+            variant={fit === 'cover' ? 'black-editor' : 'outline'}
           >
-            Cover
-          </button>
-          <button
+            Заповнити
+          </Button>
+          <Button
             onClick={() => onUpdate({ imageFit: 'contain' })}
-            className={cn(
-              'flex-1 px-3 py-2 rounded-lg border text-sm font-medium transition-smooth',
-              fit === 'contain'
-                ? 'border-primary bg-primary text-primary-foreground'
-                : 'border-border text-foreground hover:border-primary/50'
-            )}
+            size="black-editor"
+            variant={fit === 'contain' ? 'black-editor' : 'outline'}
           >
-            Fit Entire
-          </button>
+            Показати Повністю
+          </Button>
         </div>
         <p className="text-xs text-muted-foreground">
-          {fit === 'cover' ? 'Image fills the area, may crop' : 'Shows entire image, may have empty space'}
+          {fit === 'cover'
+            ? 'Зображення заповнює область, може обрізатися'
+            : 'Зображення показується повністю, можливі порожні поля'
+          }
         </p>
       </div>
 
       {/* Border radius */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Corners</label>
+        <label className="text-sm font-medium text-foreground">Скруглення Кутів</label>
         <div className="flex gap-2">
           {([
             { value: 'none', label: 'Sharp' },
@@ -203,22 +195,20 @@ const ImageSettings = ({ block, onUpdate }) => {
             { value: 'medium', label: 'Medium' },
             { value: 'full', label: 'Round' },
           ]).map((option) => (
-            <button
+            <Button
               key={option.value}
               onClick={() => onUpdate({ imageRadius: option.value })}
+              size="black-editor"
+              variant={(block.imageRadius || 'small') === option.value ? 'black-editor' : 'outline'}
               className={cn(
-                'flex-1 px-2 py-2 border text-xs font-medium transition-smooth',
                 option.value === 'none' && 'rounded-none',
                 option.value === 'small' && 'rounded-md',
                 option.value === 'medium' && 'rounded-xl',
-                option.value === 'full' && 'rounded-2xl',
-                (block.imageRadius || 'small') === option.value
-                  ? 'border-primary bg-primary text-primary-foreground'
-                  : 'border-border text-foreground hover:border-primary/50'
+                option.value === 'full' && 'rounded-2xl'
               )}
             >
               {option.label}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -226,44 +216,32 @@ const ImageSettings = ({ block, onUpdate }) => {
       {/* Alignment (for contain mode) */}
       {fit === 'contain' && (
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Position</label>
+          <label className="text-sm font-medium text-foreground">Позиція</label>
           <div className="flex gap-2">
-            <button
+            <Button
               onClick={() => onUpdate({ imageAlign: 'left' })}
-              className={cn(
-                'flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-smooth',
-                align === 'left'
-                  ? 'border-primary bg-primary text-primary-foreground'
-                  : 'border-border text-foreground hover:border-primary/50'
-              )}
+              size="black-editor"
+              variant={align === 'left' ? 'black-editor' : 'outline'}
             >
               <AlignLeft className="w-4 h-4" />
               Left
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => onUpdate({ imageAlign: 'center' })}
-              className={cn(
-                'flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-smooth',
-                align === 'center'
-                  ? 'border-primary bg-primary text-primary-foreground'
-                  : 'border-border text-foreground hover:border-primary/50'
-              )}
+              size="black-editor"
+              variant={align === 'center' ? 'black-editor' : 'outline'}
             >
               <AlignCenter className="w-4 h-4" />
               Center
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => onUpdate({ imageAlign: 'right' })}
-              className={cn(
-                'flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-smooth',
-                align === 'right'
-                  ? 'border-primary bg-primary text-primary-foreground'
-                  : 'border-border text-foreground hover:border-primary/50'
-              )}
+              size="black-editor"
+              variant={align === 'right' ? 'black-editor' : 'outline'}
             >
               <AlignRight className="w-4 h-4" />
               Right
-            </button>
+            </Button>
           </div>
         </div>
       )}
@@ -271,9 +249,9 @@ const ImageSettings = ({ block, onUpdate }) => {
       {/* Position adjustment for cover mode */}
       {fit === 'cover' && images.some(Boolean) && (
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Adjust Position</label>
+          <label className="text-sm font-medium text-foreground">Змінити Положення</label>
           <p className="text-xs text-muted-foreground mb-2">
-            Click and drag on an image to adjust which part is visible
+            Перетягніть зображення, щоб змінити видиму частину
           </p>
           <div className="space-y-3">
             {images.map((img, i) => {
@@ -346,7 +324,7 @@ const IconSettings = ({ block, onUpdate }) => {
     <div className="space-y-4">
       {/* Icon Preview */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Preview</label>
+        <label className="text-sm font-medium text-foreground">Перегляд</label>
         <div className="flex justify-center p-4 bg-muted/30 rounded-lg">
           <div
             className="flex items-center justify-center"
@@ -422,13 +400,13 @@ const IconSettings = ({ block, onUpdate }) => {
       {/* Icon Size */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-foreground">Icon Size</label>
+          <label className="text-sm font-medium text-foreground">Розмір Іконки</label>
           {block.iconSize !== 32 && (
             <button
               onClick={() => onUpdate({ iconSize: 32 })}
               className="text-xs text-muted-foreground hover:text-primary transition-smooth"
             >
-              Reset
+              Скинути
             </button>
           )}
         </div>
@@ -449,7 +427,7 @@ const IconSettings = ({ block, onUpdate }) => {
 
       {/* Icon Color */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Icon Color</label>
+        <label className="text-sm font-medium text-foreground">Колір Іконки</label>
         <div className="flex gap-2">
           <input
             type="color"
@@ -472,25 +450,21 @@ const IconSettings = ({ block, onUpdate }) => {
 
       {/* Background Shape */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Background Shape</label>
+        <label className="text-sm font-medium text-foreground">Форма Фону</label>
         <div className="flex gap-2">
           {([
-            { value: 'square', label: 'Square' },
-            { value: 'rounded', label: 'Rounded' },
-            { value: 'circle', label: 'Circle' },
+            { value: 'square', label: 'Квадрат' },
+            { value: 'rounded', label: 'Завкруглена' },
+            { value: 'circle', label: 'Коло' },
           ]).map((option) => (
-            <button
+            <Button
               key={option.value}
               onClick={() => onUpdate({ iconBgShape: option.value })}
-              className={cn(
-                'flex-1 px-3 py-2 rounded-lg border text-sm font-medium transition-smooth',
-                (block.iconBgShape || 'circle') === option.value
-                  ? 'border-primary bg-primary text-primary-foreground'
-                  : 'border-border text-foreground hover:border-primary/50'
-              )}
+              size="black-editor"
+              variant={(block.iconBgShape || 'circle') === option.value ? 'black-editor' : 'outline'}
             >
               {option.label}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -499,13 +473,13 @@ const IconSettings = ({ block, onUpdate }) => {
       {(block.iconBgShape === 'square' || block.iconBgShape === 'rounded') && (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-foreground">Corner Radius</label>
+            <label className="text-sm font-medium text-foreground">Скруглення кутів</label>
             {block.iconBgRadius !== 8 && (
               <button
                 onClick={() => onUpdate({ iconBgRadius: 8 })}
                 className="text-xs text-muted-foreground hover:text-primary transition-smooth"
               >
-                Reset
+                Скинути
               </button>
             )}
           </div>
@@ -527,7 +501,7 @@ const IconSettings = ({ block, onUpdate }) => {
 
       {/* Background Color */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Background Color</label>
+        <label className="text-sm font-medium text-foreground">Колір Фону</label>
         <div className="flex gap-2">
           <input
             type="color"
@@ -551,13 +525,13 @@ const IconSettings = ({ block, onUpdate }) => {
       {/* Background Opacity */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-foreground">Background Opacity</label>
+          <label className="text-sm font-medium text-foreground">Прозорість Фону</label>
           {block.iconBgOpacity !== 15 && (
             <button
               onClick={() => onUpdate({ iconBgOpacity: 15 })}
               className="text-xs text-muted-foreground hover:text-primary transition-smooth"
             >
-              Reset
+              Скинути
             </button>
           )}
         </div>
@@ -579,13 +553,13 @@ const IconSettings = ({ block, onUpdate }) => {
       {/* Background Padding */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-foreground">Background Padding</label>
+          <label className="text-sm font-medium text-foreground">Відступи Фону</label>
           {block.iconBgPadding !== 16 && (
             <button
               onClick={() => onUpdate({ iconBgPadding: 16 })}
               className="text-xs text-muted-foreground hover:text-primary transition-smooth"
             >
-              Reset
+              Скинути
             </button>
           )}
         </div>
@@ -643,21 +617,17 @@ const ListSettings = ({ block, onUpdate }) => {
     <div className="space-y-4">
       {/* Marker Style */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Marker Style</label>
+        <label className="text-sm font-medium text-foreground">Стиль маркера</label>
         <div className="flex gap-2">
           {(['bullet', 'dash', 'icon']).map((s) => (
-            <button
+            <Button
               key={s}
               onClick={() => onUpdate({ listStyle: s })}
-              className={cn(
-                'flex-1 px-3 py-2 rounded-lg border text-sm font-medium capitalize transition-smooth',
-                style === s
-                  ? 'border-primary bg-primary text-primary-foreground'
-                  : 'border-border text-foreground hover:border-primary/50'
-              )}
+              size="black-editor"
+              variant={style === s ? 'black-editor' : 'outline'}
             >
-              {s === 'bullet' ? '● Bullet' : s === 'dash' ? '— Dash' : '✓ Icon'}
-            </button>
+              {s === 'bullet' ? '● Маркер' : s === 'dash' ? '— Тире' : '✓ Іконка'}
+            </Button>
           ))}
         </div>
       </div>
@@ -665,7 +635,7 @@ const ListSettings = ({ block, onUpdate }) => {
       {/* Icon Picker (only when style is 'icon') */}
       {style === 'icon' && (
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Icon</label>
+          <label className="text-sm font-medium text-foreground">Іконка</label>
           <button
             onClick={() => setShowIconPicker(!showIconPicker)}
             className={cn(
@@ -709,7 +679,7 @@ const ListSettings = ({ block, onUpdate }) => {
 
       {/* Icon/Marker Color */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Marker Color</label>
+        <label className="text-sm font-medium text-foreground">Колір Позначки</label>
         <div className="flex gap-2">
           <input
             type="color"
@@ -732,7 +702,7 @@ const ListSettings = ({ block, onUpdate }) => {
 
       {/* List Items */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">List Items</label>
+        <label className="text-sm font-medium text-foreground">Список Елементів</label>
         <div className="space-y-2">
           {items.map((item, index) => (
             <div key={index} className="flex items-center gap-2 group">
@@ -776,7 +746,7 @@ const ListSettings = ({ block, onUpdate }) => {
           className="flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-smooth"
         >
           <Plus className="w-4 h-4" />
-          Add Item
+          Додати елемент
         </button>
       </div>
     </div>
@@ -843,7 +813,7 @@ const AvatarSettings = ({ block, onUpdate }) => {
     <div className="space-y-4">
       {/* Avatar Preview - Fixed size for position adjustment only */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Adjust Position</label>
+        <label className="text-sm font-medium text-foreground">Змінити положення</label>
         <div className="flex justify-center p-4 bg-muted/30 rounded-lg">
           <div
             ref={containerRef}
@@ -875,27 +845,27 @@ const AvatarSettings = ({ block, onUpdate }) => {
                 />
               </>
             ) : (
-              <span className="text-xs text-muted-foreground">No image</span>
+              <span className="text-xs text-muted-foreground">Немає зображення</span>
             )}
           </div>
         </div>
         {hasImage && (
           <p className="text-xs text-muted-foreground text-center">
-            Drag on the preview to adjust position
+            Перетягуйте у перегляді, щоб змінити положення
           </p>
         )}
       </div>
 
       {/* Upload Image */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Image</label>
+        <label className="text-sm font-medium text-foreground">Зображення</label>
         <div className="flex gap-2">
           <label className={cn(
             'flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-dashed',
             'border-input hover:border-primary/50 hover:bg-accent/50 cursor-pointer transition-smooth'
           )}>
             <Plus className="w-4 h-4" />
-            <span className="text-sm">Upload Image</span>
+            <span className="text-sm">Завантажити зображення</span>
             <input
               type="file"
               accept="image/*"
@@ -918,13 +888,13 @@ const AvatarSettings = ({ block, onUpdate }) => {
       {/* Size */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-foreground">Size</label>
+          <label className="text-sm font-medium text-foreground">Розмір</label>
           {size !== 64 && (
             <button
               onClick={() => onUpdate({ avatarSize: 64 })}
               className="text-xs text-muted-foreground hover:text-primary transition-smooth"
             >
-              Reset
+              Скинути
             </button>
           )}
         </div>
@@ -946,31 +916,27 @@ const AvatarSettings = ({ block, onUpdate }) => {
 
       {/* Alignment */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Alignment</label>
+        <label className="text-sm font-medium text-foreground">Вирівнювання</label>
         <div className="flex gap-2">
           {(['left', 'center', 'right']).map((option) => (
-            <button
+            <Button
               key={option}
               onClick={() => onUpdate({ avatarAlign: option })}
-              className={cn(
-                'flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-smooth',
-                align === option
-                  ? 'border-primary bg-primary text-primary-foreground'
-                  : 'border-border text-foreground hover:border-primary/50'
-              )}
+              size="black-editor"
+              variant={align === option ? 'black-editor' : 'outline'}
             >
               {option === 'left' && <AlignLeft className="w-4 h-4" />}
               {option === 'center' && <AlignCenter className="w-4 h-4" />}
               {option === 'right' && <AlignRight className="w-4 h-4" />}
               {option.charAt(0).toUpperCase() + option.slice(1)}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
 
       {/* Border Radius */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Corners</label>
+        <label className="text-sm font-medium text-foreground">Скруглення кутів</label>
         <div className="flex gap-2">
           {([
             { value: 'none', label: 'Sharp' },
@@ -978,22 +944,20 @@ const AvatarSettings = ({ block, onUpdate }) => {
             { value: 'medium', label: 'Medium' },
             { value: 'circle', label: 'Circle' },
           ]).map((option) => (
-            <button
+            <Button
               key={option.value}
               onClick={() => onUpdate({ avatarRadius: option.value })}
+              size="black-editor"
+              variant={radius === option.value ? 'black-editor' : 'outline'}
               className={cn(
-                'flex-1 px-2 py-2 border text-xs font-medium transition-smooth',
                 option.value === 'none' && 'rounded-none',
                 option.value === 'small' && 'rounded-md',
                 option.value === 'medium' && 'rounded-xl',
-                option.value === 'circle' && 'rounded-full',
-                radius === option.value
-                  ? 'border-primary bg-primary text-primary-foreground'
-                  : 'border-border text-foreground hover:border-primary/50'
+                option.value === 'circle' && 'rounded-full'
               )}
             >
               {option.label}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -1008,7 +972,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
         <div className="w-16 h-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
           <BlockIcon icon="Type" className="w-8 h-8 text-muted-foreground" />
         </div>
-        <p className="text-muted-foreground">Select a block to edit its settings</p>
+        <p className="text-muted-foreground">Виберіть блок для редагування налаштувань</p>
       </div>
     );
   }
@@ -1020,7 +984,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
 
   const addOption = () => {
     const options = block.options || [];
-    onUpdate({ options: [...options, `Option ${options.length + 1}`] });
+    onUpdate({ options: [...options, `Опція ${options.length + 1}`] });
   };
 
   const updateOption = (index, value) => {
@@ -1090,67 +1054,59 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
     <div className="p-4 space-y-6 animate-fade-in">
       {/* Block type indicator - hide for products since it has its own header */}
       {block.type !== 'products' && (
-        <div className="flex items-center gap-3 p-3 rounded-lg bg-accent/50">
+        <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/[0.12]">
           <div className="w-10 h-10 rounded-lg bg-background flex items-center justify-center shadow-soft">
             <BlockIcon icon={definition?.icon || 'Type'} className="w-5 h-5 text-primary" />
           </div>
           <div>
             <p className="text-sm font-medium text-foreground">{definition?.label}</p>
-            <p className="text-xs text-muted-foreground">Block type</p>
+            <p className="text-xs text-muted-foreground">Тип блоку</p>
           </div>
         </div>
       )}
 
       {/* Block Width - available for all blocks */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Width</label>
+        <label className="text-sm font-medium text-foreground">Ширина</label>
         <div className="flex gap-2">
           {(['1/1', '1/2', '1/3']).map((width) => (
-            <button
+            <Button
               key={width}
               onClick={() => onUpdate({ blockWidth: width })}
-              className={cn(
-                'flex-1 py-2 px-3 rounded-lg border text-sm font-medium transition-smooth',
-                (block.blockWidth || '1/1') === width
-                  ? 'border-primary bg-primary text-primary-foreground'
-                  : 'border-border text-foreground hover:border-primary/50'
-              )}
+              size="black-editor"
+              variant={(block?.blockWidth || '1/1') === width ? 'black-editor' : 'outline'}
             >
               {width}
-            </button>
+            </Button>
           ))}
         </div>
         <p className="text-xs text-muted-foreground">
-          Blocks with matching widths will align in a row
+          Блоки з однаковою шириною автоматично стають в один ряд
         </p>
       </div>
 
       {/* Vertical Alignment - for inline blocks */}
       {(block.blockWidth === '1/2' || block.blockWidth === '1/3') && (
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Vertical Position</label>
+          <label className="text-sm font-medium text-foreground">Вертикальне вирівнювання</label>
           <div className="flex gap-2">
             {([
               { value: 'top', label: 'Top' },
               { value: 'center', label: 'Center' },
               { value: 'bottom', label: 'Bottom' },
             ]).map((option) => (
-              <button
+              <Button
                 key={option.value}
                 onClick={() => onUpdate({ blockVerticalAlign: option.value })}
-                className={cn(
-                  'flex-1 py-2 px-3 rounded-lg border text-sm font-medium transition-smooth',
-                  (block.blockVerticalAlign || 'top') === option.value
-                    ? 'border-primary bg-primary text-primary-foreground'
-                    : 'border-border text-foreground hover:border-primary/50'
-                )}
+                size="black-editor"
+                variant={(block.blockVerticalAlign || 'top') === option.value ? 'black-editor' : 'outline'}
               >
                 {option.label}
-              </button>
+              </Button>
             ))}
           </div>
           <p className="text-xs text-muted-foreground">
-            Position within row when blocks have different heights
+            Вирівнювання в ряду для блоків різної висоти
           </p>
         </div>
       )}
@@ -1158,29 +1114,25 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
       {/* Horizontal Alignment - for 1/2 and 1/3 blocks */}
       {(block.blockWidth === '1/2' || block.blockWidth === '1/3') && (
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Horizontal Position</label>
+          <label className="text-sm font-medium text-foreground">Горизонтальне вирівнювання</label>
           <div className="flex gap-2">
             {([
               { value: 'start', label: 'Start' },
               { value: 'center', label: 'Center' },
               { value: 'end', label: 'End' },
             ]).map((option) => (
-              <button
+              <Button
                 key={option.value}
                 onClick={() => onUpdate({ blockHorizontalAlign: option.value })}
-                className={cn(
-                  'flex-1 py-2 px-3 rounded-lg border text-sm font-medium transition-smooth',
-                  (block.blockHorizontalAlign || 'start') === option.value
-                    ? 'border-primary bg-primary text-primary-foreground'
-                    : 'border-border text-foreground hover:border-primary/50'
-                )}
+                size="black-editor"
+                variant={(block.blockHorizontalAlign || 'start') === option.value ? 'black-editor' : 'outline'}
               >
                 {option.label}
-              </button>
+              </Button>
             ))}
           </div>
           <p className="text-xs text-muted-foreground">
-            Position block within its allocated space
+            Вирівнювання блоку в межах простору
           </p>
         </div>
       )}
@@ -1188,7 +1140,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
       {/* Spacer height */}
       {block.type === 'spacer' && (
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Height (px)</label>
+          <label className="text-sm font-medium text-foreground">Висота (px)</label>
           <input
             type="number"
             value={block.height || 32}
@@ -1210,7 +1162,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
         <div className="space-y-4">
           {/* Color */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Color</label>
+            <label className="text-sm font-medium text-foreground">Колір</label>
             <div className="flex gap-2">
               <input
                 type="color"
@@ -1233,7 +1185,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
 
           {/* Thickness */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Thickness (px)</label>
+            <label className="text-sm font-medium text-foreground">Товщина (px)</label>
             <input
               type="number"
               value={block.dividerThickness || 1}
@@ -1250,7 +1202,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
 
           {/* Width */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Width (%)</label>
+            <label className="text-sm font-medium text-foreground">Ширина (%)</label>
             <input
               type="range"
               value={block.dividerWidth || 100}
@@ -1268,28 +1220,24 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
 
           {/* Style */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Style</label>
+            <label className="text-sm font-medium text-foreground">Стиль</label>
             <div className="flex gap-2">
               {(['solid', 'dashed', 'dotted']).map((style) => (
-                <button
+                <Button
                   key={style}
                   onClick={() => onUpdate({ dividerStyle: style })}
-                  className={cn(
-                    'flex-1 px-3 py-2 rounded-lg border text-sm font-medium capitalize transition-smooth',
-                    (block.dividerStyle || 'solid') === style
-                      ? 'border-primary bg-primary text-primary-foreground'
-                      : 'border-border text-foreground hover:border-primary/50'
-                  )}
+                  size="black-editor"
+                  variant={(block.dividerStyle || 'solid') === style ? 'black-editor' : 'outline'}
                 >
                   {style}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
 
           {/* Preview */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Preview</label>
+            <label className="text-sm font-medium text-foreground">Перегляд</label>
             <div className="p-4 rounded-lg border border-border bg-muted/30 flex justify-center">
               <hr
                 className="border-0"
@@ -1325,7 +1273,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
         <div className="space-y-4">
           {/* Height */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Photo Height (px)</label>
+            <label className="text-sm font-medium text-foreground">Висота фото (px)</label>
             <input
               type="number"
               value={block.slideshowHeight || 200}
@@ -1338,12 +1286,12 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
                 'transition-smooth'
               )}
             />
-            <p className="text-xs text-muted-foreground">All photos fit by height regardless of orientation</p>
+            <p className="text-xs text-muted-foreground">Усі фото мають однакову висоту незалежно від орієнтації</p>
           </div>
 
           {/* Gap */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Space Between Photos (px)</label>
+            <label className="text-sm font-medium text-foreground">Відстань між фото (px)</label>
             <input
               type="range"
               value={block.slideshowGap ?? 12}
@@ -1361,7 +1309,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
 
           {/* Corners / Rounding */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Corners</label>
+            <label className="text-sm font-medium text-foreground">Скруглення кутів</label>
             <div className="flex gap-2">
               {([
                 { value: 'none', label: 'Sharp' },
@@ -1369,22 +1317,20 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
                 { value: 'medium', label: 'Medium' },
                 { value: 'large', label: 'Large' },
               ]).map((option) => (
-                <button
+                <Button
                   key={option.value}
                   onClick={() => onUpdate({ slideshowRadius: option.value })}
+                  size="black-editor"
+                  variant={(block.slideshowRadius || 'small') === option.value ? 'black-editor' : 'outline'}
                   className={cn(
-                    'flex-1 px-2 py-2 border text-xs font-medium transition-smooth',
                     option.value === 'none' && 'rounded-none',
                     option.value === 'small' && 'rounded-md',
                     option.value === 'medium' && 'rounded-xl',
-                    option.value === 'large' && 'rounded-2xl',
-                    (block.slideshowRadius || 'small') === option.value
-                      ? 'border-primary bg-primary text-primary-foreground'
-                      : 'border-border text-foreground hover:border-primary/50'
+                    option.value === 'large' && 'rounded-2xl'
                   )}
                 >
                   {option.label}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -1399,12 +1345,12 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
 
           {/* Image count */}
           <div className="p-3 rounded-lg bg-muted/50 flex items-center justify-between">
-            <span className="text-sm text-foreground">Photos added</span>
+            <span className="text-sm text-foreground">Фото додано</span>
             <span className="text-sm font-medium text-foreground">{block.slideshowImages?.length || 0}</span>
           </div>
           
           <p className="text-xs text-muted-foreground">
-            Click &quot;Add photos&quot; in the block to add images. Drag horizontally to scroll through photos.
+            Натисніть «Додати фото», щоб додати зображення. Гортайте фото горизонтальним перетягуванням.
           </p>
         </div>
       )}
@@ -1419,36 +1365,28 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
         <div className="space-y-4">
           {/* Layout */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Layout</label>
+            <label className="text-sm font-medium text-foreground">Макет</label>
             <div className="flex gap-2">
-              <button
+              <Button
                 onClick={() => onUpdate({ reviewsLayout: 'cards' })}
-                className={cn(
-                  'flex-1 px-3 py-2 rounded-lg border text-sm font-medium transition-smooth',
-                  (block.reviewsLayout || 'cards') === 'cards'
-                    ? 'border-primary bg-primary text-primary-foreground'
-                    : 'border-border text-foreground hover:border-primary/50'
-                )}
+                size="black-editor"
+                variant={(block.reviewsLayout || 'cards') === 'cards' ? 'black-editor' : 'outline'}
               >
-                Cards
-              </button>
-              <button
+                Картки
+              </Button>
+              <Button
                 onClick={() => onUpdate({ reviewsLayout: 'list' })}
-                className={cn(
-                  'flex-1 px-3 py-2 rounded-lg border text-sm font-medium transition-smooth',
-                  block.reviewsLayout === 'list'
-                    ? 'border-primary bg-primary text-primary-foreground'
-                    : 'border-border text-foreground hover:border-primary/50'
-                )}
+                size="black-editor"
+                variant={block.reviewsLayout === 'list' ? 'black-editor' : 'outline'}
               >
-                List
-              </button>
+                Список
+              </Button>
             </div>
           </div>
 
           {/* Show Avatar */}
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-foreground">Show Avatar</label>
+            <label className="text-sm font-medium text-foreground">Показати аватар</label>
             <button
               onClick={() => onUpdate({ reviewsShowAvatar: block.reviewsShowAvatar === false ? true : false })}
               className={cn(
@@ -1467,21 +1405,21 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
 
           {/* Review count */}
           <div className="p-3 rounded-lg bg-muted/50 flex items-center justify-between">
-            <span className="text-sm text-foreground">Reviews added</span>
+            <span className="text-sm text-foreground">Відгуки додано</span>
             <span className="text-sm font-medium text-foreground">{block.reviews?.length || 0}</span>
           </div>
           
           <p className="text-xs text-muted-foreground">
-            Click &quot;Add review&quot; in the block to add testimonials. You can edit individual reviews in the block settings.
+            Натисніть «Додати відгук», щоб додати відгуки. Редагування — в налаштуваннях блоку.
           </p>
 
           {/* Edit individual reviews */}
           {(block.reviews?.length || 0) > 0 && (
             <div className="space-y-3">
-              <label className="text-sm font-medium text-foreground">Edit Reviews</label>
+              <label className="text-sm font-medium text-foreground">Редагувати відгуки</label>
               {block.reviews?.map((review, i) => (
                 <div key={review.id} className="space-y-2 p-3 rounded-lg border border-border bg-muted/30">
-                  <span className="text-xs text-muted-foreground">Review {i + 1}</span>
+                  <span className="text-xs text-muted-foreground">Відгук {i + 1}</span>
                   <textarea
                     value={review.text}
                     onChange={(e) => {
@@ -1495,7 +1433,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
                       'focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary',
                       'transition-smooth resize-none'
                     )}
-                    placeholder="Review text..."
+                    placeholder="Текст відгуку..."
                   />
                   <div className="grid grid-cols-2 gap-2">
                     <input
@@ -1510,7 +1448,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
                         'px-3 py-1.5 rounded-md border border-input bg-background text-foreground text-sm',
                         'focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary'
                       )}
-                      placeholder="Name"
+                      placeholder="Імʼя"
                     />
                     <input
                       type="text"
@@ -1524,11 +1462,11 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
                         'px-3 py-1.5 rounded-md border border-input bg-background text-foreground text-sm',
                         'focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary'
                       )}
-                      placeholder="Role"
+                      placeholder="Роль"
                     />
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted-foreground">Rating:</span>
+                    <span className="text-xs text-muted-foreground">Рейтинг:</span>
                     <div className="flex gap-1">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <button
@@ -1560,18 +1498,18 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
         <div className="space-y-4">
           {/* FAQ count */}
           <div className="p-3 rounded-lg bg-muted/50 flex items-center justify-between">
-            <span className="text-sm text-foreground">FAQ items added</span>
+            <span className="text-sm text-foreground">Елементи FAQ додано</span>
             <span className="text-sm font-medium text-foreground">{block.faqItems?.length || 0}</span>
           </div>
           
           <p className="text-xs text-muted-foreground">
-            Click &quot;Add FAQ item&quot; in the block to add questions. You can edit individual items below.
+            Натисніть «Додати елемент FAQ», щоб додати запитання. Окремі пункти редагуються нижче.
           </p>
 
           {/* Edit individual FAQ items */}
           {(block.faqItems?.length || 0) > 0 && (
             <div className="space-y-3">
-              <label className="text-sm font-medium text-foreground">Edit FAQ Items</label>
+              <label className="text-sm font-medium text-foreground">Редагувати елемент FAQ</label>
               {block.faqItems?.map((item, i) => (
                 <div key={item.id} className="space-y-2 p-3 rounded-lg border border-border bg-muted/30">
                   <span className="text-xs text-muted-foreground">Item {i + 1}</span>
@@ -1615,7 +1553,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
       {block.type === 'map' && (
         <div className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Location</label>
+            <label className="text-sm font-medium text-foreground">Локація</label>
 
             <div className="relative">
               <div className="flex gap-2">
@@ -1698,7 +1636,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
             </div>
 
             <p className="text-xs text-muted-foreground">
-              Pick a suggestion, then click the map to drop a pin. Pan/zoom is saved automatically.
+              Оберіть підказку й клацніть на карту, щоб додати пін. Масштаб і позиція зберігаються автоматично.
             </p>
           </div>
 
@@ -1717,7 +1655,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
                   'hover:bg-muted/60 transition-smooth'
                 )}
               >
-                Clear
+                Очистити
               </button>
             </div>
 
@@ -1769,11 +1707,11 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
               )}
             />
 
-            <p className="text-xs text-muted-foreground">Tip: click the map to drop a pin, then drag it to adjust.</p>
+            <p className="text-xs text-muted-foreground">Порада: клікніть на карту, щоб поставити пін, і перетягніть його за потреби.</p>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Zoom</label>
+            <label className="text-sm font-medium text-foreground">Масштаб</label>
             <input
               type="range"
               min={1}
@@ -1790,7 +1728,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Height (px)</label>
+            <label className="text-sm font-medium text-foreground">Висота (px)</label>
             <input
               type="number"
               min={160}
@@ -1808,25 +1746,21 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Map Style</label>
+            <label className="text-sm font-medium text-foreground">Стиль карти</label>
             <div className="flex gap-2">
               {([
                 { value: 'color', label: 'Color' },
                 { value: 'bw', label: 'B&W' },
                 { value: 'satellite', label: 'Satellite' },
               ]).map((option) => (
-                <button
+                <Button
                   key={option.value}
                   onClick={() => onUpdate({ mapStyle: option.value })}
-                  className={cn(
-                    'flex-1 px-3 py-2 rounded-lg border text-sm font-medium transition-smooth',
-                    (block.mapStyle ?? 'color') === option.value
-                      ? 'border-primary bg-primary text-primary-foreground'
-                      : 'border-border text-foreground hover:border-primary/50'
-                  )}
+                  size="black-editor"
+                  variant={(block.mapStyle ?? 'color') === option.value ? 'black-editor' : 'outline'}
                 >
                   {option.label}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -1846,7 +1780,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
       {/* Label field */}
       {!['spacer', 'image', 'slideshow', 'products', 'divider', 'reviews', 'faq', 'icon', 'avatar', 'messenger-select'].includes(block.type) && (
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Label</label>
+          <label className="text-sm font-medium text-foreground">Назва поля</label>
           <input
             type="text"
             value={block.label}
@@ -1864,44 +1798,32 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
       {/* Text Alignment for heading/paragraph */}
       {isTextBlock && (
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Text Alignment</label>
+          <label className="text-sm font-medium text-foreground">Вирівнювання тексту</label>
           <div className="flex gap-2">
-            <button
+            <Button
               onClick={() => onUpdate({ textAlign: 'left' })}
-              className={cn(
-                'flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-smooth',
-                (block.textAlign || 'left') === 'left'
-                  ? 'border-primary bg-primary text-primary-foreground'
-                  : 'border-border text-foreground hover:border-primary/50'
-              )}
+              size="black-editor"
+              variant={(block.textAlign || 'left') === 'left' ? 'black-editor' : 'outline'}
             >
               <AlignLeft className="w-4 h-4" />
-              Left
-            </button>
-            <button
+              Зліва
+            </Button>
+            <Button
               onClick={() => onUpdate({ textAlign: 'center' })}
-              className={cn(
-                'flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-smooth',
-                block.textAlign === 'center'
-                  ? 'border-primary bg-primary text-primary-foreground'
-                  : 'border-border text-foreground hover:border-primary/50'
-              )}
+              size="black-editor"
+              variant={block.textAlign === 'center' ? 'black-editor' : 'outline'}
             >
               <AlignCenter className="w-4 h-4" />
-              Center
-            </button>
-            <button
+              Центр
+            </Button>
+            <Button
               onClick={() => onUpdate({ textAlign: 'right' })}
-              className={cn(
-                'flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-smooth',
-                block.textAlign === 'right'
-                  ? 'border-primary bg-primary text-primary-foreground'
-                  : 'border-border text-foreground hover:border-primary/50'
-              )}
+              size="black-editor"
+              variant={block.textAlign === 'right' ? 'black-editor' : 'outline'}
             >
               <AlignRight className="w-4 h-4" />
-              Right
-            </button>
+              Справа
+            </Button>
           </div>
         </div>
       )}
@@ -1909,7 +1831,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
       {/* Per-block text color */}
       {!['spacer', 'divider', 'image', 'slideshow', 'icon', 'map', 'reviews', 'faq', 'products', 'avatar', 'messenger-select'].includes(block.type) && (
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Text Color</label>
+          <label className="text-sm font-medium text-foreground">Колір тексту</label>
           <div className="flex gap-2">
             <input
               type="color"
@@ -1940,7 +1862,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
             )}
           </div>
           <p className="text-xs text-muted-foreground">
-            Leave empty to use the global text color from Design settings
+            Залиште порожнім, щоб використати глобальний колір тексту з налаштувань дизайну
           </p>
         </div>
       )}
@@ -1948,7 +1870,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
       {/* Show/Hide Label toggle */}
       {isInputBlock && (
         <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-foreground">Show Label</label>
+          <label className="text-sm font-medium text-foreground">Показувати назву</label>
           <button
             onClick={() => onUpdate({ showLabel: block.showLabel === false ? true : false })}
             className={cn(
@@ -1969,7 +1891,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
       {/* Placeholder field */}
       {block.placeholder !== undefined && !['spacer', 'image'].includes(block.type) && (
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Placeholder</label>
+          <label className="text-sm font-medium text-foreground">Заповнювач</label>
           <input
             type="text"
             value={block.placeholder || ''}
@@ -1987,7 +1909,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
       {/* Required toggle */}
       {!['heading', 'paragraph', 'spacer', 'image', 'icon', 'divider', 'slideshow', 'map', 'reviews', 'faq', 'avatar', 'messenger-select', 'grid'].includes(block.type) && (
         <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-foreground">Required</label>
+          <label className="text-sm font-medium text-foreground">Обовʼязкове</label>
           <button
             onClick={() => onUpdate({ required: !block.required })}
             className={cn(
@@ -2008,7 +1930,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
       {/* Options editor */}
       {hasOptions && (
         <div className="space-y-3">
-          <label className="text-sm font-medium text-foreground">Options</label>
+          <label className="text-sm font-medium text-foreground">Опції</label>
           <div className="space-y-2">
             {block.options?.map((option, index) => (
               <div key={index} className="flex items-center gap-2">
@@ -2041,7 +1963,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
             )}
           >
             <Plus className="w-4 h-4" />
-            Add option
+            Додати опцію
           </button>
         </div>
       )}

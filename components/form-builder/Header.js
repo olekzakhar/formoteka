@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowLeft, Play, Link as LinkIcon, ExternalLink, Loader2, CheckCheck, FileCheckCorner } from 'lucide-react';
-import { Button } from '@/components/ui/button-2';
+import { Button } from '@/components/ui/button';
 import { useState, useRef, useEffect } from 'react';
 import { BASE_URL, FORMS_PATH } from '@/constants';
 import Logo from '@/components/Logo';
@@ -51,20 +51,28 @@ export const Header = ({
     <header className="h-[52px] border-b border-border bg-card rounded-b-3xl flex items-center px-5 shrink-0 bg-transparent">
       {/* Left section - Back button and form name */}
       <div className="flex items-center gap-2 w-[200px]">
-        <Link
-          href={FORMS_PATH}
-          className="h-8 w-8 flex justify-center items-center hover:bg-accent hover:text-accent-foreground
-            rounded-md text-sm font-medium transition-colors"
+        <Button
+          asChild
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 shrink-0"
+          title="Повернутись назад"
         >
-          <ArrowLeft className="h-4 w-4" />
-        </Link>
+          <Link
+            href={FORMS_PATH}
+            className="h-8 w-8 flex justify-center items-center"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Link>
+        </Button>
         
-        <div className="flex flex-col min-w-0">
+        <div className="flex flex-col min-w-0 flex-1">
           {isEditingName ? (
             <input
               ref={inputRef}
               type="text"
               value={formName}
+              className="text-sm font-medium text-foreground bg-transparent outline-none w-full px-0 border-0 m-0"
               onChange={(e) => setFormName(e.target.value)}
               onBlur={handleSaveName}
               onKeyDown={(e) => {
@@ -74,12 +82,11 @@ export const Header = ({
                   setIsEditingName(false);
                 }
               }}
-              className="text-sm font-medium text-foreground bg-transparent border-b-2 border-primary outline-none px-1 min-w-0"
             />
           ) : (
             <button
               onClick={() => setIsEditingName(true)}
-              className="text-sm font-medium text-foreground hover:text-primary transition-smooth truncate text-left"
+              className="text-sm font-medium text-foreground hover:text-black/60 transition-smooth truncate text-left w-full px-0 border-0 m-0"
             >
               {formName}
             </button>
@@ -133,7 +140,7 @@ export const Header = ({
           size="icon"
           onClick={onTogglePreview}
           className="h-8 w-8"
-          title="Preview"
+          title="Перегляд"
         >
           <Play className="h-4 w-4" />
         </Button>

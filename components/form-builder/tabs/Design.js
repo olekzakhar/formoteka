@@ -5,6 +5,7 @@
 import { useState } from 'react';
 import { cn } from '@/utils';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 // Background colors with associated text colors
 const backgroundColors = [
@@ -345,18 +346,14 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
         <label className="text-sm font-medium text-foreground">Розмір заголовків</label>
         <div className="flex gap-2">
           {headingSizes.map((size) => (
-            <button
+            <Button
               key={size.value}
               onClick={() => onUpdateDesign({ headingSize: size.value })}
-              className={cn(
-                'flex-1 py-2 px-3 rounded-lg border text-sm font-medium transition-smooth',
-                (design.headingSize || 'medium') === size.value
-                  ? 'border-primary bg-primary text-primary-foreground'
-                  : 'border-border text-foreground hover:border-primary/50'
-              )}
+              size="black-editor"
+              variant={(design.headingSize || 'medium') === size.value ? 'black-editor' : 'outline'}
             >
               {size.label}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -366,18 +363,14 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
         <label className="text-sm font-medium text-foreground">Розмір тексту</label>
         <div className="flex gap-2">
           {textSizes.map((size) => (
-            <button
+            <Button
               key={size.value}
               onClick={() => onUpdateDesign({ fontSize: size.value })}
-              className={cn(
-                'flex-1 py-2 px-3 rounded-lg border text-sm font-medium transition-smooth',
-                design.fontSize === size.value
-                  ? 'border-primary bg-primary text-primary-foreground'
-                  : 'border-border text-foreground hover:border-primary/50'
-              )}
+              size="black-editor"
+              variant={design.fontSize === size.value ? 'black-editor' : 'outline'}
             >
               {size.label}
-            </button>
+            </Button>
           ))}
         </div>
       </div>

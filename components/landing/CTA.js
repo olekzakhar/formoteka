@@ -9,7 +9,7 @@ const CTASection = () => {
       <div className="container relative">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-black mb-4 tracking-tight">
-            Готовий навести порядок у своїх замовленнях?
+            Готовий навести порядок у своїх заявках?
           </h2>
 
           <p className="text-[#1C1C1C] max-w-md mx-auto mb-8">

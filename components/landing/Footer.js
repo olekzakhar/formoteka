@@ -6,7 +6,7 @@ import Logo from "@/components/Logo"
 
 const Footer = () => {
   return (
-    <footer className="py-8 bg-[#1C1C1C]">
+    <footer className="py-8 bg-[#1C1C1C] rounded-[44px]">
       <div className="container">
         <div className="relative z-[60] flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
           <Link href={BASE_URL} className="ml-1.5">

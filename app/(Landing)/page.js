@@ -8,10 +8,8 @@ import HeroSection from "@/components/landing/Hero"
 
 // Lazy load below-the-fold sections
 // Це щоб прискорити завантаження сторінки, щоб одразу завантажувався лише Header, Hero
-const PainSection = dynamic(() => import("@/components/landing/Pain"));
 const ComparisonSection = dynamic(() => import("@/components/landing/Comparison"));
 const BenefitsSection = dynamic(() => import("@/components/landing/Benefits"));
-const ForWhoSection = dynamic(() => import("@/components/landing/ForWho"));
 const FAQSection = dynamic(() => import("@/components/landing/FAQ"));
 const CTASection = dynamic(() => import("@/components/landing/CTA"));
 const Footer = dynamic(() => import("@/components/landing/Footer"));
@@ -25,10 +23,8 @@ export default async function Home() {
       <Header isUser={!!user} />
       <main>
         <HeroSection />
-        <PainSection />
-        <ComparisonSection />
         <BenefitsSection />
-        <ForWhoSection />
+        <ComparisonSection />
         <FAQSection />
         <CTASection />
       </main>

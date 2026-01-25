@@ -42,7 +42,7 @@ export default function FormsCreateButton({ userId }) {
   return (
     <Button
       variant="black"
-      size="sm-black"
+      size="black-sm"
       onClick={handleCreateForm}
       loading={isCreating}
       disabled={isCreating}

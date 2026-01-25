@@ -73,7 +73,7 @@
   --color-ring: hsl(var(--ring));
   --color-canvas-bg: hsl(var(--canvas-bg));
   
-  --font-sans: 'DM Sans', sans-serif;
+  --font-sans: 'Inter', sans-serif;
 }
 
 [data-theme="slug"] * {
@@ -83,7 +83,7 @@
 [data-theme="slug"] body {
   /* background: hsl(var(--background)); */
   color: hsl(var(--foreground));
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -112,7 +112,7 @@
 /* Tailwind 4 Configuration */
 @theme {
   /* Font Family */
-  --font-sans: "DM Sans", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
 
   /* Colors - Custom CSS Variables */
   --color-border: hsl(var(--border));

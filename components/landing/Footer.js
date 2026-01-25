@@ -17,9 +17,7 @@ const Footer = () => {
           </Link>
 
           <nav className="flex items-center gap-6 text-xs">
-            <a href="#" className="hover:text-foreground transition-colors">Про сервіс</a>
-            <a href="#" className="hover:text-foreground transition-colors">Тарифи</a>
-            <a href="#" className="hover:text-foreground transition-colors">Контакти</a>
+            <a href="#" className="hover:text-foreground transition-colors">Ціни</a>
           </nav>
         </div>
       </div>

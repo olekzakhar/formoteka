@@ -1,6 +1,6 @@
 // components/Logo
 
-export default function Logo({ height = 24 }) {
+export default function Logo({ height = 22 }) {
   return (
     <svg
       style={{ height }}

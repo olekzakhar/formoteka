@@ -11,13 +11,13 @@
   --color-secondary: hsl(var(--secondary));
   --color-secondary-foreground: hsl(var(--secondary-foreground));
   
-  --font-sans: 'DM Sans', sans-serif;
+  --font-sans: 'Inter', sans-serif;
 }
 
 /* Tailwind 4 Configuration */
 @theme {
   /* Font Family */
-  --font-sans: "DM Sans", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
   
   /* Secondary */
   --color-secondary: hsl(var(--secondary));

@@ -1,6 +1,6 @@
 // app/layout
 
-import { DM_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
 import {
   BASE_URL,
   SEO_TITLE,
@@ -9,9 +9,9 @@ import {
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import "./globals.css";
 
-const dmSans = DM_Sans({
+const inter = Inter({
   subsets: ["latin", "cyrillic"],
-  variable: "--font-dm-sans",
+  variable: "--font-inter",
   weight: ["400", "500", "600", "700", "800"],
   style: ["normal"],
   display: "swap",
@@ -54,7 +54,7 @@ export const metadata = {
 export default function RootLayout({ children, modal }) {
   return (
     <html lang="uk">
-      <body className={`${dmSans.variable} antialiased`}>
+      <body className={`${inter.variable} antialiased`}>
         {children}
         {modal}
         <GoogleAnalytics />

@@ -7,7 +7,7 @@ import Logo from "@/components/Logo";
 
 const Header = ({ isUser=false }) => {
   return (
-    <header className="fixed top-[6px] left-1/2 px-3 pb-2 -translate-x-1/2 w-full border-b border-b-black/[0.05]! rounded-b-3xl z-50">
+    <header className="fixed top-[6px] left-1/2 px-3 pb-2 -translate-x-1/2 w-full border-b border-b-black/[0.06]! rounded-b-3xl z-50">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-12">
           <Link

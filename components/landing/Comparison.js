@@ -38,7 +38,7 @@ const ComparisonSection = () => {
             Що змінюється з Formoteka
           </h2>
           <p className="text-lg text-[#1C1C1C]">
-            Від хаосу до порядку — крок за кроком.
+            Проста зміна, яка економить години щодня
           </p>
         </div>
 

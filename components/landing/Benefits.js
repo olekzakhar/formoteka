@@ -48,10 +48,10 @@ const BenefitsSection = () => {
       <div className="container">
         <div className="max-w-2xl mx-auto text-center mb-16">
           <h2 className="text-3xl md:text-4xl text-black font-bold text-foreground mb-4">
-            Що дає форма замість чатів
+            Що ви отримуєте
           </h2>
           <p className="text-lg text-[#1C1C1C]">
-            Коротко про результат для процесу, без маркетингу.
+            Не функції — а відчуття і результат
           </p>
         </div>
 

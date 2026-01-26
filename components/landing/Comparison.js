@@ -31,13 +31,13 @@ const comparisons = [
 
 const ComparisonSection = () => {
   return (
-    <section className="py-20 md:py-28">
+    <section className="py-20 md:py-28 pt-16 md:pt-16">
       <div className="container">
         <div className="max-w-2xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+          <h2 className="text-3xl md:text-4xl text-black font-bold text-foreground mb-4">
             Що змінюється з Formoteka
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-[#1C1C1C]">
             Від хаосу до порядку — крок за кроком.
           </p>
         </div>
@@ -46,7 +46,7 @@ const ComparisonSection = () => {
           {comparisons.map((item, index) => (
             <div 
               key={index}
-              className="group flex flex-col md:flex-row items-center gap-4 p-4 md:p-6 rounded-2xl bg-card border border-border/50 hover:shadow-soft transition-all duration-300"
+              className="group flex flex-col md:flex-row items-center gap-4 p-4 md:p-5 rounded-full bg-white/50 border border-white/40! hover:shadow-soft transition-all duration-300"
             >
               {/* Before */}
               <div className="flex items-center gap-3 md:w-[420px] md:justify-end">
@@ -60,13 +60,13 @@ const ComparisonSection = () => {
 
               {/* Arrow */}
               <div className="hidden md:flex items-center justify-center w-16 flex-shrink-0">
-                <ArrowRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-5 h-5 text-[#2BB58F] group-hover:translate-x-1 transition-transform" />
               </div>
 
               {/* After */}
               <div className="flex items-center gap-3 md:w-[420px]">
-                <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
-                  <Check className="w-4 h-4 text-accent" />
+                <div className="w-8 h-8 rounded-full bg-[#2BB58F]/10 flex items-center justify-center flex-shrink-0">
+                  <Check className="w-4 h-4 text-[#2BB58F]" />
                 </div>
                 <span className="text-foreground font-semibold">
                   {item.after}

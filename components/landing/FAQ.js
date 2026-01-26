@@ -44,13 +44,13 @@ const faqs = [
 
 const FAQSection = () => {
   return (
-    <section id="faq" className="py-20 md:py-28">
+    <section id="faq" className="py-20 md:py-28 pt-12 md:pt-12">
       <div className="container">
         <div className="max-w-2xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+          <h2 className="text-3xl md:text-4xl text-black font-bold text-foreground mb-4">
             Питання та відповіді
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-[#1C1C1C]">
             Найпоширеніші питання про Formoteka.
           </p>
         </div>
@@ -61,12 +61,12 @@ const FAQSection = () => {
               <AccordionItem 
                 key={index} 
                 value={`item-${index}`}
-                className="bg-card border border-border/50 rounded-xl px-5 data-[state=open]:shadow-soft transition-shadow"
+                className="bg-white/50 border border-white/40! rounded-xl px-5 data-[state=open]:shadow-soft transition-shadow"
               >
-                <AccordionTrigger className="text-left text-foreground font-semibold hover:no-underline py-3.5">
+                <AccordionTrigger className="text-left text-black font-semibold hover:no-underline py-3.5">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pb-5 leading-relaxed">
+                <AccordionContent className="text-[#1C1C1C] pb-5 leading-relaxed">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>

@@ -44,13 +44,13 @@ const benefits = [
 
 const BenefitsSection = () => {
   return (
-    <section id="pain" className="py-20 md:py-28">
+    <section id="pain" className="py-20 md:py-28 pt-20 md:pt-20">
       <div className="container">
         <div className="max-w-2xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+          <h2 className="text-3xl md:text-4xl text-black font-bold text-foreground mb-4">
             Що дає форма замість чатів
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-[#1C1C1C]">
             Коротко про результат для процесу, без маркетингу.
           </p>
         </div>
@@ -59,15 +59,15 @@ const BenefitsSection = () => {
           {benefits.map((benefit, index) => (
             <div 
               key={index}
-              className="group p-6 rounded-2xl bg-card border border-border/50 hover:border-primary/20 hover:shadow-soft transition-all duration-300"
+              className="group p-6 rounded-2xl bg-white/50 border border-white/40! hover:border-primary/20 hover:shadow-soft transition-all duration-300"
             >
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
-                <benefit.icon className="w-5 h-5 text-primary" />
+              <div className="w-10 h-10 rounded-xl bg-primary/40 flex items-center justify-center mb-4 group-hover:bg-primary/50 transition-colors">
+                <benefit.icon className="w-5 h-5 text-black/50" />
               </div>
-              <h3 className="text-lg font-semibold text-foreground mb-2">
+              <h3 className="text-lg font-semibold text-black mb-2">
                 {benefit.title}
               </h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
+              <p className="text-[#1C1C1C] text-sm leading-relaxed">
                 {benefit.description}
               </p>
             </div>

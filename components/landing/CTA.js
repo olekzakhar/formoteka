@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 
 const CTASection = () => {
   return (
-    <section className="py-16 md:py-24 relative overflow-hidden">
+    <section className="py-16 md:py-24 pt-16 md:pt-16 relative overflow-hidden">
       <div className="container relative">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-black mb-4 tracking-tight">

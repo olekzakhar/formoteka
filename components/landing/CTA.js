@@ -30,7 +30,7 @@ const CTASection = () => {
             </Button>
           </div>
 
-          <p className="mt-4 text-xs text-[#1C1C1C]/80">
+          <p className="animate-fade-up-delay-3 mt-4 text-xs text-[#1C1C1C]/80">
             Без картки • Без зобовʼязань
           </p>
         </div>

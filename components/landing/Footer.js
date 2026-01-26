@@ -15,6 +15,7 @@ const Footer = () => {
 
           <nav className="flex items-center gap-6 text-sm text-white/60">
             <Link href="#" className="hover:text-white transition-colors">Ціни</Link>
+            <Link href="#" className="hover:text-white transition-colors">Шаблони</Link>
             <Link
               href={BASE_URL}
               className="px-[13px] py-[7px] rounded-[6px] bg-[#3C3B3B] text-white/80"

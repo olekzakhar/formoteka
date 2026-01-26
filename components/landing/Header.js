@@ -19,7 +19,7 @@ const Header = ({ isUser=false }) => {
           </Link>
           
           <nav className="pt-[5px] hidden md:flex items-center gap-5 text-sm font-medium text-[#1C1C1C]/80 transition-colors duration-200 ease-in-out">
-            <Link href="#pain" className="hover:text-[#101828]">
+            <Link href="#pricing" className="hover:text-[#101828]">
               Ціни
             </Link>
             <Link href="#benefits" className="hover:text-[#101828]">

@@ -14,7 +14,7 @@ const Footer = () => {
           </Link>
 
           <nav className="flex items-center gap-6 text-sm text-white/60">
-            <Link href="#" className="hover:text-white transition-colors">Ціни</Link>
+            <Link href="#pricing" className="hover:text-white transition-colors">Ціни</Link>
             <Link href="#" className="hover:text-white transition-colors">Шаблони</Link>
             <Link
               href={BASE_URL}

@@ -40,7 +40,7 @@ export const TabsAdd = ({ onAddBlock }) => {
                     'group'
                   )}
                 >
-                  <div className="w-10 h-10 rounded-lg bg-background flex items-center justify-center shadow-soft group-hover:shadow-medium transition-smooth">
+                  <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center shadow-soft group-hover:shadow-medium transition-smooth">
                     <BlockIcon icon={block.icon} className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-smooth" />
                   </div>
                   <span className="text-xs font-medium text-foreground">{block.label}</span>

@@ -7,7 +7,7 @@
 :root:has([data-theme="landing"]) {
   /* Base Color Values */
   /* --background: 0 0% 100%; */
-  --background: 193.2, 37.3%, 73.7%;
+  --background: 193.2, 37.3%, 73.7%; /* #A3CAD5 */
   --foreground: 210 11% 15%;
   --card: 150 10% 98%;
   --card-foreground: 210 11% 15%;

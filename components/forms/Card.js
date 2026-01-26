@@ -99,7 +99,7 @@ export default function FormCard({ form, userId }) {
 
   return (
     <div
-      className="relative pl-8 pr-4 py-5 block bg-card rounded-lg hover:bg-card/50 hover:ring-1 hover:ring-block-hover/30
+      className="relative pl-7 pr-[12px] py-[18px] block bg-card rounded-lg hover:bg-card/50 hover:ring-1 hover:ring-block-hover/30
         shadow-sm hover:shadow-md transition-smooth">
       <div className="flex justify-between items-center min-w-0">
         <div className="relative flex-1 min-w-0">

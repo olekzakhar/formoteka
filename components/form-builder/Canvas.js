@@ -332,7 +332,7 @@ export const Canvas = ({
         )}>
           {/* Preview Mode Toggle */}
           <div className="flex justify-center mb-2">
-            <div className="inline-flex bg-background rounded-lg p-1 border border-border">
+            <div className="inline-flex bg-white/20 rounded-lg p-1 border border-border">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -639,7 +639,7 @@ export const Canvas = ({
           {/* Success Page Section */}
           <div
             className={cn(
-              "mt-8 rounded-2xl border border-[#2f3032]/[0.05]! shadow-sm",
+              "mt-8 rounded-2xl border border-border",
               !bgColorHex && formDesign.backgroundColor)}
             style={bgColorHex ? { backgroundColor: bgColorHex } : undefined}
           >

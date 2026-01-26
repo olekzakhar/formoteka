@@ -85,7 +85,7 @@ const HeroSection = () => {
                 <div className="bg-primary/[0.12] rounded-xl p-4 border border-primary/30!">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-2 h-2 rounded-full bg-[#2BB58F]" />
-                    <span className="text-xs font-semibold text-foreground">Нове замовлення</span>
+                    <span className="text-xs font-semibold text-foreground">Нова заявка</span>
                   </div>
                   <div className="space-y-1.5 text-xs">
                     <OrderRow label="Товар" value="Свічка «Лаванда»" />

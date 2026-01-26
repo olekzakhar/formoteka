@@ -67,7 +67,7 @@ const HeroSection = () => {
 
         {/* Preview card */}
         <div className="mt-16 relative w-full max-w-3xl mx-auto">
-          <div className="relative bg-white/90 rounded-2xl shadow-elevated border border-border/60 p-5 md:p-6">
+          <div className="relative bg-white/95 rounded-2xl shadow-elevated border border-border/60 p-5 md:p-6">
             <div className="grid md:grid-cols-2 gap-10">
               {/* Before */}
               <div className="space-y-2.5">

@@ -67,11 +67,11 @@ const HeroSection = () => {
 
         {/* Preview card */}
         <div className="mt-16 relative w-full max-w-3xl mx-auto">
-          <div className="relative bg-white/80 rounded-2xl shadow-elevated border border-border/60 p-5 md:p-6">
+          <div className="relative bg-white/85 rounded-2xl shadow-elevated border border-border/60 p-5 md:p-6">
             <div className="grid md:grid-cols-2 gap-10">
               {/* Before */}
               <div className="space-y-2.5">
-                <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-3">До</div>
+                <div className="text-[10px] font-semibold text-[#1C1C1C] uppercase tracking-widest mb-3">До</div>
                 <MessageBubble variant="incoming" text="Привіт! Скільки коштує?" />
                 <MessageBubble variant="outgoing" text="Вітаю! Що саме цікавить?" />
                 <MessageBubble variant="incoming" text="Те, що вчора викладали" />
@@ -81,8 +81,8 @@ const HeroSection = () => {
 
               {/* After */}
               <div className="space-y-2.5">
-                <div className="text-[10px] font-semibold text-[#2BB58F] uppercase tracking-widest mb-3">Після</div>
-                <div className="bg-primary/[0.12] rounded-xl p-4 border border-primary/30!">
+                <div className="text-[10px] font-semibold text-[#1C1C1C] uppercase tracking-widest mb-3">Після</div>
+                <div className="bg-primary/[0.1] rounded-xl p-4 border border-primary/30!">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-2 h-2 rounded-full bg-[#2BB58F]" />
                     <span className="text-xs font-semibold text-foreground">Нова заявка</span>

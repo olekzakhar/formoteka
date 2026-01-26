@@ -43,9 +43,16 @@ const HeroSection = () => {
                 </div> */}
               </Link>
             </Button>
-            {/* <Button variant="ghost" size="lg" className="text-muted-foreground">
-              Як це працює?
-            </Button> */}
+            <Button
+              asChild
+              variant="ghost"
+              size="black"
+              className="px-[22px] h-[42px] font-semibold text-sm hover:bg-black/[0.05] shadow"
+            >
+              <Link href="/forms">
+                Демо
+              </Link>
+            </Button>
           </div>
 
           {/* Trust indicators */}

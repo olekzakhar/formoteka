@@ -81,7 +81,7 @@ const HeroSection = () => {
 
               {/* After */}
               <div className="space-y-2.5">
-                <div className="text-[10px] font-semibold text-[#1C1C1C] uppercase tracking-widest mb-3">Після</div>
+                <div className="text-[10px] font-semibold text-[#1C1C1C]/80 uppercase tracking-widest mb-3">Після</div>
                 <div className="bg-primary/[0.1] rounded-xl p-4 border border-primary/30!">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-2 h-2 rounded-full bg-[#2BB58F]" />

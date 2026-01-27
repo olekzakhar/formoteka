@@ -24,7 +24,7 @@ const HeroSection = () => {
 
           {/* Subheadline */}
           <p className="animate-fade-up-delay-2 text-base md:text-xl text-[#1C1C1C] text-center max-w-xl mb-8 leading-relaxed">
-            Попрощайтеся з нудними формами. Знайомтесь з інтуїтивно зрозумілим конструктором форм, який ви шукали.
+            Попрощайтеся з нудними формами. Знайомтесь з Formoteka — безкоштовним, інтуїтивно зрозумілим конструктором форм, який ви шукали.
           </p>
 
           {/* CTAs */}

@@ -28,7 +28,7 @@ const HeroSection = () => {
           </p>
 
           {/* CTAs */}
-          <div className="animate-fade-up-delay-3 flex flex-col sm:flex-row items-start gap-3">
+          <div className="animate-fade-up-delay-3 flex flex-col sm:flex-row items-start gap-4">
             <Button
               asChild
               size="black"

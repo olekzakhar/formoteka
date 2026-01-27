@@ -10,6 +10,7 @@ import HeroSection from "@/components/landing/Hero"
 // Це щоб прискорити завантаження сторінки, щоб одразу завантажувався лише Header, Hero
 const ComparisonSection = dynamic(() => import("@/components/landing/Comparison"));
 const BenefitsSection = dynamic(() => import("@/components/landing/Benefits"));
+const TemplatesSection = dynamic(() => import("@/components/landing/Templates"));
 const PricingSection = dynamic(() => import("@/components/landing/Pricing"));
 const FAQSection = dynamic(() => import("@/components/landing/FAQ"));
 const CTASection = dynamic(() => import("@/components/landing/CTA"));
@@ -26,6 +27,7 @@ export default async function Home() {
         <HeroSection />
         <BenefitsSection />
         <ComparisonSection />
+        <TemplatesSection />
         <PricingSection />
         <FAQSection />
         <CTASection />

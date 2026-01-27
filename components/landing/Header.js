@@ -22,11 +22,11 @@ const Header = ({ isUser=false }) => {
             <Link href="#pricing" className="hover:text-[#101828]">
               Ціни
             </Link>
-            <Link href="#benefits" className="hover:text-[#101828]">
-              Демо
-            </Link>
-            <Link href="#benefits" className="hover:text-[#101828]">
+            <Link href="#templates" className="hover:text-[#101828]">
               Шаблони
+            </Link>
+            <Link href="#faq" className="hover:text-[#101828]">
+              FAQ
             </Link>
           </nav>
         </div>

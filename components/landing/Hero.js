@@ -1,6 +1,7 @@
 // components/landing/Hero
 
 import Link from "next/link";
+import { cn } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Zap } from "lucide-react";
 
@@ -28,7 +29,7 @@ const HeroSection = () => {
           </p>
 
           {/* CTAs */}
-          <div className="animate-fade-up-delay-3 flex flex-col sm:flex-row items-start gap-4">
+          <div className="animate-fade-up-delay-3 flex flex-row items-start gap-4">
             <Button
               asChild
               size="black"
@@ -56,7 +57,7 @@ const HeroSection = () => {
           </div>
 
           {/* Trust indicators */}
-          <div className="animate-fade-up-delay-3 mt-6 flex flex-wrap items-center gap-5 text-sm text-[#1C1C1C]/80">
+          <div className="animate-fade-up-delay-3 mt-6 flex items-center gap-5 text-sm max-[400px]:text-xs text-[#1C1C1C]/80">
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-black" />
               <span>Безкоштовний старт</span>
@@ -75,15 +76,15 @@ const HeroSection = () => {
         {/* Preview card */}
         <div className="mt-16 relative w-full max-w-3xl mx-auto">
           <div className="relative bg-white/90 rounded-2xl shadow-elevated border border-border/60 p-5 md:p-6">
-            <div className="grid md:grid-cols-2 gap-10">
+            <div className="grid min-[570px]:grid-cols-2 gap-4 min-[570px]:gap-10">
               {/* Before */}
-              <div className="space-y-2.5">
+              <div className="space-y-1.5 min-[570px]:space-y-2.5">
                 <div className="text-[10px] font-semibold text-[#1C1C1C] uppercase tracking-widest mb-3">До</div>
                 <MessageBubble variant="incoming" text="Привіт! Скільки коштує?" />
                 <MessageBubble variant="outgoing" text="Вітаю! Що саме цікавить?" />
                 <MessageBubble variant="incoming" text="Те, що вчора викладали" />
                 <MessageBubble variant="outgoing" text="Їх було кілька, уточніть" />
-                <MessageBubble variant="incoming" text="..." className="opacity-40" />
+                <MessageBubble variant="incoming" text="..." />
               </div>
 
               {/* After */}
@@ -119,13 +120,13 @@ const MessageBubble = ({
   
   return (
     <div className={`flex ${isIncoming ? "justify-start" : "justify-end"} ${className}`}>
-      <div className={`
-        max-w-[85%] px-3 py-2 rounded-2xl text-xs
-        ${isIncoming 
-          ? "bg-muted text-foreground rounded-bl-sm" 
-          : "bg-foreground/5 text-foreground rounded-br-sm"
-        }
-      `}>
+      <div className={cn(
+          'max-w-[85%] px-3 py-2 rounded-2xl text-xs',
+          isIncoming 
+            ? 'bg-muted text-foreground rounded-bl-sm'
+            : 'bg-foreground/5 text-foreground rounded-br-sm'
+        )}
+      >
         {text}
       </div>
     </div>

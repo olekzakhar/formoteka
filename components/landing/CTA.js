@@ -16,7 +16,7 @@ const CTASection = () => {
             Створи форму за 5 хвилин. Безкоштовно. Без складних налаштувань.
           </p>
 
-          <div className="animate-fade-up-delay-3 flex flex-col sm:flex-row justify-center items-start gap-3">
+          <div className="animate-fade-up-delay-3 flex flex-col sm:flex-row justify-center items-center gap-3">
             <Button
               asChild
               size="black"

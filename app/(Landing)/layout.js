@@ -8,7 +8,7 @@ export default function HomeLayout({ children }) {
       {children}
 
       {/* Блюр знизу сторінки */}
-      <div className="pointer-events-none fixed bottom-0 left-0 z-50 w-full h-[100px]">
+      <div className="pointer-events-none fixed bottom-0 left-0 z-50 w-full h-[60px] sm:h-[100px]">
         <div
           className="
             absolute inset-0

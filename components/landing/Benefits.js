@@ -59,17 +59,19 @@ const BenefitsSection = () => {
           {benefits.map((benefit, index) => (
             <div 
               key={index}
-              className="group p-6 rounded-2xl bg-white/50 border border-white/40! hover:border-primary/20 hover:shadow-soft transition-all duration-300"
+              className="group p-6 flex flex-row sm:flex-col gap-4 rounded-2xl bg-white/50 border border-white/40! hover:border-primary/20 hover:shadow-soft transition-all duration-300"
             >
-              <div className="w-10 h-10 rounded-xl bg-primary/40 flex items-center justify-center mb-4 group-hover:bg-primary/50 transition-colors">
+              <div className="min-w-10 min-h-10 w-10 h-10 rounded-xl bg-primary/40 flex items-center justify-center group-hover:bg-primary/50 transition-colors">
                 <benefit.icon className="w-5 h-5 text-black/50" />
               </div>
-              <h3 className="text-lg font-semibold text-black mb-2">
-                {benefit.title}
-              </h3>
-              <p className="text-[#1C1C1C] text-sm leading-relaxed">
-                {benefit.description}
-              </p>
+              <div>
+                <h3 className="text-lg font-semibold text-black mb-2">
+                  {benefit.title}
+                </h3>
+                <p className="text-[#1C1C1C] text-sm leading-relaxed">
+                  {benefit.description}
+                </p>
+              </div>
             </div>
           ))}
         </div>

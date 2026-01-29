@@ -155,6 +155,12 @@
   }
 }
 
+@media (max-width: 440px) {
+  [data-theme="landing"] .container {
+    padding-inline: 12px;
+  }
+}
+
 /* Custom utility classes */
 [data-theme="landing"] .text-gradient {
   background-clip: text;

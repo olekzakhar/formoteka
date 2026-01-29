@@ -69,7 +69,7 @@ const PricingSection = () => {
                 </div>
               )}
 
-              <div className="text-center mb-6">
+              <div className="pl-4 mb-6">
                 <h3 className="text-xl font-bold text-black mb-2">
                   {plan.name}
                 </h3>
@@ -78,14 +78,14 @@ const PricingSection = () => {
                 </p>
                 
                 {/* HORIZONTAL PRICE LAYOUT - OLD LEFT, NEW RIGHT */}
-                <div className="flex items-center justify-center gap-3">
+                <div className="flex items-center gap-3">
                   {plan.originalPrice && (
                     <span className="text-xl text-[#1C1C1C]/40 line-through">
                       {plan.originalPrice} грн
                     </span>
                   )}
                   
-                  <div className="flex items-baseline gap-1">
+                  <div className="flex items-center gap-1">
                     <span className="text-4xl font-bold text-black">
                       {plan.price}
                     </span>

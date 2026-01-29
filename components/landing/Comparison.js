@@ -45,7 +45,7 @@ const ComparisonSection = () => {
 
         <div className="max-w-[860px] mx-auto grid md:grid-cols-2 gap-6">
           {/* Before Block */}
-          <div className="bg-red-400/30 h-fit rounded-3xl border border-black/[0.1]! overflow-hidden">
+          <div className="bg-red-400/25 h-fit rounded-3xl border border-black/[0.1]! overflow-hidden">
             <div className="pt-7 pb-1">
               <h3 className="px-8 text-xl font-bold mb-5 flex items-center gap-2">
                 <X className="w-5 h-5" /> Без Formoteka
@@ -71,7 +71,7 @@ const ComparisonSection = () => {
           </div>
           
           {/* After Block */}
-          <div className="bg-[#7CE0C4]/40 h-fit rounded-3xl border border-black/[0.1]! overflow-hidden">
+          <div className="bg-[#2BB58F]/25 h-fit rounded-3xl border border-black/[0.1]! overflow-hidden">
             <div className="pt-7 pb-1">
               <h3 className="px-8 text-xl font-bold mb-5 flex items-center gap-2">
                 <Check className="w-5 h-5" /> Formoteka

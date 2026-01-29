@@ -45,7 +45,7 @@ const Templates = () => {
 
   const scroll = (direction) => {
     if (scrollContainerRef.current) {
-      const scrollAmount = 454; // 430px ширина + 24px gap
+      const scrollAmount = 414; // 390px ширина + 24px gap
       const newPosition = direction === 'left' 
         ? scrollContainerRef.current.scrollLeft - scrollAmount
         : scrollContainerRef.current.scrollLeft + scrollAmount;
@@ -78,10 +78,10 @@ const Templates = () => {
               <Link
                 key={index}
                 href={template.href}
-                className="flex-shrink-0 w-[430px] bg-[#f0f0eb]/[0.05] rounded-2xl pb-4 px-4 pt-0 transition-all duration-300 hover:scale-105 block"
+                className="flex-shrink-0 w-[390px] bg-[#f0f0eb]/[0.05] rounded-2xl pb-4 px-4 pt-0 transition-all duration-300 hover:scale-105 block"
               >
                 {/* Title */}
-                <h3 className="px-9 my-10 text-2xl font-medium text-[#f0f0eb99] leading-[24px]">
+                <h3 className="px-7 my-8 text-xl font-medium text-[#f0f0eb99] leading-[20px]">
                   {template.title}
                 </h3>
 

@@ -5,14 +5,15 @@ import screenshot from '@/public/landing/screenshot.jpg'
 
 export default function ScreenshotSection() {
   return (
-    <section className="relative mx-auto px-8 w-full max-w-[1290px] h-[100vh] max-h-[630px] overflow-hidden shadow-elevated animate-fade-up rounded-2xl">
-      {/* Зображення */}
-      <Image
-        src={screenshot}
-        alt="Formoteka"
-        fill
-        className="object-cover [object-position:left_top] rounded-2xl opacity-[0.96] hover:opacity-100 transition-opacity duration-250 ease-in-out"
-      />
+    <section className="px-2 sm:px-4 md:px-8 py-10 md:py-14 pt-4 md:pt-4">
+      <div className="mx-auto w-full max-w-[1290px] h-[100vh] max-h-[630px] overflow-hidden shadow-elevated animate-fade-up rounded-2xlrounded-2xl">
+        <Image
+          src={screenshot}
+          alt="Formoteka"
+          fill
+          className="object-cover [object-position:left_top] rounded-2xl opacity-[0.96] hover:opacity-100 transition-opacity duration-250 ease-in-out"
+        />
+      </div>
     </section>
   )
 }

@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { ArrowRight, CheckCircle, Image } from 'lucide-react'
 import { useState } from 'react'
 import { cn, getImageUrl } from '@/utils'
-import { BlockProductsRenderer } from '@/components/form-builder/block/ProductsRenderer'
+import { BlockLineItemsRenderer } from '@/components/form-builder/block/LineItemsRenderer'
 import { OrderButton } from '@/components/ui/OrderButton'
 import { BlockSlideshow } from '@/components/form-builder/block/Slideshow'
 import { BlockReviews } from '@/components/form-builder/block/Reviews'
@@ -46,23 +46,23 @@ export const FormRenderer = ({
 }) => {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [selectedProducts, setSelectedProducts] = useState([])
+  const [selectedLineItems, setSelectedLineItems] = useState([])
 
   const textColorHex = formDesign.textColor?.match(/text-\[(#[0-9A-Fa-f]{6})\]/)?.[1]
   const bgColorHex = formDesign.backgroundColor?.match(/bg-\[(#[0-9A-Fa-f]{6})\]/)?.[1]
 
-  const handleSelectProduct = (productId, quantity) => {
-    setSelectedProducts((prev) => {
+  const handleSelectLineItem = (lineItemId, quantity) => {
+    setSelectedLineItems((prev) => {
       if (quantity === 0) {
-        return prev.filter((p) => p.productId !== productId)
+        return prev.filter((p) => p.lineItemId !== lineItemId)
       }
 
-      const existing = prev.find((p) => p.productId === productId)
+      const existing = prev.find((p) => p.lineItemId === lineItemId)
       if (existing) {
-        return prev.map((p) => (p.productId === productId ? { ...p, quantity } : p))
+        return prev.map((p) => (p.lineItemId === lineItemId ? { ...p, quantity } : p))
       }
 
-      return [...prev, { productId, quantity }]
+      return [...prev, { lineItemId, quantity }]
     })
   }
 
@@ -95,7 +95,7 @@ export const FormRenderer = ({
         formSlug,
         submittedAt: new Date().toISOString(),
         fields: {},
-        products: [],
+        lineItems: [],
       }
 
       // Process each block to extract field values
@@ -112,22 +112,22 @@ export const FormRenderer = ({
         const fieldKey = block.id
         const fieldLabel = block.label || block.type
 
-        if (block.type === 'products') {
-          const productDetails = selectedProducts.map((sp) => {
-            const product = block.products?.find((p) => p.id === sp.productId)
-            return product
+        if (block.type === 'line-items') {
+          const lineItemDetails = selectedLineItems.map((sp) => {
+            const lineItem = block.lineItems?.find((p) => p.id === sp.lineItemId)
+            return lineItem
               ? {
-                  productId: product.id,
-                  productName: product.name,
-                  sku: product.sku,
+                  lineItemId: lineItem.id,
+                  lineItemName: lineItem.name,
+                  sku: lineItem.sku,
                   quantity: sp.quantity,
-                  price: product.price,
-                  subtotal: product.price * sp.quantity,
+                  price: lineItem.price,
+                  subtotal: lineItem.price * sp.quantity,
                 }
               : null
           }).filter(Boolean)
 
-          orderData.products = productDetails
+          orderData.lineItems = lineItemDetails
         } else if (block.type === 'checkbox') {
           const checkedValues = []
           block.options?.forEach((option, idx) => {
@@ -161,8 +161,8 @@ export const FormRenderer = ({
         }
       })
 
-      if (orderData.products.length > 0) {
-        orderData.productsTotal = orderData.products.reduce(
+      if (orderData.lineItems.length > 0) {
+        orderData.lineItemsTotal = orderData.lineItems.reduce(
           (sum, p) => sum + (p?.subtotal || 0),
           0
         )
@@ -322,7 +322,7 @@ export const FormRenderer = ({
       case 'messenger-select':
         return <BlockMessengerSelect block={block} isPreview={isPreview} />
 
-      case 'products':
+      case 'line-items':
         return (
           <div className="space-y-2">
             {showLabel && (
@@ -331,10 +331,10 @@ export const FormRenderer = ({
                 {block.required && <span className="text-destructive ml-1">*</span>}
               </Label>
             )}
-            <BlockProductsRenderer
+            <BlockLineItemsRenderer
               block={block}
-              selectedProducts={selectedProducts}
-              onSelectProduct={handleSelectProduct}
+              selectedLineItems={selectedLineItems}
+              onSelectLineItem={handleSelectLineItem}
               isPreview={isPreview}
             />
           </div>
@@ -492,17 +492,17 @@ export const FormRenderer = ({
     }
   }
 
-  // Calculate product totals
-  const hasProductsBlock = blocks.some((b) => b.type === 'products')
-  const totalQuantity = selectedProducts.reduce((sum, sp) => sum + sp.quantity, 0)
-  const totalAmount = selectedProducts.reduce((sum, sp) => {
-    const productBlock = blocks.find((b) => b.type === 'products')
-    const product = productBlock?.products?.find((p) => p.id === sp.productId)
-    return sum + (product?.price ?? 0) * sp.quantity
+  // Calculate Line Item totals
+  const hasLineItemsBlock = blocks.some((b) => b.type === 'line-items')
+  const totalQuantity = selectedLineItems.reduce((sum, sp) => sum + sp.quantity, 0)
+  const totalAmount = selectedLineItems.reduce((sum, sp) => {
+    const lineItemBlock = blocks.find((b) => b.type === 'line-items')
+    const lineItem = lineItemBlock?.lineItems?.find((p) => p.id === sp.lineItemId)
+    return sum + (lineItem?.price ?? 0) * sp.quantity
   }, 0)
 
-  const showProductInfo = formDesign.stickyButton && hasProductsBlock && totalQuantity > 0
-  const displayButtonText = formDesign.stickyButton && hasProductsBlock ? 'Order' : submitButtonText
+  const showLineItemInfo = formDesign.stickyButton && hasLineItemsBlock && totalQuantity > 0
+  const displayButtonText = formDesign.stickyButton && hasLineItemsBlock ? 'Order' : submitButtonText
 
   // ✅ В preview краще sticky, на slug — fixed
   const stickyWrapperClass = isPreview ? 'sticky bottom-0' : 'fixed bottom-0 left-0 right-0'
@@ -617,7 +617,7 @@ export const FormRenderer = ({
               onClick={handleSubmit}
               disabled={isSubmitting}
             >
-              {showProductInfo ? (
+              {showLineItemInfo ? (
                 <>
                   <span className="flex items-center justify-center w-7 h-7 rounded-full bg-muted-foreground/30 text-sm">
                     {totalQuantity}
@@ -636,8 +636,8 @@ export const FormRenderer = ({
 
 
             <OrderButton
-              hasProducts={showProductInfo}
-              quantityProducts={totalQuantity}
+              hasLineItems={showLineItemInfo}
+              quantityLineItems={totalQuantity}
               totalAmount={totalAmount.toFixed(2)}
               submitButtonText={displayButtonText}
               onClick={handleSubmit}

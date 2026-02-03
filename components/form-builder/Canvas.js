@@ -608,7 +608,7 @@ export const Canvas = ({
                     onSubmitButtonClick();
                   }}
                 >
-                  {blocks.some((b) => b.type === 'products') ? (
+                  {blocks.some((b) => b.type === 'line-items') ? (
                     <>
                       <span className="flex items-center justify-center w-7 h-7 rounded-full bg-muted-foreground/30 text-sm">1</span>
                       <span className="flex-1 text-center">Order</span>
@@ -623,8 +623,8 @@ export const Canvas = ({
                 </Button> */}
 
                 <OrderButton
-                  hasProducts={blocks.some((b) => b.type === 'products')}
-                  quantityProducts={1}
+                  hasLineItems={blocks.some((b) => b.type === 'line-items')}
+                  quantityLineItems={1}
                   totalAmount="0.00"
                   submitButtonText={submitButtonText}
                   onClick={(e) => {

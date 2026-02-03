@@ -4,25 +4,25 @@ import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export const OrderButton = ({ 
-  hasProducts,
-  quantityProducts=0,
+  hasLineItems,
+  quantityLineItems=0,
   totalAmount,
   submitButtonText,
   onClick,
   disabled = false
 }) => {
   return (
-    (hasProducts && quantityProducts) &&
+    (hasLineItems && quantityLineItems) &&
       <Button
         variant="order"
         size="order"
         onClick={onClick}
         disabled={disabled}
       >
-        {hasProducts ? (
+        {hasLineItems ? (
           <>
             <span className="flex items-center justify-center w-7 h-7 rounded-full bg-muted-foreground/30 text-sm">
-              {quantityProducts}
+              {quantityLineItems}
             </span>
             <span className="flex-1 text-center">Order</span>
             {/* <span className="text-sm font-medium">$0.00</span> */}

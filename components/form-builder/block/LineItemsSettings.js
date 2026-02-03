@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button-2';
 import { Label } from '@/components/ui/label';
-import { ManageProductsPopup } from '@/components/form-builder/ManageProductsPopup';
+import { ManageLineItemsPopup } from '@/components/form-builder/ManageLineItemsPopup';
 import { cn } from '@/utils';
 import { List, LayoutGrid, Package } from 'lucide-react';
 
@@ -26,39 +26,39 @@ const layoutOptions = [
   },
 ];
 
-export const BlockProductsSettings = ({ block, onUpdate }) => {
-  const [showManageProducts, setShowManageProducts] = useState(false);
+export const BlockLineItemsSettings = ({ block, onUpdate }) => {
+  const [showManageLineItems, setShowManageLineItems] = useState(false);
 
-  const products = block.products || [];
-  const layout = block.productsLayout || 'grid-2';
+  const lineItems = block.lineItems || [];
+  const layout = block.lineItemsLayout || 'grid-2';
 
   const handleLayoutChange = (newLayout) => {
-    onUpdate({ productsLayout: newLayout });
+    onUpdate({ lineItemsLayout: newLayout });
   };
 
-  const handleUpdateProducts = (newProducts) => {
-    onUpdate({ products: newProducts });
+  const handleUpdateLineItems = (newLineItems) => {
+    onUpdate({ lineItem: newLineItems });
   };
 
   return (
     <div className="space-y-6">
-      {/* Manage Products Button */}
+      {/* Manage Line Items Button */}
       <div className="space-y-2">
         <div className="flex items-center gap-2 p-3 rounded-lg bg-accent/50">
           <div className="w-10 h-10 rounded-lg bg-background flex items-center justify-center shadow-soft">
             <Package className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <p className="text-sm font-medium text-foreground">Продукти</p>
-            <p className="text-xs text-muted-foreground">{products.length} продуктів</p>
+            <p className="text-sm font-medium text-foreground">Позиції</p>
+            <p className="text-xs text-muted-foreground">{lineItems.length} позицій</p>
           </div>
         </div>
 
         <Button
-          onClick={() => setShowManageProducts(true)}
+          onClick={() => setShowManageLineItems(true)}
           className="w-full"
         >
-          Керування продуктами
+          Керування позиціями
         </Button>
       </div>
 
@@ -101,12 +101,12 @@ export const BlockProductsSettings = ({ block, onUpdate }) => {
         </div>
       </div>
 
-      {/* Manage Products Popup */}
-      {showManageProducts && (
-        <ManageProductsPopup
-          products={products}
-          onUpdateProducts={handleUpdateProducts}
-          onClose={() => setShowManageProducts(false)}
+      {/* Manage LineItems Popup */}
+      {showManageLineItems && (
+        <ManageLineItemsPopup
+          lineItems={lineItems}
+          onUpdateLineItems={handleUpdateLineItems}
+          onClose={() => setShowManageLineItems(false)}
         />
       )}
     </div>

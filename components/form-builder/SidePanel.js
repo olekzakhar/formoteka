@@ -33,7 +33,7 @@ export const SidePanel = ({
   onUpdateSeo,
   deliveryTargets,
   onUpdateDeliveryTargets,
-  hasProductsBlock = false,
+  hasLineItemsBlock = false,
   onOpenSubmitSettings,
 }) => {
   // Render Block Settings view (for form blocks)
@@ -95,7 +95,7 @@ export const SidePanel = ({
             onButtonTextChange={onSubmitButtonTextChange}
             formDesign={formDesign}
             onUpdateDesign={onUpdateDesign}
-            hasProductsBlock={hasProductsBlock}
+            hasLineItemsBlock={hasLineItemsBlock}
             totalQuantity={1}
             totalAmount={9.99}
           />

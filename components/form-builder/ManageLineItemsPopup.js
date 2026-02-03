@@ -13,9 +13,9 @@ import {
 } from '@/components/ui/tooltip';
 import { useIsMobile } from '@/hooks/use-mobile';
 
-const generateId = () => `product-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+const generateId = () => `line-item-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-const createEmptyProduct = () => ({
+const createEmptyLineItem = () => ({
   id: generateId(),
   name: '',
   sku: Math.random().toString(36).substr(2, 5),
@@ -26,17 +26,17 @@ const createEmptyProduct = () => ({
   images: [],
 });
 
-const ProductForm = ({ 
+const LineItemForm = ({ 
   variant, 
-  currentProduct, 
-  handleUpdateProduct, 
+  currentLineItem, 
+  handleUpdateLineItem, 
   handleAddImage, 
   handleRemoveImage, 
 }) => {
-  if (!currentProduct) {
+  if (!currentLineItem) {
     return (
       <div className="h-full flex items-center justify-center text-muted-foreground">
-        Виберіть продукт або додайте новий
+        Виберіть позицію або додайте нову
       </div>
     );
   }
@@ -47,7 +47,7 @@ const ProductForm = ({
       onClick={(e) => e.stopPropagation()}
     >
       <h3 className="text-lg font-medium text-foreground">
-        Редагування продукту
+        Редагування позиції
       </h3>
 
       {/* Name */}
@@ -56,9 +56,9 @@ const ProductForm = ({
           Name<span className="text-destructive">*</span>
         </Label>
         <Input
-          value={currentProduct.name}
-          onChange={(e) => handleUpdateProduct('name', e.target.value)}
-          placeholder="Назва продукту"
+          value={currentLineItem.name}
+          onChange={(e) => handleUpdateLineItem('name', e.target.value)}
+          placeholder="Назва позиції"
           className="bg-muted/50"
         />
       </div>
@@ -79,8 +79,8 @@ const ProductForm = ({
           </TooltipProvider>
         </Label>
         <Input
-          value={currentProduct.sku}
-          onChange={(e) => handleUpdateProduct('sku', e.target.value)}
+          value={currentLineItem.sku}
+          onChange={(e) => handleUpdateLineItem('sku', e.target.value)}
           placeholder="sku-123"
           className="bg-muted/50"
         />
@@ -92,8 +92,8 @@ const ProductForm = ({
           <Label className="flex items-center gap-1">Price*</Label>
           <Input
             type="number"
-            value={currentProduct.price}
-            onChange={(e) => handleUpdateProduct('price', parseFloat(e.target.value) || 0)}
+            value={currentLineItem.price}
+            onChange={(e) => handleUpdateLineItem('price', parseFloat(e.target.value) || 0)}
             onFocus={(e) => e.target.select()}
             className="bg-muted/50"
           />
@@ -116,8 +116,8 @@ const ProductForm = ({
           </Label>
           <Input
             type="number"
-            value={currentProduct.stock}
-            onChange={(e) => handleUpdateProduct('stock', parseInt(e.target.value) || 0)}
+            value={currentLineItem.stock}
+            onChange={(e) => handleUpdateLineItem('stock', parseInt(e.target.value) || 0)}
             onFocus={(e) => e.target.select()}
             className="bg-muted/50"
           />
@@ -128,12 +128,12 @@ const ProductForm = ({
           <Label>Minimum Quantity / Order</Label>
           <p className="text-xs text-muted-foreground flex items-start gap-1">
             <Info className="w-3 h-3 mt-0.5 shrink-0" />
-            If this product is selected, the submitter must order at least the minimum quantity or more.
+            If this line item is selected, the submitter must order at least the minimum quantity or more.
           </p>
           <Input
             type="number"
-            value={currentProduct.minQuantity}
-            onChange={(e) => handleUpdateProduct('minQuantity', parseInt(e.target.value) || 1)}
+            value={currentLineItem.minQuantity}
+            onChange={(e) => handleUpdateLineItem('minQuantity', parseInt(e.target.value) || 1)}
             min={1}
             className="bg-muted/50"
           />
@@ -144,12 +144,12 @@ const ProductForm = ({
           <Label>Maximum Quantity / Order</Label>
           <p className="text-xs text-muted-foreground flex items-start gap-1">
             <Info className="w-3 h-3 mt-0.5 shrink-0" />
-            If this product is selected, the submitter can only order the maximum quantity or less.
+            If this line item is selected, the submitter can only order the maximum quantity or less.
           </p>
           <Input
             type="number"
-            value={currentProduct.maxQuantity ?? ''}
-            onChange={(e) => handleUpdateProduct('maxQuantity', e.target.value ? parseInt(e.target.value) : null)}
+            value={currentLineItem.maxQuantity ?? ''}
+            onChange={(e) => handleUpdateLineItem('maxQuantity', e.target.value ? parseInt(e.target.value) : null)}
             placeholder="-"
             className="bg-muted/50"
           />
@@ -160,7 +160,7 @@ const ProductForm = ({
       <div className="space-y-3">
         <Label>Images</Label>
         <div className="flex flex-wrap gap-2">
-          {currentProduct.images.map((img, i) => (
+          {currentLineItem.images.map((img, i) => (
             <div key={i} className="relative group">
               <div className="w-16 h-16 rounded-lg overflow-hidden border border-border">
                 <img src={img} alt="" className="w-full h-full object-cover" />
@@ -184,80 +184,80 @@ const ProductForm = ({
   );
 };
 
-export const ManageProductsPopup = ({
-  products,
-  onUpdateProducts,
+export const ManageLineItemsPopup = ({
+  lineItems,
+  onUpdateLineItems,
   onClose,
 }) => {
   const isMobile = useIsMobile();
-  const [localProducts, setLocalProducts] = useState(products);
-  const [selectedProductId, setSelectedProductId] = useState(null);
+  const [localLineItems, setLocalLineItems] = useState(lineItems);
+  const [selectedLineItemId, setSelectedLineItemId] = useState(null);
   const scrollAnchorRef = useRef(null);
 
   useEffect(() => {
-    if (localProducts.length > products.length) {
+    if (localLineItems.length > lineItems.length) {
       scrollAnchorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
-  }, [localProducts.length]);
+  }, [localLineItems.length]);
 
   // Додаємо в кінець списку (вниз)
-  const handleAddProduct = () => {
-    const newProduct = createEmptyProduct();
-    setLocalProducts((prev) => [...prev, newProduct]);
+  const handleAddLineItem = () => {
+    const newLineItem = createEmptyLineItem();
+    setLocalLineItems((prev) => [...prev, newLineItem]);
     
-    // Додаємо перевірку: якщо це НЕ мобільна версія, тоді робимо продукт активним
+    // Додаємо перевірку: якщо це НЕ мобільна версія, тоді робимо позицію активною
     if (!isMobile) {
-      setSelectedProductId(newProduct.id);
+      setSelectedLineItemId(newLineItem.id);
     }
   };
 
-  const handleSelectProduct = (e, id) => {
+  const handleSelectLineItem = (e, id) => {
     e.stopPropagation();
-    setSelectedProductId(prev => prev === id ? null : id);
+    setSelectedLineItemId(prev => prev === id ? null : id);
   };
 
-  const handleUpdateProduct = (field, value) => {
-    if (selectedProductId) {
-      setLocalProducts((prev) =>
-        prev.map((p) => (p.id === selectedProductId ? { ...p, [field]: value } : p))
+  const handleUpdateLineItem = (field, value) => {
+    if (selectedLineItemId) {
+      setLocalLineItems((prev) =>
+        prev.map((p) => (p.id === selectedLineItemId ? { ...p, [field]: value } : p))
       );
     }
   };
 
-  const handleDuplicateProduct = (e, id) => {
+  const handleDuplicateLineItem = (e, id) => {
     e.stopPropagation();
-    const product = localProducts.find((p) => p.id === id);
-    if (product) {
+    const lineItem = localLineItems.find((p) => p.id === id);
+    if (lineItem) {
       const duplicated = {
-        ...product,
+        ...lineItem,
         id: generateId(),
-        name: product.name ? `${product.name} (копія)` : '',
-        sku: `${product.sku}-copy`,
+        name: lineItem.name ? `${lineItem.name} (копія)` : '',
+        sku: `${lineItem.sku}-copy`,
       };
-      const index = localProducts.findIndex((p) => p.id === id);
-      const newProducts = [...localProducts];
-      newProducts.splice(index + 1, 0, duplicated);
-      setLocalProducts(newProducts);
-      setSelectedProductId(duplicated.id);
+      const index = localLineItems.findIndex((p) => p.id === id);
+      const newLineItems = [...localLineItems];
+      newLineItems.splice(index + 1, 0, duplicated);
+      setLocalLineItems(newLineItems);
+      setSelectedLineItemId(duplicated.id);
     }
   };
 
-  const handleDeleteProduct = (e, id) => {
+  const handleDeleteLineItem = (e, id) => {
     e.stopPropagation();
-    const updated = localProducts.filter((p) => p.id !== id);
-    setLocalProducts(updated);
-    if (selectedProductId === id) setSelectedProductId(null);
+    const updated = localLineItems.filter((p) => p.id !== id);
+    setLocalLineItems(updated);
+    if (selectedLineItemId === id) setSelectedLineItemId(null);
   };
 
-  const handleMoveProduct = (e, id, direction) => {
+  const handleMoveLineItem = (e, id, direction) => {
     e.stopPropagation();
-    const index = localProducts.findIndex((p) => p.id === id);
+    const index = localLineItems.findIndex((p) => p.id === id);
     const newIndex = direction === 'up' ? index - 1 : index + 1;
-    if (newIndex < 0 || newIndex >= localProducts.length) return;
+    if (newIndex < 0 || newIndex >= localLineItems.length) return;
 
-    const newProducts = [...localProducts];
-    [newProducts[index], newProducts[newIndex]] = [newProducts[newIndex], newProducts[index]];
-    setLocalProducts(newProducts);
+    const newLineItems = [...localLineItems];
+    [newLineItems[index], newLineItems[newIndex]] = [newLineItems[newIndex], newLineItems[index]];
+    setLocalLineItems(newLineItems);
   };
 
   const handleAddImage = () => {
@@ -267,14 +267,14 @@ export const ManageProductsPopup = ({
     input.multiple = true;
     input.onchange = (e) => {
       const files = e.target.files;
-      if (files && selectedProductId) {
+      if (files && selectedLineItemId) {
         Array.from(files).forEach((file) => {
           const reader = new FileReader();
           reader.onload = (ev) => {
             const url = ev.target?.result;
-            setLocalProducts((prev) =>
+            setLocalLineItems((prev) =>
               prev.map((p) =>
-                p.id === selectedProductId ? { ...p, images: [...p.images, url] } : p
+                p.id === selectedLineItemId ? { ...p, images: [...p.images, url] } : p
               )
             );
           };
@@ -286,10 +286,10 @@ export const ManageProductsPopup = ({
   };
 
   const handleRemoveImage = (imageIndex) => {
-    if (selectedProductId) {
-      setLocalProducts((prev) =>
+    if (selectedLineItemId) {
+      setLocalLineItems((prev) =>
         prev.map((p) =>
-          p.id === selectedProductId
+          p.id === selectedLineItemId
             ? { ...p, images: p.images.filter((_, i) => i !== imageIndex) }
             : p
         )
@@ -298,12 +298,12 @@ export const ManageProductsPopup = ({
   };
 
   const handleClose = () => {
-    onUpdateProducts(localProducts);
+    onUpdateLineItems(localLineItems);
     onClose();
   };
 
-  const currentProduct = localProducts.find((p) => p.id === selectedProductId) || null;
-  const selectedIndex = localProducts.findIndex((p) => p.id === selectedProductId);
+  const currentLineItem = localLineItems.find((p) => p.id === selectedLineItemId) || null;
+  const selectedIndex = localLineItems.findIndex((p) => p.id === selectedLineItemId);
 
   return (
     <div
@@ -318,7 +318,7 @@ export const ManageProductsPopup = ({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-          <h2 className="text-xl font-semibold text-foreground">Керування продуктами</h2>
+          <h2 className="text-xl font-semibold text-foreground">Керування позиціями</h2>
           <button onClick={handleClose} className="p-2 rounded-lg hover:bg-muted transition-colors">
             <X className="w-5 h-5 text-muted-foreground" />
           </button>
@@ -328,36 +328,36 @@ export const ManageProductsPopup = ({
           {/* Список */}
           <div 
             className={cn('flex flex-col', isMobile ? 'w-full' : 'w-[380px] border-r border-border')}
-            onClick={() => setSelectedProductId(null)}
+            onClick={() => setSelectedLineItemId(null)}
           >
             <div className="px-4 py-3 border-b border-border bg-background" onClick={(e) => e.stopPropagation()}>
               <div className="flex items-center justify-between gap-2">
-                <Button onClick={handleAddProduct} className="gap-2 bg-primary">
+                <Button onClick={handleAddLineItem} className="gap-2 bg-primary">
                   <Plus className="w-4 h-4" />
-                  Додати продукт
+                  Додати позицію
                 </Button>
                 <Button variant="outline" size="sm" className="gap-2">
                   <Upload className="w-4 h-4" />
-                  Import / Export
+                  Імпорт / Експорт
                 </Button>
               </div>
             </div>
 
             <ScrollArea className="flex-1">
               <div className="p-4 space-y-2">
-                {localProducts.map((product) => (
-                  <div key={product.id}>
+                {localLineItems.map((lineItem) => (
+                  <div key={lineItem.id}>
                     <div
                       className={cn(
                         'relative rounded-lg border-2 cursor-pointer transition-all overflow-hidden bg-background',
-                        selectedProductId === product.id ? 'border-primary!' : 'border-border hover:border-muted-foreground/30'
+                        selectedLineItemId === lineItem.id ? 'border-primary!' : 'border-border hover:border-muted-foreground/30'
                       )}
-                      onClick={(e) => handleSelectProduct(e, product.id)}
+                      onClick={(e) => handleSelectLineItem(e, lineItem.id)}
                     >
                       <div className="flex">
                         <div className="w-20 h-20 bg-muted flex-shrink-0 overflow-hidden">
-                          {product.images[0] ? (
-                            <img src={product.images[0]} alt="" className="w-full h-full object-cover" />
+                          {lineItem.images[0] ? (
+                            <img src={lineItem.images[0]} alt="" className="w-full h-full object-cover" />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center">
                               <Image className="w-8 h-8 text-muted-foreground" />
@@ -367,39 +367,39 @@ export const ManageProductsPopup = ({
 
                         <div className="flex-1 min-w-0 px-3 pt-1 pb-2">
                           <h4 className="text-base font-medium truncate">
-                            {product.name || 'Новий продукт'}
+                            {lineItem.name || 'Нова позиція'}
                           </h4>
-                          <p className="text-sm text-muted-foreground/70 truncate">{product.sku}</p>
-                          <p className="text-sm font-medium mt-1">{product.price} грн</p>
+                          <p className="text-sm text-muted-foreground/70 truncate">{lineItem.sku}</p>
+                          <p className="text-sm font-medium mt-1">{lineItem.price} грн</p>
                         </div>
                       </div>
 
-                      {selectedProductId === product.id && (
+                      {selectedLineItemId === lineItem.id && (
                         <div 
                           className="absolute bottom-2 right-2 flex gap-0.5 bg-background rounded-md shadow-md border border-border p-0.5"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <button onClick={(e) => handleDuplicateProduct(e, product.id)} className="p-1.5 hover:bg-muted rounded">
+                          <button onClick={(e) => handleDuplicateLineItem(e, lineItem.id)} className="p-1.5 hover:bg-muted rounded">
                             <Copy className="w-3.5 h-3.5 text-muted-foreground" />
                           </button>
-                          <button onClick={(e) => handleDeleteProduct(e, product.id)} className="p-1.5 hover:bg-destructive/10 rounded">
+                          <button onClick={(e) => handleDeleteLineItem(e, lineItem.id)} className="p-1.5 hover:bg-destructive/10 rounded">
                             <Trash2 className="w-3.5 h-3.5 text-destructive" />
                           </button>
-                          <button onClick={(e) => handleMoveProduct(e, product.id, 'up')} disabled={selectedIndex === 0} className="p-1.5 hover:bg-muted rounded disabled:opacity-30">
+                          <button onClick={(e) => handleMoveLineItem(e, lineItem.id, 'up')} disabled={selectedIndex === 0} className="p-1.5 hover:bg-muted rounded disabled:opacity-30">
                             <ChevronUp className="w-3.5 h-3.5 text-muted-foreground" />
                           </button>
-                          <button onClick={(e) => handleMoveProduct(e, product.id, 'down')} disabled={selectedIndex === localProducts.length - 1} className="p-1.5 hover:bg-muted rounded disabled:opacity-30">
+                          <button onClick={(e) => handleMoveLineItem(e, lineItem.id, 'down')} disabled={selectedIndex === localLineItems.length - 1} className="p-1.5 hover:bg-muted rounded disabled:opacity-30">
                             <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />
                           </button>
                         </div>
                       )}
                     </div>
 
-                    {isMobile && selectedProductId === product.id && (
-                      <ProductForm 
+                    {isMobile && selectedLineItemId === lineItem.id && (
+                      <LineItemForm 
                         variant="inline"
-                        currentProduct={product}
-                        handleUpdateProduct={handleUpdateProduct}
+                        currentLineItem={lineItem}
+                        handleUpdateLineItem={handleUpdateLineItem}
                         handleAddImage={handleAddImage}
                         handleRemoveImage={handleRemoveImage}
                       />
@@ -413,11 +413,11 @@ export const ManageProductsPopup = ({
 
           {/* Панель для десктопа */}
           {!isMobile && (
-            <div className="flex-1 p-6 overflow-y-auto bg-background" onClick={() => setSelectedProductId(null)}>
-              <ProductForm 
+            <div className="flex-1 p-6 overflow-y-auto bg-background" onClick={() => setSelectedLineItemId(null)}>
+              <LineItemForm 
                 variant="panel"
-                currentProduct={currentProduct}
-                handleUpdateProduct={handleUpdateProduct}
+                currentLineItem={currentLineItem}
+                handleUpdateLineItem={handleUpdateLineItem}
                 handleAddImage={handleAddImage}
                 handleRemoveImage={handleRemoveImage}
               />

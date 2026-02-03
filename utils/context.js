@@ -92,21 +92,21 @@ export function useCategoriesContext() {
 }
 
 
-const initProductsContext = {}
-const ProductsContext = createContext(initProductsContext)
+const initLineItemsContext = {}
+const LineItemsContext = createContext(initLineItemsContext)
 
-export function ProductsProvider({ children, allProducts }) {
-  const [products, setProducts] = useState(allProducts)
+export function LineItemsProvider({ children, allLineItems }) {
+  const [lineItems, setLineItems] = useState(allLineItems)
 
   return (
-    <ProductsContext.Provider value={{ products, setProducts }}>
+    <LineItemsContext.Provider value={{ lineItems, setLineItems }}>
       {children}
-    </ProductsContext.Provider>
+    </LineItemsContext.Provider>
   )
 }
 
-export function useProductsContext() {
-  return useContext(ProductsContext)
+export function useLineItemsContext() {
+  return useContext(LineItemsContext)
 }
 
 

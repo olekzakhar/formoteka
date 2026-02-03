@@ -650,7 +650,7 @@ export const Builder = ({ form }) => {
     setActiveTab('add');
   };
 
-  const hasProductsBlock = blocks.some((b) => b.type === 'products');
+  const hasLineItemsBlock = blocks.some((b) => b.type === 'line-items');
 
   const sidePanelContent = (
     <SidePanel
@@ -690,7 +690,7 @@ export const Builder = ({ form }) => {
       onUpdateSeo={(updates) => setFormSeo((prev) => ({ ...prev, ...updates }))}
       deliveryTargets={deliveryTargets}
       onUpdateDeliveryTargets={(updates) => setDeliveryTargets((prev) => ({ ...prev, ...updates }))}
-      hasProductsBlock={hasProductsBlock}
+      hasLineItemsBlock={hasLineItemsBlock}
       onOpenSubmitSettings={handleSubmitButtonClick}
     />
   );

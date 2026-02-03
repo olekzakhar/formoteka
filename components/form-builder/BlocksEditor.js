@@ -671,11 +671,11 @@ export const BlocksEditor = ({
             </div>
           </div>
         );
-      case 'products':
-        const products = block.products || [];
-        const layout = block.productsLayout || 'grid-2';
+      case 'line-items':
+        const lineItems = block.lineItems || [];
+        const layout = block.lineItemsLayout || 'grid-2';
 
-        if (products.length === 0) {
+        if (lineItems.length === 0) {
           return (
             <div className="space-y-2">
               {showLabel && (
@@ -686,14 +686,14 @@ export const BlocksEditor = ({
               )}
               <div className="p-4 border-2 border-dashed border-border rounded-lg bg-muted/30 text-center">
                 <p className="text-sm text-muted-foreground">
-                  Продукти не додано. Керуйте ними в параметрах блоку.
+                  Позиції не додано. Керуйте ними в параметрах блоку.
                 </p>
               </div>
             </div>
           );
         }
 
-        // Render actual products
+        // Render actual Line items
         if (layout === 'list') {
           return (
             <div className="space-y-2">
@@ -704,17 +704,17 @@ export const BlocksEditor = ({
                 </label>
               )}
               <div className="space-y-2">
-                {products.map((product) => (
+                {lineItems.map((lineItem) => (
                   <div
-                    key={product.id}
+                    key={lineItem.id}
                     className="flex rounded-lg border border-border bg-background overflow-hidden"
                   >
                     {/* Full height image, left aligned, no margin */}
                     <div className="w-20 h-20 bg-muted flex-shrink-0 overflow-hidden">
-                      {product.images[0] ? (
+                      {lineItem.images[0] ? (
                         <img
-                          src={product.images[0]}
-                          alt={product.name}
+                          src={lineItem.images[0]}
+                          alt={lineItem.name}
                           className="w-full h-full object-cover"
                         />
                       ) : (
@@ -724,8 +724,8 @@ export const BlocksEditor = ({
                       )}
                     </div>
                     <div className="flex-1 min-w-0 p-3 flex flex-col justify-start">
-                      <h4 className="font-medium text-foreground truncate">{product.name}</h4>
-                      <p className="text-sm text-muted-foreground">${product.price.toFixed(2)}</p>
+                      <h4 className="font-medium text-foreground truncate">{lineItem.name}</h4>
+                      <p className="text-sm text-muted-foreground">${lineItem.price.toFixed(2)}</p>
                     </div>
                   </div>
                 ))}
@@ -745,16 +745,16 @@ export const BlocksEditor = ({
               </label>
             )}
             <div className={cn('grid gap-4', gridCols)}>
-              {products.map((product) => (
+              {lineItems.map((lineItem) => (
                 <div
-                  key={product.id}
+                  key={lineItem.id}
                   className="rounded-lg border border-border overflow-hidden bg-background"
                 >
                   <div className="aspect-square bg-muted relative">
-                    {product.images[0] ? (
+                    {lineItem.images[0] ? (
                       <img
-                        src={product.images[0]}
-                        alt={product.name}
+                        src={lineItem.images[0]}
+                        alt={lineItem.name}
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -764,8 +764,8 @@ export const BlocksEditor = ({
                     )}
                   </div>
                   <div className="p-3">
-                    <h4 className="font-medium text-foreground truncate text-sm">{product.name}</h4>
-                    <p className="text-sm text-muted-foreground">${product.price.toFixed(2)}</p>
+                    <h4 className="font-medium text-foreground truncate text-sm">{lineItem.name}</h4>
+                    <p className="text-sm text-muted-foreground">${lineItem.price.toFixed(2)}</p>
                   </div>
                 </div>
               ))}

@@ -128,19 +128,19 @@ export const toSlugify = text => slugify(text, { lower: true, replacement: '_', 
 //     : number ? Number(number)?.toFixed(2) : 0.00 // Display with 2 decimal places
 // }
 
-// export const getCartProduct = (cart, name) => {
-//   return cart.find(item => item.product.name === name)
+// export const getCartLineItem = (cart, name) => {
+//   return cart.find(item => item.lineItem.name === name)
 // }
 
 // export const getMessengerMessage = (order) => {
-//   const textProducts = order?.products?.map(item =>
-//     `▪ ${item.quantity} x ${item.product.name} (${order?.currency}${item.product.price})`).join('\n')
+//   const textLineItems = order?.lineItems?.map(item =>
+//     `▪ ${item.quantity} x ${item.lineItem.name} (${order?.currency}${item.lineItem.price})`).join('\n')
 
 //     return `Order #${order?.order_number ?? 0}
 
-// ${textProducts}
+// ${textLineItems}
 
-// Total: ${order?.currency}${Number(order?.sum)?.toFixed(2)} (Qty: ${order?.products?.length ?? 0})
+// Total: ${order?.currency}${Number(order?.sum)?.toFixed(2)} (Qty: ${order?.lineItems?.length ?? 0})
 
 // Customer: ${order?.name}
 // +${order?.phone}

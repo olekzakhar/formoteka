@@ -3,65 +3,65 @@ import { cn } from '@/utils';
 import { Minus, Plus, Image as ImageIcon } from 'lucide-react';
 import { ImageLightbox } from '@/components/form-builder/ImageLightbox';
 
-export const BlockProductsRenderer = ({
+export const BlockLineItemsRenderer = ({
   block,
-  selectedProducts,
-  onSelectProduct,
+  selectedLineItems,
+  onSelectLineItem,
   isPreview = false,
 }) => {
-  const products = block.products || [];
-  const layout = block.productsLayout || 'grid-2';
+  const lineItems = block.lineItems || [];
+  const layout = block.lineItemsLayout || 'grid-2';
   const [lightboxImages, setLightboxImages] = useState(null);
   const [lightboxIndex, setLightboxIndex] = useState(0);
 
-  const getSelectedQuantity = (productId) => {
-    const selected = selectedProducts.find((s) => s.productId === productId);
+  const getSelectedQuantity = (lineItemId) => {
+    const selected = selectedLineItems.find((s) => s.lineItemId === lineItemId);
     return selected?.quantity || 0;
   };
 
-  const handleProductClick = (product) => {
-    const currentQuantity = getSelectedQuantity(product.id);
+  const handleLineItemClick = (lineItem) => {
+    const currentQuantity = getSelectedQuantity(lineItem.id);
     if (currentQuantity === 0) {
       // Select with minimum quantity
-      onSelectProduct(product.id, product.minQuantity);
+      onSelectLineItem(lineItem.id, lineItem.minQuantity);
     } else {
       // Deselect when clicking again
-      onSelectProduct(product.id, 0);
+      onSelectLineItem(lineItem.id, 0);
     }
   };
 
-  const handleIncrement = (e, product) => {
+  const handleIncrement = (e, lineItem) => {
     e.stopPropagation();
-    const currentQuantity = getSelectedQuantity(product.id);
-    const maxQty = product.maxQuantity ?? Infinity;
-    if (currentQuantity < maxQty && currentQuantity < product.stock) {
-      onSelectProduct(product.id, currentQuantity + 1);
+    const currentQuantity = getSelectedQuantity(lineItem.id);
+    const maxQty = lineItem.maxQuantity ?? Infinity;
+    if (currentQuantity < maxQty && currentQuantity < lineItem.stock) {
+      onSelectLineItem(lineItem.id, currentQuantity + 1);
     }
   };
 
-  const handleDecrement = (e, product) => {
+  const handleDecrement = (e, lineItem) => {
     e.stopPropagation();
-    const currentQuantity = getSelectedQuantity(product.id);
-    if (currentQuantity > product.minQuantity) {
-      onSelectProduct(product.id, currentQuantity - 1);
-    } else if (currentQuantity === product.minQuantity) {
+    const currentQuantity = getSelectedQuantity(lineItem.id);
+    if (currentQuantity > lineItem.minQuantity) {
+      onSelectLineItem(lineItem.id, currentQuantity - 1);
+    } else if (currentQuantity === lineItem.minQuantity) {
       // Deselect
-      onSelectProduct(product.id, 0);
+      onSelectLineItem(lineItem.id, 0);
     }
   };
 
-  const handleImageClick = (e, product, imageIndex) => {
+  const handleImageClick = (e, lineItem, imageIndex) => {
     e.stopPropagation();
-    if (product.images.length > 0) {
-      setLightboxImages(product.images);
+    if (lineItem.images.length > 0) {
+      setLightboxImages(lineItem.images);
       setLightboxIndex(imageIndex);
     }
   };
 
-  if (products.length === 0) {
+  if (lineItems.length === 0) {
     return (
       <div className="p-6 border-2 border-dashed border-border rounded-lg text-center">
-        <p className="text-muted-foreground">No products added yet</p>
+        <p className="text-muted-foreground">No line items added yet</p>
       </div>
     );
   }
@@ -71,14 +71,14 @@ export const BlockProductsRenderer = ({
     return (
       <>
         <div className="space-y-2">
-          {products.map((product) => {
-            const quantity = getSelectedQuantity(product.id);
+          {lineItems.map((lineItem) => {
+            const quantity = getSelectedQuantity(lineItem.id);
             const isSelected = quantity > 0;
 
             return (
               <div
-                key={product.id}
-                onClick={() => handleProductClick(product)}
+                key={lineItem.id}
+                onClick={() => handleLineItemClick(lineItem)}
                 className={cn(
                   'flex items-stretch gap-0 rounded-lg border cursor-pointer transition-all overflow-hidden',
                   isSelected
@@ -89,12 +89,12 @@ export const BlockProductsRenderer = ({
                 {/* Image - full height, no margin */}
                 <div
                   className="w-20 h-20 bg-muted flex-shrink-0 cursor-zoom-in"
-                  onClick={(e) => handleImageClick(e, product)}
+                  onClick={(e) => handleImageClick(e, lineItem)}
                 >
-                  {product.images[0] ? (
+                  {lineItem.images[0] ? (
                     <img
-                      src={product.images[0]}
-                      alt={product.name}
+                      src={lineItem.images[0]}
+                      alt={lineItem.name}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -107,9 +107,9 @@ export const BlockProductsRenderer = ({
                 {/* Info */}
                 <div className="flex-1 min-w-0 flex items-start px-4 pt-3">
                   <div>
-                    <h4 className="font-medium text-foreground truncate">{product.name}</h4>
+                    <h4 className="font-medium text-foreground truncate">{lineItem.name}</h4>
                     <p className="text-sm text-muted-foreground">
-                      ${product.price.toFixed(2)}
+                      ${lineItem.price.toFixed(2)}
                     </p>
                   </div>
                 </div>
@@ -119,7 +119,7 @@ export const BlockProductsRenderer = ({
                   <div className="flex items-center gap-1 px-2">
                     <button
                       type="button"
-                      onClick={(e) => handleDecrement(e, product)}
+                      onClick={(e) => handleDecrement(e, lineItem)}
                       className="w-6 h-6 rounded-full bg-foreground/20 hover:bg-foreground/30 flex items-center justify-center transition-colors"
                     >
                       <Minus className="w-3 h-3 text-foreground" />
@@ -127,7 +127,7 @@ export const BlockProductsRenderer = ({
                     <span className="w-6 text-center text-sm font-medium">{quantity}</span>
                     <button
                       type="button"
-                      onClick={(e) => handleIncrement(e, product)}
+                      onClick={(e) => handleIncrement(e, lineItem)}
                       className="w-6 h-6 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 flex items-center justify-center transition-colors"
                     >
                       <Plus className="w-3 h-3" />
@@ -157,14 +157,14 @@ export const BlockProductsRenderer = ({
   return (
     <>
       <div className={cn('grid gap-4', gridCols)}>
-        {products.map((product) => {
-          const quantity = getSelectedQuantity(product.id);
+        {lineItems.map((lineItem) => {
+          const quantity = getSelectedQuantity(lineItem.id);
           const isSelected = quantity > 0;
 
           return (
             <div
-              key={product.id}
-              onClick={() => handleProductClick(product)}
+              key={lineItem.id}
+              onClick={() => handleLineItemClick(lineItem)}
               className={cn(
                 'rounded-lg border overflow-hidden cursor-pointer transition-all',
                 isSelected
@@ -175,12 +175,12 @@ export const BlockProductsRenderer = ({
               {/* Image */}
               <div
                 className="aspect-square bg-muted relative cursor-zoom-in"
-                onClick={(e) => handleImageClick(e, product)}
+                onClick={(e) => handleImageClick(e, lineItem)}
               >
-                {product.images[0] ? (
+                {lineItem.images[0] ? (
                   <img
-                    src={product.images[0]}
-                    alt={product.name}
+                    src={lineItem.images[0]}
+                    alt={lineItem.name}
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -193,8 +193,8 @@ export const BlockProductsRenderer = ({
               {/* Info */}
               <div className="p-3">
                 <div className="flex justify-between items-start gap-2">
-                  <h4 className="font-medium text-foreground text-sm break-words flex-1">{product.name}</h4>
-                  <p className="text-sm text-muted-foreground whitespace-nowrap flex-shrink-0">${product.price.toFixed(2)}</p>
+                  <h4 className="font-medium text-foreground text-sm break-words flex-1">{lineItem.name}</h4>
+                  <p className="text-sm text-muted-foreground whitespace-nowrap flex-shrink-0">${lineItem.price.toFixed(2)}</p>
                 </div>
 
                 {/* Quantity controls */}
@@ -202,7 +202,7 @@ export const BlockProductsRenderer = ({
                   <div className="flex items-center justify-center gap-1 mt-2">
                     <button
                       type="button"
-                      onClick={(e) => handleDecrement(e, product)}
+                      onClick={(e) => handleDecrement(e, lineItem)}
                       className="w-6 h-6 rounded-full bg-foreground/20 hover:bg-foreground/30 flex items-center justify-center transition-colors"
                     >
                       <Minus className="w-3 h-3 text-foreground" />
@@ -210,7 +210,7 @@ export const BlockProductsRenderer = ({
                     <span className="w-6 text-center text-sm font-medium">{quantity}</span>
                     <button
                       type="button"
-                      onClick={(e) => handleIncrement(e, product)}
+                      onClick={(e) => handleIncrement(e, lineItem)}
                       className="w-6 h-6 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 flex items-center justify-center transition-colors"
                     >
                       <Plus className="w-3 h-3" />

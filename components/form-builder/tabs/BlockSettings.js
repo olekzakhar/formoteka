@@ -9,7 +9,7 @@ import { BlockIcon } from '@/components/form-builder/block/ButtonIcons';
 import { Plus, X, AlignLeft, AlignCenter, AlignRight, ChevronUp, ChevronDown } from 'lucide-react';
 import { cn } from '@/utils';
 import { useState, useRef, useEffect } from 'react';
-import { BlockProductsSettings } from '@/components/form-builder/block/ProductsSettings';
+import { BlockLineItemsSettings } from '@/components/form-builder/block/LineItemsSettings';
 import { availableIcons } from '@/components/form-builder/block/Icon';
 import { listIconOptions } from '@/components/form-builder/block/List';
 import * as LucideIcons from 'lucide-react';
@@ -1052,8 +1052,8 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
 
   return (
     <div className="p-4 space-y-6 animate-fade-in">
-      {/* Block type indicator - hide for products since it has its own header */}
-      {block.type !== 'products' && (
+      {/* Block type indicator - hide for Line items since it has its own header */}
+      {block.type !== 'line-items' && (
         <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/[0.12]">
           <div className="w-10 h-10 rounded-lg bg-background flex items-center justify-center shadow-soft">
             <BlockIcon icon={definition?.icon || 'Type'} className="w-5 h-5 text-primary" />
@@ -1355,9 +1355,9 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
         </div>
       )}
 
-      {/* Products settings */}
-      {block.type === 'products' && (
-        <BlockProductsSettings block={block} onUpdate={onUpdate} />
+      {/* Line items settings */}
+      {block.type === 'line-items' && (
+        <BlockLineItemsSettings block={block} onUpdate={onUpdate} />
       )}
 
       {/* Reviews settings */}
@@ -1778,7 +1778,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
       )}
 
       {/* Label field */}
-      {!['spacer', 'image', 'slideshow', 'products', 'divider', 'reviews', 'faq', 'icon', 'avatar', 'messenger-select'].includes(block.type) && (
+      {!['spacer', 'image', 'slideshow', 'line-items', 'divider', 'reviews', 'faq', 'icon', 'avatar', 'messenger-select'].includes(block.type) && (
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">Назва поля</label>
           <input
@@ -1829,7 +1829,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
       )}
 
       {/* Per-block text color */}
-      {!['spacer', 'divider', 'image', 'slideshow', 'icon', 'map', 'reviews', 'faq', 'products', 'avatar', 'messenger-select'].includes(block.type) && (
+      {!['spacer', 'divider', 'image', 'slideshow', 'icon', 'map', 'reviews', 'faq', 'line-items', 'avatar', 'messenger-select'].includes(block.type) && (
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">Колір тексту</label>
           <div className="flex gap-2">

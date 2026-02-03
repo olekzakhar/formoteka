@@ -1,5 +1,5 @@
 export const blockDefinitions = [
-  { type: 'products', label: 'Продукти', icon: 'Package', category: 'choice' },
+  { type: 'line-items', label: 'Позиції', icon: 'Package', category: 'choice' },
   { type: 'heading', label: 'Заголовок', icon: 'Heading', category: 'content' },
   { type: 'paragraph', label: 'Текст', icon: 'AlignLeft', category: 'content' },
   { type: 'short-text', label: 'Текст', icon: 'Type', category: 'input' },
@@ -34,7 +34,7 @@ export const getDefaultBlock = (type) => {
     checkbox: { label: 'Прапорець', options: ['Варіант 1', 'Варіант 2'], showLabel: true },
     radio: { label: 'Група перемикачів', options: ['Варіант 1', 'Варіант 2', 'Варіант 3'], showLabel: true },
     date: { label: 'Дата', placeholder: 'Оберіть дату', showLabel: true },
-    products: { label: 'Продукти', products: [], productsLayout: 'grid-2', showLabel: true },
+    'line-items': { label: 'Позиції', lineItems: [], lineItemsLayout: 'grid-2', showLabel: true },
     spacer: { label: 'Простір', height: 32 },
     image: { label: 'Зображення', imageCount: 1, images: [] },
     avatar: { 

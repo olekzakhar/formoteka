@@ -20,8 +20,8 @@ async function handleFormOrder(data) {
     //     form_slug: data.orderData.formSlug,
     //     submitted_at: data.orderData.submittedAt,
     //     fields: data.orderData.fields,
-    //     products: data.orderData.products,
-    //     products_total: data.orderData.productsTotal,
+    //     line_items: data.orderData.lineItems,
+    //     line_items_total: data.orderData.lineItemsTotal,
     //   })
 
     // if (insertError) {

@@ -7,12 +7,12 @@ export const SubmitButtonSettings = ({
   onButtonTextChange,
   formDesign,
   onUpdateDesign,
-  hasProductsBlock = false,
+  hasLineItemsBlock = false,
   totalQuantity = 0,
   totalAmount = 0,
 }) => {
-  const showProductInfo = formDesign.stickyButton && hasProductsBlock && totalQuantity > 0;
-  const displayButtonText = formDesign.stickyButton && hasProductsBlock ? 'Замовити' : buttonText;
+  const showLineItemInfo = formDesign.stickyButton && hasLineItemsBlock && totalQuantity > 0;
+  const displayButtonText = formDesign.stickyButton && hasLineItemsBlock ? 'Замовити' : buttonText;
 
   return (
     <div className="p-4 space-y-6 animate-fade-in">
@@ -34,13 +34,13 @@ export const SubmitButtonSettings = ({
                 size="black"
                 className="w-full flex items-center justify-between"
               >
-                {showProductInfo && (
+                {showLineItemInfo && (
                   <span className="flex items-center justify-center w-7 h-7 rounded-full bg-muted-foreground/30 text-sm">
                     {totalQuantity}
                   </span>
                 )}
                 <span className="flex-1 text-center">{displayButtonText}</span>
-                {showProductInfo ? (
+                {showLineItemInfo ? (
                   <span className="text-sm font-medium">${totalAmount.toFixed(2)}</span>
                 ) : (
                   <ArrowRight className="w-4 h-4" />
@@ -87,7 +87,7 @@ export const SubmitButtonSettings = ({
         {formDesign.stickyButton && (
           <div className="p-3 bg-accent/50 rounded-lg">
             <p className="text-xs text-muted-foreground">
-              Коли є блок Продукти, кнопка показує загальну кількість і суму.
+              Коли є блок Позиції, кнопка показує загальну кількість і суму.
             </p>
           </div>
         )}
@@ -107,7 +107,7 @@ export const SubmitButtonSettings = ({
             'transition-smooth'
           )}
         />
-        {formDesign.stickyButton && hasProductsBlock && (
+        {formDesign.stickyButton && hasLineItemsBlock && (
           <p className="text-xs text-muted-foreground">
             Після вибору товарів текст кнопки автоматично змінюється на “Замовити”.
           </p>

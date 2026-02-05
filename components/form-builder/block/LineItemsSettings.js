@@ -39,7 +39,7 @@ export const BlockLineItemsSettings = ({ block, onUpdate }) => {
   };
 
   const handleUpdateLineItems = (newLineItems) => {
-    onUpdate({ lineItems: newLineItems }); // ✅ Виправлено: lineItems замість lineItem
+    onUpdate({ lineItems: newLineItems })
   };
 
   return (

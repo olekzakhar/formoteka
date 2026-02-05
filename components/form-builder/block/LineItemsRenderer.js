@@ -1,3 +1,5 @@
+// components/form-builder/block/LineItemsRenderer
+
 import { useState } from 'react';
 import { cn } from '@/utils';
 import { Minus, Plus, Image as ImageIcon } from 'lucide-react';

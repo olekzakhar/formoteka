@@ -1,3 +1,5 @@
+// components/form-builder/block/LineItemsSettings
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button-2';
 import { Label } from '@/components/ui/label';
@@ -37,7 +39,7 @@ export const BlockLineItemsSettings = ({ block, onUpdate }) => {
   };
 
   const handleUpdateLineItems = (newLineItems) => {
-    onUpdate({ lineItem: newLineItems });
+    onUpdate({ lineItems: newLineItems }); // ✅ Виправлено: lineItems замість lineItem
   };
 
   return (
@@ -77,10 +79,10 @@ export const BlockLineItemsSettings = ({ block, onUpdate }) => {
                 key={option.value}
                 onClick={() => handleLayoutChange(option.value)}
                 className={cn(
-                  'w-full flex items-start gap-3 p-3 rounded-lg border-2 transition-colors text-left',
+                  'w-full flex items-start gap-3 p-3 rounded-lg border-2 transition-colors duration-200 ease-in-out text-left',
                   layout === option.value
-                    ? 'border-primary bg-primary/5'
-                    : 'border-border hover:border-muted-foreground/50'
+                    ? 'border-primary! bg-primary/5'
+                    : 'border-border hover:border-muted-foreground/35!'
                 )}
               >
                 <div
@@ -110,5 +112,5 @@ export const BlockLineItemsSettings = ({ block, onUpdate }) => {
         />
       )}
     </div>
-  );
-};
+  )
+}

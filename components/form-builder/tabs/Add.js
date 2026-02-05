@@ -35,7 +35,7 @@ export const TabsAdd = ({ onAddBlock }) => {
                   }}
                   className={cn(
                     'flex flex-col items-center gap-2 p-3 rounded-lg',
-                    'bg-primary/[0.08] hover:bg-primary/15 border border-primary/25! hover:border-primary/40!',
+                    'bg-primary/[0.08] hover:bg-primary/15 border border-primary/20! hover:border-primary/40!',
                     'transition-smooth cursor-grab active:cursor-grabbing',
                     'group'
                   )}

@@ -1,3 +1,5 @@
+// components/form-builder/ManageLineItemsPopup
+
 import { useEffect, useState, useRef } from 'react';
 import { Button } from '@/components/ui/button-2';
 import { Input } from '@/components/ui/input';

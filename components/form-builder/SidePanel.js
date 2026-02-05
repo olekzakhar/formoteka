@@ -1,14 +1,14 @@
 // components/form-builder/SidePanel
 
-import { TabsAdd } from '@/components/form-builder/tabs/Add';
-import { TabsBlockSettings } from '@/components/form-builder/tabs/BlockSettings';
-import { TabsSettings } from '@/components/form-builder/tabs/Settings';
-import { TabsDesign } from '@/components/form-builder/tabs/Design';
-import { SubmitButtonSettings } from '@/components/form-builder/SubmitButtonSettings';
-import { cn } from '@/utils';
-import { PaintbrushVertical, Settings, ArrowLeft, Plus } from 'lucide-react';
+import { TabsAdd } from '@/components/form-builder/tabs/Add'
+import { BlockSettings } from '@/components/form-builder/block/Settings'
+import { TabsSettings } from '@/components/form-builder/tabs/Settings'
+import { TabsDesign } from '@/components/form-builder/tabs/Design'
+import { SubmitButtonSettings } from '@/components/form-builder/SubmitButtonSettings'
+import { cn } from '@/utils'
+import { PaintbrushVertical, Settings, ArrowLeft, Plus } from 'lucide-react'
 
-const PANEL_WIDTH = 'w-full md:w-[280px] lg:w-[360px] md:h-[calc(100%-16px)] md:mt-[8px] md:mr-[10px] rounded-3xl border';
+const PANEL_WIDTH = 'w-full md:w-[280px] lg:w-[360px] md:h-[calc(100%-16px)] md:mt-[8px] md:mr-[10px] rounded-3xl border'
 
 
 export const SidePanel = ({
@@ -50,7 +50,7 @@ export const SidePanel = ({
           <span className="text-sm font-medium text-foreground">Параметри блоку</span>
         </div>
         <div className="flex-1 overflow-y-auto">
-          <TabsBlockSettings block={activeBlock} onUpdate={onUpdateBlock} />
+          <BlockSettings block={activeBlock} onUpdate={onUpdateBlock} />
         </div>
       </div>
     );
@@ -70,7 +70,7 @@ export const SidePanel = ({
           <span className="text-sm font-medium text-foreground">Success Block Settings</span>
         </div>
         <div className="flex-1 overflow-y-auto">
-          <TabsBlockSettings block={activeSuccessBlock} onUpdate={onUpdateSuccessBlock} />
+          <BlockSettings block={activeSuccessBlock} onUpdate={onUpdateSuccessBlock} />
         </div>
       </div>
     );
@@ -169,5 +169,5 @@ export const SidePanel = ({
         )}
       </div>
     </div>
-  );
-};
+  )
+}

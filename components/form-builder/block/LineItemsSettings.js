@@ -10,44 +10,44 @@ import { List, LayoutGrid, Package } from 'lucide-react';
 const layoutOptions = [
   {
     value: 'list',
-    label: 'List View',
+    label: 'Список',
     icon: <List className="w-4 h-4" />,
-    description: 'Small photo on left with name and price',
+    description: 'Мале фото зліва, назва та ціна',
   },
   {
     value: 'grid-2',
-    label: '2 Cards per Row',
+    label: '2 картки в ряд',
     icon: <LayoutGrid className="w-4 h-4" />,
-    description: 'Photo on top, name and price below',
+    description: 'Фото зверху, назва та ціна знизу',
   },
   {
     value: 'grid-3',
-    label: '3 Cards per Row',
+    label: '3 картки в ряд',
     icon: <LayoutGrid className="w-4 h-4" />,
-    description: 'Photo on top, name and price below',
-  },
-];
+    description: 'Фото зверху, назва та ціна знизу',
+  }
+]
 
 export const BlockLineItemsSettings = ({ block, onUpdate }) => {
-  const [showManageLineItems, setShowManageLineItems] = useState(false);
+  const [showManageLineItems, setShowManageLineItems] = useState(false)
 
-  const lineItems = block.lineItems || [];
-  const layout = block.lineItemsLayout || 'grid-2';
+  const lineItems = block.lineItems || []
+  const layout = block.lineItemsLayout || 'grid-2'
 
   const handleLayoutChange = (newLayout) => {
-    onUpdate({ lineItemsLayout: newLayout });
-  };
+    onUpdate({ lineItemsLayout: newLayout })
+  }
 
   const handleUpdateLineItems = (newLineItems) => {
     onUpdate({ lineItems: newLineItems })
-  };
+  }
 
   return (
     <div className="space-y-6">
       {/* Manage Line Items Button */}
       <div className="space-y-2">
         <div className="flex items-center gap-2 p-3 rounded-lg bg-accent/50">
-          <div className="w-10 h-10 rounded-lg bg-background flex items-center justify-center shadow-soft">
+          <div className="w-10 h-10 rounded-lg bg-white/60 flex items-center justify-center shadow-soft">
             <Package className="w-5 h-5 text-primary" />
           </div>
           <div>
@@ -66,13 +66,13 @@ export const BlockLineItemsSettings = ({ block, onUpdate }) => {
 
       {/* Appearance Section */}
       <div className="space-y-4">
-        <div className="flex items-center gap-2">
-          <h4 className="text-sm font-medium text-foreground">Appearance</h4>
-        </div>
+        {/* <div className="flex items-center gap-2">
+          <h4 className="text-sm font-medium text-foreground">Оформлення</h4>
+        </div> */}
 
         {/* Layout Options */}
         <div className="space-y-2">
-          <Label>Choose Layout</Label>
+          <Label>Обрати макет</Label>
           <div className="space-y-2">
             {layoutOptions.map((option) => (
               <button

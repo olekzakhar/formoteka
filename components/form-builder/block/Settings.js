@@ -1,4 +1,4 @@
-// components/form-builder/tabs/BlockSettings
+// components/form-builder/block/Settings
 
 /* eslint-disable react-hooks/rules-of-hooks */
 
@@ -965,7 +965,7 @@ const AvatarSettings = ({ block, onUpdate }) => {
   );
 };
 
-export const TabsBlockSettings = ({ block, onUpdate }) => {
+export const BlockSettings = ({ block, onUpdate }) => {
   if (!block) {
     return (
       <div className="p-8 text-center animate-fade-in">
@@ -1055,7 +1055,7 @@ export const TabsBlockSettings = ({ block, onUpdate }) => {
       {/* Block type indicator - hide for Line items since it has its own header */}
       {block.type !== 'line-items' && (
         <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/[0.12]">
-          <div className="w-10 h-10 rounded-lg bg-background flex items-center justify-center shadow-soft">
+          <div className="w-10 h-10 rounded-lg bg-white/60 flex items-center justify-center shadow-soft">
             <BlockIcon icon={definition?.icon || 'Type'} className="w-5 h-5 text-primary" />
           </div>
           <div>

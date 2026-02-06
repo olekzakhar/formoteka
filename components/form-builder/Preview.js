@@ -105,8 +105,9 @@ export const Preview = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                title={displayUrl}
               >
-                {displayUrl}
+                {/* {displayUrl} */}
                 <ExternalLink className="w-3.5 h-3.5" />
               </Link>
             </div>

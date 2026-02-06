@@ -45,6 +45,9 @@ export const Builder = ({ form }) => {
       fontSize: 'medium',
       formDisabled: true,
       stickyButton: false,
+      accentColor: '#000000',
+      inputColor: '#e5e7eb',
+      inputBgColor: 'transparent',
     }
   );
 
@@ -738,7 +741,7 @@ export const Builder = ({ form }) => {
         />
 
         {/* Desktop side panel */}
-        <div className="hidden md:block absolute top-0 right-0 h-full z-10 pointer-events-none">
+        <div id="side-panel" className="hidden md:block absolute top-0 right-0 h-full z-10 pointer-events-none">
           <div className="pointer-events-auto h-full">
             {sidePanelContent}
           </div>

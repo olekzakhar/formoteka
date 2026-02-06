@@ -64,7 +64,7 @@ export const SubmitButtonSettings = ({
         <div className="flex items-center justify-between">
           <div>
             <label className="text-sm font-medium text-foreground">Закріплена кнопка</label>
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <p className="text-xs text-muted-foreground -mt-[6px]">
               Закріплено внизу екрана
             </p>
           </div>

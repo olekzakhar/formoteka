@@ -62,7 +62,7 @@ export async function createForm(supabase, userId) {
 
   while (attempts < maxAttempts) {
     const code = nanoid(6)
-    const slug = `form-${code}`
+    const slug = code
     const name = `Форма ${code}`
     
     const { data, error } = await supabase
@@ -132,7 +132,7 @@ export async function duplicateForm(supabase, formSlug, userId) {
 
   while (attempts < maxAttempts) {
     const code = nanoid(6)
-    const slug = `form-${code}`
+    const slug = code
     const name = `${originalForm.name} (копія)`
     
     const { data, error } = await supabase
@@ -176,7 +176,7 @@ export async function updateFormData(supabase, formSlug, userId, updates) {
   // Get current data first to merge properly
   const { data: currentForm } = await supabase
     .from('forms')
-    .select('name, form_data, settings')
+    .select('name, form_data, settings, is_public')
     .eq('slug', formSlug)
     .eq('user_id', userId)
     .single()
@@ -184,6 +184,11 @@ export async function updateFormData(supabase, formSlug, userId, updates) {
   // Update form name if provided
   if (updates.formName !== undefined) {
     updateData.name = updates.formName
+  }
+
+  // Update is_public directly
+  if (updates.isPublic !== undefined) {
+    updateData.is_public = updates.isPublic
   }
 
   // Update form_data (blocks and submitButtonText)

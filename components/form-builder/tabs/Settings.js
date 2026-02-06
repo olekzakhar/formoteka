@@ -17,6 +17,8 @@ export const TabsSettings = ({
   onUpdateSeo,
   delivery,
   onUpdateDelivery,
+  isPublic,
+  onUpdateIsPublic,
   onOpenSubmitSettings,
 }) => {
   // FIXED: Safe access with optional chaining to prevent undefined errors
@@ -36,20 +38,20 @@ export const TabsSettings = ({
       {/* Top-level (outside collapsibles) */}
       <div className="flex items-center justify-between">
         <div>
-          <label className="text-sm font-medium text-foreground">Disable form</label>
-          <p className="text-xs text-muted-foreground mt-0.5">When enabled, form orders are disabled</p>
+          <label className="text-sm font-medium text-foreground">Увімкнути форму</label>
+          <p className="text-xs text-muted-foreground -mt-[6px]">Коли увімкнено, форма доступна для користувачів</p>
         </div>
         <button
-          onClick={() => onUpdateDesign({ formDisabled: !formDesign.formDisabled })}
+          onClick={() => onUpdateIsPublic(!isPublic)}
           className={cn(
-            'relative w-11 h-6 rounded-full transition-smooth',
-            formDesign.formDisabled ? 'bg-primary' : 'bg-muted'
+            'relative w-11 h-6 shrink-0 rounded-full transition-smooth',
+            isPublic ? 'bg-primary' : 'bg-muted'
           )}
         >
           <span
             className={cn(
               'absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-background shadow-soft transition-smooth',
-              formDesign.formDisabled && 'translate-x-5'
+              isPublic && 'translate-x-5'
             )}
           />
         </button>
@@ -113,7 +115,7 @@ export const TabsSettings = ({
                 <div className="space-y-2">
                   <div className="flex items-center space-x-3">
                     <RadioGroupItem value="email" id="delivery-email" />
-                    <Label htmlFor="delivery-email" className="flex items-center gap-2 cursor-pointer">
+                    <Label htmlFor="delivery-email" className="mb-0! flex items-center gap-2 cursor-pointer">
                       <Mail className="h-4 w-4 text-muted-foreground" />
                       <span>Email</span>
                     </Label>
@@ -133,7 +135,7 @@ export const TabsSettings = ({
                 <div className="space-y-2">
                   <div className="flex items-center space-x-3">
                     <RadioGroupItem value="messengers" id="delivery-messengers" />
-                    <Label htmlFor="delivery-messengers" className="cursor-pointer">
+                    <Label htmlFor="delivery-messengers" className="mb-0! cursor-pointer">
                       Messengers
                     </Label>
                   </div>
@@ -142,7 +144,7 @@ export const TabsSettings = ({
                     <div className="ml-7 space-y-2">
                       {/* Telegram */}
                       <div className="rounded-md border border-border bg-muted/20 px-3 py-2 space-y-2">
-                        <label className="flex items-center gap-3 cursor-pointer">
+                        <label className="mb-0! flex items-center gap-3 cursor-pointer">
                           <Checkbox
                             checked={delivery.telegram.enabled}
                             onCheckedChange={(v) => {
@@ -172,7 +174,7 @@ export const TabsSettings = ({
 
                       {/* Viber */}
                       <div className="rounded-md border border-border bg-muted/20 px-3 py-2 space-y-2">
-                        <label className="flex items-center gap-3 cursor-pointer">
+                        <label className="mb-0! flex items-center gap-3 cursor-pointer">
                           <Checkbox
                             checked={delivery.viber.enabled}
                             onCheckedChange={(v) => {
@@ -202,7 +204,7 @@ export const TabsSettings = ({
 
                       {/* Instagram */}
                       <div className="rounded-md border border-border bg-muted/20 px-3 py-2 space-y-2">
-                        <label className="flex items-center gap-3 cursor-pointer">
+                        <label className="mb-0! flex items-center gap-3 cursor-pointer">
                           <Checkbox
                             checked={delivery.instagram.enabled}
                             onCheckedChange={(v) => {
@@ -231,23 +233,18 @@ export const TabsSettings = ({
                       </div>
 
                       {enabledMessengers.length > 1 && (
-                        <p className="text-xs text-primary bg-primary/10 px-2 py-1.5 rounded-md">
-                          Multiple messengers selected. A messenger selector will be added to the form.
+                        <p className="mt-3 text-xs bg-primary/30 px-2 py-1.5 opacity-85 rounded-md">
+                          Обрано кілька месенджерів. До форми буде додано перемикач месенджерів.
                         </p>
                       )}
                     </div>
                   )}
                 </div>
               </RadioGroup>
-
-              <p className="text-xs text-muted-foreground">
-                This only configures destinations in the builder UI. Hooking up real delivery requires server-side
-                integration.
-              </p>
             </div>
           </AccordionContent>
         </AccordionItem>
       </Accordion>
     </div>
-  );
-};
+  )
+}

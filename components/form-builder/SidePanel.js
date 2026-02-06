@@ -33,6 +33,8 @@ export const SidePanel = ({
   onUpdateSeo,
   deliveryTargets,
   onUpdateDeliveryTargets,
+  isPublic,
+  onUpdateIsPublic,
   hasLineItemsBlock = false,
   onOpenSubmitSettings,
 }) => {
@@ -164,6 +166,8 @@ export const SidePanel = ({
             onUpdateSeo={onUpdateSeo}
             delivery={deliveryTargets}
             onUpdateDelivery={onUpdateDeliveryTargets}
+            isPublic={isPublic}
+            onUpdateIsPublic={onUpdateIsPublic}
             onOpenSubmitSettings={onOpenSubmitSettings}
           />
         )}

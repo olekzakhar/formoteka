@@ -25,7 +25,7 @@ export const TabsSettings = ({
   const enabledMessengers = [
     delivery?.telegram?.enabled && 'telegram',
     delivery?.viber?.enabled && 'viber',
-    delivery?.instagram?.enabled && 'instagram',
+    // delivery?.instagram?.enabled && 'instagram',
   ].filter(Boolean);
 
   // FIXED: Early return if delivery is not initialized
@@ -67,42 +67,42 @@ export const TabsSettings = ({
             'transition-smooth group'
           )}
         >
-          <span className="text-sm font-medium text-foreground">Submit Button</span>
+          <span className="text-sm font-medium text-foreground">Кнопка надсилання</span>
           <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-smooth" />
         </button>
       )}
 
       <Accordion type="multiple" defaultValue={['seo', 'delivery']} className="w-full">
         <AccordionItem value="seo" className="border border-border rounded-lg px-3">
-          <AccordionTrigger className="hover:no-underline">SEO (form page)</AccordionTrigger>
+          <AccordionTrigger className="hover:no-underline">SEO сторінки форми</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-3 pb-3">
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-foreground">Title</label>
+                <label className="text-sm font-medium text-foreground">Заголовок</label>
                 <Input
                   value={seo.title}
                   onChange={(e) => onUpdateSeo({ title: e.target.value })}
-                  placeholder="e.g. Contact Form — ACME"
+                  placeholder="Напр.: Форма для звʼязку — ACME"
                 />
-                <p className="text-xs text-muted-foreground">Recommended: under 60 characters.</p>
+                <p className="text-xs text-muted-foreground">Рекомендовано: до 60 символів.</p>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-foreground">Meta description</label>
+                <label className="text-sm font-medium text-foreground">Метаопис</label>
                 <Textarea
                   value={seo.description}
                   onChange={(e) => onUpdateSeo({ description: e.target.value })}
-                  placeholder="A short summary of this form..."
+                  placeholder="Короткий опис форми…"
                   rows={3}
                 />
-                <p className="text-xs text-muted-foreground">Recommended: under 160 characters.</p>
+                <p className="text-xs text-muted-foreground">Рекомендовано: до 160 символів.</p>
               </div>
             </div>
           </AccordionContent>
         </AccordionItem>
 
         <AccordionItem value="delivery" className="border border-border rounded-lg px-3 mt-3">
-          <AccordionTrigger className="hover:no-underline">Send orders to</AccordionTrigger>
+          <AccordionTrigger className="hover:no-underline">Надсилати замовлення до</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-4 pb-3">
               {/* Radio group for Email vs Messengers */}
@@ -136,7 +136,7 @@ export const TabsSettings = ({
                   <div className="flex items-center space-x-3">
                     <RadioGroupItem value="messengers" id="delivery-messengers" />
                     <Label htmlFor="delivery-messengers" className="mb-0! cursor-pointer">
-                      Messengers
+                      Месенджери
                     </Label>
                   </div>
                   
@@ -166,7 +166,7 @@ export const TabsSettings = ({
                             onChange={(e) =>
                               onUpdateDelivery({ telegram: { ...delivery.telegram, handle: e.target.value } })
                             }
-                            placeholder="@username or chat ID"
+                            placeholder="@username або ID чату"
                             className="mt-1"
                           />
                         )}
@@ -196,14 +196,14 @@ export const TabsSettings = ({
                             onChange={(e) =>
                               onUpdateDelivery({ viber: { ...delivery.viber, handle: e.target.value } })
                             }
-                            placeholder="Phone number"
+                            placeholder="Номер телефону"
                             className="mt-1"
                           />
                         )}
                       </div>
 
                       {/* Instagram */}
-                      <div className="rounded-md border border-border bg-muted/20 px-3 py-2 space-y-2">
+                      {/* <div className="rounded-md border border-border bg-muted/20 px-3 py-2 space-y-2">
                         <label className="mb-0! flex items-center gap-3 cursor-pointer">
                           <Checkbox
                             checked={delivery.instagram.enabled}
@@ -230,7 +230,7 @@ export const TabsSettings = ({
                             className="mt-1"
                           />
                         )}
-                      </div>
+                      </div> */}
 
                       {enabledMessengers.length > 1 && (
                         <p className="mt-3 text-xs bg-primary/30 px-2 py-1.5 opacity-85 rounded-md">

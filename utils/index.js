@@ -98,7 +98,30 @@ export const getImageUrl = (fileName) => {
   // Інакше - це ім'я файлу, додаємо базовий URL
   const baseUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || 'https://cdn.formoteka.com';
   return `${baseUrl}/${fileName}`;
-};
+}
+
+
+export const getColor = (color, opacity = 0.5) => {
+  if (!color) return undefined
+
+  // Конвертуємо opacity (0-1) в hex (00-FF)
+  const opacityHex = Math.round(opacity * 255).toString(16).padStart(2, '0').toUpperCase()
+
+  // Якщо hex (#EC224B або #EC224BCC)
+  if (color.startsWith('#')) {
+    const hexWithoutAlpha = color.length > 7 ? color.slice(0, 7) : color
+    return `${hexWithoutAlpha}${opacityHex}`
+  }
+  
+  // Якщо rgb/rgba
+  if (color.startsWith('rgb')) {
+    // Видаляємо існуючу alpha якщо є
+    const rgbOnly = color.replace(/rgba?\(/, 'rgba(').replace(/,?\s*[\d.]+\)$/, '')
+    return `${rgbOnly}, ${opacity})`
+  }
+  
+  return color
+}
 
 
 // export const getLogoUrl = form =>

@@ -509,7 +509,7 @@ export const BlocksEditor = ({
             {isEditingPlaceholder
               ? <Input
                   ref={placeholderInputRef}
-                  className="w-full max-w-[300px]"
+                  className="max-w-[300px]"
                   type="text"
                   value={editPlaceholderValue}
                   onChange={(e) => setEditPlaceholderValue(e.target.value)}
@@ -520,11 +520,11 @@ export const BlocksEditor = ({
                     backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined,
                     color: inputTextColor || undefined,
                     '--placeholder-color': getColor(inputTextColor) || undefined,
-                    '--focus-ring-color': accentColor || undefined
+                    '--focus-ring-color': getColor(accentColor, 0.7) || undefined
                   }}
                 />
               : <Input
-                  className="w-full max-w-[300px]"
+                  className="max-w-[300px]"
                   type="text"
                   value=""
                   placeholder={block.placeholder}
@@ -533,7 +533,7 @@ export const BlocksEditor = ({
                     backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined,
                     color: inputTextColor || undefined,
                     '--placeholder-color': getColor(inputTextColor) || undefined,
-                    '--focus-ring-color': accentColor || undefined
+                    '--focus-ring-color': getColor(accentColor, 0.7) || undefined
                   }}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -586,7 +586,7 @@ export const BlocksEditor = ({
                     backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined,
                     color: inputTextColor || undefined,
                     '--placeholder-color': getColor(inputTextColor) || undefined,
-                    '--focus-ring-color': accentColor || undefined
+                    '--focus-ring-color': getColor(accentColor, 0.7) || undefined
                   }}
                 />
               : <Textarea
@@ -597,7 +597,7 @@ export const BlocksEditor = ({
                     backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined,
                     color: inputTextColor || undefined,
                     '--placeholder-color': getColor(inputTextColor) || undefined,
-                    '--focus-ring-color': accentColor || undefined
+                    '--focus-ring-color': getColor(accentColor, 0.7) || undefined
                   }}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -638,9 +638,9 @@ export const BlocksEditor = ({
             )}
 
             <Select
-              placeholder={block?.placeholder || 'Оберіть варіант...'}
+              placeholder={block?.placeholder || 'Оберіть варіант'}
               options={block?.options}
-              className="w-full max-w-[300px]"
+              className="max-w-[300px]"
               style={{ 
                 borderColor: inputColor || undefined, 
                 backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined,
@@ -648,6 +648,7 @@ export const BlocksEditor = ({
                 '--placeholder-color': getColor(inputTextColor) || undefined,
                 '--focus-ring-color': getColor(accentColor, 0.7) || undefined
               }}
+              accentColor={accentColor}
             />
           </div>
         )
@@ -842,12 +843,14 @@ export const BlocksEditor = ({
                   </Label>
             )}
 
-            <input
+            <Input
               type="date"
-              className="w-full max-w-[300px] px-3 py-2 rounded-md border text-muted-foreground"
+              className="max-w-[300px]"
               style={{ 
-                borderColor: inputColor || undefined, 
-                backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined 
+                borderColor: inputColor || undefined,
+                backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined,
+                '--placeholder-color': getColor(inputTextColor) || undefined,
+                '--focus-ring-color': getColor(accentColor, 0.7) || undefined
               }}
               disabled
             />
@@ -856,7 +859,15 @@ export const BlocksEditor = ({
 
 
       case 'messenger-select':
-        return <BlockMessengerSelect block={block} />;
+        return <BlockMessengerSelect
+                 block={block}
+                 style={{ 
+                   borderColor: inputColor || undefined,
+                   backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined,
+                   color: inputTextColor || undefined,
+                   '--focus-ring-color': getColor(accentColor, 0.7) || undefined
+                 }}
+               />
       default:
         return <div className="text-muted-foreground">Невідомий тип блоку</div>
     }

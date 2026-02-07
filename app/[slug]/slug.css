@@ -33,6 +33,9 @@
   --input: 210 20% 90%;
   --ring: 173 80% 40%;
 
+  --placeholder-color: #676F7E;
+  --focus-ring-color: #2F3032;
+
   --radius: 0.625rem;
 
   /* Custom tokens */
@@ -262,4 +265,14 @@
 
 [data-theme="slug"] .border-input {
   border-color: rgba(0,0,0, 0.11);
+}
+
+[data-theme="slug"] input::placeholder, textarea::placeholder {
+  color: var(--placeholder-color, #676F7E);
+}
+
+[data-theme="dashboard"] input,
+[data-theme="dashboard"] textarea,
+[data-theme="dashboard"] select {
+  --tw-ring-color: var(--focus-ring-color, hsl(var(--ring)));
 }

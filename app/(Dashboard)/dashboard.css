@@ -42,6 +42,9 @@
   --input: 210 20% 90%;
   --ring: 173 80% 40%;
 
+  --placeholder-color: #676F7E;
+  --focus-ring-color: #2F3032;
+
   --radius: 0.625rem;
 
   /* Custom tokens */
@@ -60,7 +63,7 @@
   --sidebar-ring: 217.2 91.2% 59.8%;
 }
 
-[data-theme="dashboard"] .dark {
+/* [data-theme="dashboard"] .dark {
   --background: 220 25% 8%;
   --foreground: 210 20% 98%;
 
@@ -101,7 +104,7 @@
   --sidebar-accent-foreground: 240 4.8% 95.9%;
   --sidebar-border: 240 3.7% 15.9%;
   --sidebar-ring: 217.2 91.2% 59.8%;
-}
+} */
 
 @theme inline {
   --color-background: hsl(var(--background));
@@ -377,6 +380,17 @@
 }
 
 [data-theme="dashboard"] #side-panel label {
-  display: inline-block;
+  display: flex;
+  align-items: center;
   margin-bottom: 8px;
+}
+
+[data-theme="dashboard"] input::placeholder, textarea::placeholder {
+  color: var(--placeholder-color, #676F7E);
+}
+
+[data-theme="dashboard"] input,
+[data-theme="dashboard"] textarea,
+[data-theme="dashboard"] select {
+  --tw-ring-color: var(--focus-ring-color, hsl(var(--ring)));
 }

@@ -31,6 +31,9 @@ export const Builder = ({ form }) => {
   const savedSettings = form?.settings || {};
   const savedSuccessMessage = form?.success_message || [];
 
+  // Separate state for is_public
+  const [isPublic, setIsPublic] = useState(form?.is_public ?? false);
+
   // Initialize state with saved data
   const [submitButtonText, setSubmitButtonText] = useState(
     savedFormData.submitButtonText || 'Надіслати'
@@ -43,7 +46,6 @@ export const Builder = ({ form }) => {
       headingColor: 'text-foreground',
       headingSize: 'medium',
       fontSize: 'medium',
-      formDisabled: true,
       stickyButton: false,
       accentColor: '#000000',
       inputColor: '#e5e7eb',
@@ -119,6 +121,7 @@ export const Builder = ({ form }) => {
   const debouncedSuccessBlocks = useDebounce(successBlocks, 3000);
   const debouncedFormSeo = useDebounce(formSeo, 3000);
   const debouncedDeliveryTargets = useDebounce(deliveryTargets, 3000);
+  const debouncedIsPublic = useDebounce(isPublic, 3000);
 
   // Функція для видалення зображень з R2
   const deleteImagesFromR2 = useCallback(async (fileNames) => {
@@ -209,13 +212,14 @@ export const Builder = ({ form }) => {
       successBlocks: successBlocks,
       formSeo: formSeo,
       deliveryTargets: deliveryTargets,
+      isPublic: isPublic,
     };
 
     const success = await saveToDatabase(currentData);
     if (success) {
       console.log('✅ Manual save completed');
     }
-  }, [hasUnsavedChanges, isSaving, formName, blocks, submitButtonText, formDesign, successBlocks, formSeo, deliveryTargets, saveToDatabase]);
+  }, [hasUnsavedChanges, isSaving, formName, blocks, submitButtonText, formDesign, successBlocks, formSeo, deliveryTargets, isPublic, saveToDatabase]);
 
   // FIXED: Auto-save effect - removed autoSave callback dependency
   useEffect(() => {
@@ -232,6 +236,7 @@ export const Builder = ({ form }) => {
       successBlocks: debouncedSuccessBlocks,
       formSeo: debouncedFormSeo,
       deliveryTargets: debouncedDeliveryTargets,
+      isPublic: debouncedIsPublic,
     };
 
     saveToDatabase(currentData);
@@ -243,6 +248,7 @@ export const Builder = ({ form }) => {
     debouncedSuccessBlocks, 
     debouncedFormSeo, 
     debouncedDeliveryTargets,
+    debouncedIsPublic,
     saveToDatabase
   ]);
 
@@ -252,7 +258,7 @@ export const Builder = ({ form }) => {
     if (!isInitialLoad.current && isDataLoaded.current) {
       setHasUnsavedChanges(true);
     }
-  }, [formName, blocks, submitButtonText, formDesign, successBlocks, formSeo, deliveryTargets]);
+  }, [formName, blocks, submitButtonText, formDesign, successBlocks, formSeo, deliveryTargets, isPublic]);
 
   // Save on page unload if there are unsaved changes
   useEffect(() => {
@@ -290,6 +296,11 @@ export const Builder = ({ form }) => {
       if (form.name) {
         setFormName(form.name);
       }
+
+      // Load is_public
+      if (form.is_public !== undefined) {
+        setIsPublic(form.is_public);
+      }
       
       if (formData.blocks) {
         setBlocks(formData.blocks);
@@ -326,8 +337,10 @@ export const Builder = ({ form }) => {
           headingColor: 'text-foreground',
           headingSize: 'medium',
           fontSize: 'medium',
-          formDisabled: true,
           stickyButton: false,
+          accentColor: '#000000',
+          inputColor: '#e5e7eb',
+          inputBgColor: 'transparent',
         },
         successBlocks: successMessage.length > 0 ? successMessage : [
           { 
@@ -356,6 +369,7 @@ export const Builder = ({ form }) => {
           viber: { enabled: false, handle: '' },
           instagram: { enabled: false, handle: '' },
         },
+        isPublic: form.is_public ?? false,
       };
       
       lastSaveDataRef.current = JSON.stringify(initialData);
@@ -693,6 +707,8 @@ export const Builder = ({ form }) => {
       onUpdateSeo={(updates) => setFormSeo((prev) => ({ ...prev, ...updates }))}
       deliveryTargets={deliveryTargets}
       onUpdateDeliveryTargets={(updates) => setDeliveryTargets((prev) => ({ ...prev, ...updates }))}
+      isPublic={isPublic}
+      onUpdateIsPublic={setIsPublic}
       hasLineItemsBlock={hasLineItemsBlock}
       onOpenSubmitSettings={handleSubmitButtonClick}
     />

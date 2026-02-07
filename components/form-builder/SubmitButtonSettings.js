@@ -85,8 +85,8 @@ export const SubmitButtonSettings = ({
         </div>
         
         {formDesign.stickyButton && (
-          <div className="p-3 bg-accent/50 rounded-lg">
-            <p className="text-xs text-muted-foreground">
+          <div className="p-3 bg-primary/30 opacity-85 rounded-lg">
+            <p className="text-xs">
               Коли є блок Позиції, кнопка показує загальну кількість і суму.
             </p>
           </div>

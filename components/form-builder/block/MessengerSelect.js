@@ -49,7 +49,7 @@ export const BlockMessengerSelect = ({
         <select
           className={cn(
             'flex h-10 w-full rounded-md border border-input bg-background pl-10 pr-3 py-2 text-sm appearance-none',
-            'ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+            'focus:outline-none focus:ring-2 focus:ring-ring',
             'cursor-pointer'
           )}
           value={currentValue}

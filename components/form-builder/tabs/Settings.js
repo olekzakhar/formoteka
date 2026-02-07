@@ -67,7 +67,7 @@ export const TabsSettings = ({
             'transition-smooth group'
           )}
         >
-          <span className="text-sm font-medium text-foreground">Кнопка надсилання</span>
+          <span className="text-sm font-medium text-foreground">Кнопка відправки</span>
           <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-smooth" />
         </button>
       )}

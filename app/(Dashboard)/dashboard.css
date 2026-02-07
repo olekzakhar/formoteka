@@ -391,6 +391,7 @@
 
 [data-theme="dashboard"] input,
 [data-theme="dashboard"] textarea,
-[data-theme="dashboard"] select {
+[data-theme="dashboard"] select,
+[data-theme="dashboard"] [role="combobox"] {
   --tw-ring-color: var(--focus-ring-color, hsl(var(--ring)));
 }

@@ -271,8 +271,9 @@
   color: var(--placeholder-color, #676F7E);
 }
 
-[data-theme="dashboard"] input,
-[data-theme="dashboard"] textarea,
-[data-theme="dashboard"] select {
+[data-theme="slug"] input,
+[data-theme="slug"] textarea,
+[data-theme="slug"] select,
+[data-theme="slug"] [role="combobox"] {
   --tw-ring-color: var(--focus-ring-color, hsl(var(--ring)));
 }

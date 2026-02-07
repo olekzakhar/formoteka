@@ -25,9 +25,9 @@ export const blockDefinitions = [
 export const getDefaultBlock = (type) => {
   const defaults = {
     heading: { label: 'Новий заголовок', showLabel: true },
-    paragraph: { label: 'Введіть текст тут...', showLabel: true },
-    'short-text': { label: 'Текст', placeholder: 'Введіть текст...', showLabel: true },
-    'long-text': { label: 'Довгий текст', placeholder: 'Введіть відповідь...', showLabel: true },
+    paragraph: { label: 'Введіть текст тут', showLabel: true },
+    'short-text': { label: 'Текст', placeholder: 'Введіть текст', showLabel: true },
+    'long-text': { label: 'Довгий текст', placeholder: 'Введіть відповідь', showLabel: true },
     email: { label: 'Електронна пошта', placeholder: 'твій@email.com', showLabel: true },
     number: { label: 'Число', placeholder: '0', showLabel: true },
     dropdown: { label: 'Випадаючий список', options: ['Варіант 1', 'Варіант 2', 'Варіант 3'], showLabel: true },

@@ -4,8 +4,12 @@
 
 import { blockDefinitions } from '@/data/block-definitions';
 import { GripVertical, Copy, Trash2, Image, Image as ImageIcon, Loader2 } from 'lucide-react';
-import { cn, getImageUrl } from '@/utils';
+import { cn, getImageUrl, getColor } from '@/utils';
 import { useState, useRef, useEffect } from 'react';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select } from '@/components/ui/select';
 import { BlockSlideshow } from '@/components/form-builder/block/Slideshow';
 import { BlockReviews } from '@/components/form-builder/block/Reviews';
 import { BlockFAQ } from '@/components/form-builder/block/FAQ';
@@ -14,6 +18,7 @@ import { BlockIcon } from '@/components/form-builder/block/Icon';
 import { BlockAvatar } from '@/components/form-builder/block/Avatar';
 import { BlockMessengerSelect } from '@/components/form-builder/block/MessengerSelect';
 import { BlockList } from '@/components/form-builder/block/List';
+import { BlockChoiceCard } from '@/components/form-builder/block/ChoiceCard';
 
 export const BlocksEditor = ({
   block,
@@ -28,6 +33,11 @@ export const BlocksEditor = ({
   dragHandleProps,
   headingColor = 'text-foreground',
   headingSize = 'text-xl',
+  inputColor,
+  inputBgColor,
+  inputTextColor,
+  formTextColor,
+  accentColor
 }) => {
   const definition = blockDefinitions.find((d) => d.type === block.type);
   const [isEditingLabel, setIsEditingLabel] = useState(false);
@@ -317,7 +327,9 @@ export const BlocksEditor = ({
               }}
             />
           </div>
-        );
+        )
+
+
       case 'spacer':
         return (
           <div 
@@ -326,21 +338,37 @@ export const BlocksEditor = ({
           >
             Spacer ({block.height || 32}px)
           </div>
-        );
+        )
+
+
       case 'image':
-        return renderImageGrid();
+        return renderImageGrid()
+
+
       case 'slideshow':
-        return <BlockSlideshow block={block} onUpdateBlock={onUpdateBlock} />;
+        return <BlockSlideshow block={block} onUpdateBlock={onUpdateBlock} />
+
+
       case 'reviews':
-        return <BlockReviews block={block} onUpdateBlock={onUpdateBlock} />;
+        return <BlockReviews block={block} onUpdateBlock={onUpdateBlock} />
+
+
       case 'faq':
-        return <BlockFAQ block={block} onUpdateBlock={onUpdateBlock} />;
+        return <BlockFAQ block={block} onUpdateBlock={onUpdateBlock} />
+
+
       case 'map':
-        return <BlockMap block={block} onUpdateBlock={onUpdateBlock} onRequestSelect={onSelect} />;
+        return <BlockMap block={block} onUpdateBlock={onUpdateBlock} onRequestSelect={onSelect} />
+
+
       case 'icon':
-        return <BlockIcon block={block} />;
+        return <BlockIcon block={block} />
+
+
       case 'list':
-        return <BlockList block={block} onUpdateBlock={onUpdateBlock} isEditable />;
+        return <BlockList block={block} onUpdateBlock={onUpdateBlock} isEditable />
+
+
       case 'avatar':
         const hasAvatarImage = Boolean(block.avatarImage);
         return (
@@ -378,31 +406,33 @@ export const BlocksEditor = ({
               </button>
             )}
           </div>
-        );
+        )
+
+
       case 'heading':
         const headingAlignClass = block.textAlign === 'center' ? 'text-center' : block.textAlign === 'right' ? 'text-right' : 'text-left';
-        return isEditingLabel ? (
-          <input
-            ref={labelInputRef}
-            type="text"
-            value={editLabelValue}
-            onChange={(e) => setEditLabelValue(e.target.value)}
-            onBlur={handleSaveLabel}
-            onKeyDown={handleLabelKeyDown}
-            className={cn("font-semibold bg-transparent outline-none w-full", headingSize, headingColor, headingAlignClass)}
-          />
-        ) : (
-          <h3
-            className={cn("font-semibold cursor-text", headingSize, headingColor, headingAlignClass)}
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelect();
-              setIsEditingLabel(true);
-            }}
-          >
-            {block.label}
-          </h3>
-        );
+        return isEditingLabel
+          ? <input
+              ref={labelInputRef}
+              type="text"
+              value={editLabelValue}
+              onChange={(e) => setEditLabelValue(e.target.value)}
+              onBlur={handleSaveLabel}
+              onKeyDown={handleLabelKeyDown}
+              className={cn("font-semibold bg-transparent outline-none w-full", headingSize, headingColor, headingAlignClass)}
+            />
+          : <h3
+              className={cn("font-semibold cursor-text", headingSize, headingColor, headingAlignClass)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect();
+                setIsEditingLabel(true);
+              }}
+            >
+              {block.label}
+            </h3>
+
+
       case 'paragraph':
         const paragraphAlignClass =
           block.textAlign === 'center'
@@ -410,267 +440,257 @@ export const BlocksEditor = ({
             : block.textAlign === 'right'
               ? 'text-right'
               : 'text-left';
-        return isEditingLabel ? (
-          <textarea
-            ref={textareaRef}
-            rows={1}
-            value={editLabelValue}
-            onChange={(e) => {
-              setEditLabelValue(e.target.value);
-              autoResizeTextarea();
-            }}
-            onFocus={autoResizeTextarea}
-            onBlur={handleSaveLabel}
-            onKeyDown={(e) => {
-              if (e.key === 'Escape') {
-                setEditLabelValue(block.label);
-                setIsEditingLabel(false);
-              }
-            }}
-            className={cn(
-              'bg-transparent outline-none w-full resize-none overflow-hidden block',
-              'leading-normal p-0 m-0 whitespace-pre-wrap break-words',
-              'opacity-80',
-              paragraphAlignClass
-            )}
-            style={{ lineHeight: '1.5' }}
-          />
-        ) : (
-          <p
-            className={cn('cursor-text whitespace-pre-wrap break-words', 'opacity-80', paragraphAlignClass)}
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelect();
-              setIsEditingLabel(true);
-            }}
-          >
-            {block.label}
-          </p>
-        );
+        return isEditingLabel
+          ? <textarea
+              ref={textareaRef}
+              rows={1}
+              value={editLabelValue}
+              onChange={(e) => {
+                setEditLabelValue(e.target.value);
+                autoResizeTextarea();
+              }}
+              onFocus={autoResizeTextarea}
+              onBlur={handleSaveLabel}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  setEditLabelValue(block.label);
+                  setIsEditingLabel(false);
+                }
+              }}
+              className={cn(
+                'bg-transparent outline-none w-full resize-none overflow-hidden block',
+                'leading-normal p-0 m-0 whitespace-pre-wrap break-words',
+                'opacity-80',
+                paragraphAlignClass
+              )}
+              style={{ lineHeight: '1.5' }}
+            />
+          : <p
+              className={cn('cursor-text whitespace-pre-wrap break-words', 'opacity-80', paragraphAlignClass)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect();
+                setIsEditingLabel(true);
+              }}
+            >
+              {block.label}
+            </p>
+
+
       case 'short-text':
       case 'email':
       case 'number':
         return (
           <div className="space-y-2">
             {showLabel && (
-              isEditingLabel ? (
-                <input
-                  ref={labelInputRef}
+              isEditingLabel
+                ? <input
+                    ref={labelInputRef}
+                    type="text"
+                    value={editLabelValue}
+                    onChange={(e) => setEditLabelValue(e.target.value)}
+                    onBlur={handleSaveLabel}
+                    onKeyDown={handleLabelKeyDown}
+                    className="block text-sm font-medium bg-transparent outline-none w-full p-0 border-0 leading-5"
+                  />
+                : <Label
+                    className="cursor-text"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onSelect()
+                      setIsEditingLabel(true)
+                    }}
+                  >
+                    {block.label}
+                    {block.required && <span className="text-destructive ml-1">*</span>}
+                  </Label>
+            )}
+
+            {isEditingPlaceholder
+              ? <Input
+                  ref={placeholderInputRef}
+                  className="w-full max-w-[300px]"
                   type="text"
-                  value={editLabelValue}
-                  onChange={(e) => setEditLabelValue(e.target.value)}
-                  onBlur={handleSaveLabel}
-                  onKeyDown={handleLabelKeyDown}
-                  className="text-sm font-medium text-foreground bg-transparent outline-none w-full p-0 border-0 block leading-5"
+                  value={editPlaceholderValue}
+                  onChange={(e) => setEditPlaceholderValue(e.target.value)}
+                  onBlur={handleSavePlaceholder}
+                  onKeyDown={handlePlaceholderKeyDown}
+                  style={{ 
+                    borderColor: inputColor || undefined, 
+                    backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined,
+                    color: inputTextColor || undefined,
+                    '--placeholder-color': getColor(inputTextColor) || undefined,
+                    '--focus-ring-color': accentColor || undefined
+                  }}
                 />
-              ) : (
-                <label
-                  className="text-sm font-medium text-foreground cursor-text block"
+              : <Input
+                  className="w-full max-w-[300px]"
+                  type="text"
+                  value=""
+                  placeholder={block.placeholder}
+                  style={{ 
+                    borderColor: inputColor || undefined, 
+                    backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined,
+                    color: inputTextColor || undefined,
+                    '--placeholder-color': getColor(inputTextColor) || undefined,
+                    '--focus-ring-color': accentColor || undefined
+                  }}
                   onClick={(e) => {
                     e.stopPropagation();
                     onSelect();
-                    setIsEditingLabel(true);
+                    setIsEditingPlaceholder(true);
                   }}
-                >
-                  {block.label}
-                  {block.required && <span className="text-destructive ml-1">*</span>}
-                </label>
-              )
-            )}
-            {isEditingPlaceholder ? (
-              <input
-                ref={placeholderInputRef}
-                type="text"
-                value={editPlaceholderValue}
-                onChange={(e) => setEditPlaceholderValue(e.target.value)}
-                onBlur={handleSavePlaceholder}
-                onKeyDown={handlePlaceholderKeyDown}
-                className="w-full max-w-[300px] px-3 py-2 rounded-md border border-input bg-input text-foreground outline-none"
-              />
-            ) : (
-              <input
-                type="text"
-                value=""
-                placeholder={block.placeholder}
-                className="w-full max-w-[300px] px-3 py-2 rounded-md border border-input bg-input text-foreground placeholder:text-muted-foreground focus:outline-none cursor-text"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onSelect();
-                  setIsEditingPlaceholder(true);
-                }}
-                readOnly
-              />
-            )}
+                  readOnly
+                />
+            }
           </div>
-        );
+        )
+
       case 'long-text':
         return (
           <div className="space-y-2">
             {showLabel && (
-              isEditingLabel ? (
-                <input
-                  ref={labelInputRef}
-                  type="text"
-                  value={editLabelValue}
-                  onChange={(e) => setEditLabelValue(e.target.value)}
-                  onBlur={handleSaveLabel}
-                  onKeyDown={handleLabelKeyDown}
-                  className="text-sm font-medium text-foreground bg-transparent outline-none w-full p-0 border-0 block leading-5"
+              isEditingLabel
+                ? <input
+                    ref={labelInputRef}
+                    type="text"
+                    value={editLabelValue}
+                    onChange={(e) => setEditLabelValue(e.target.value)}
+                    onBlur={handleSaveLabel}
+                    onKeyDown={handleLabelKeyDown}
+                    className="block text-sm font-medium bg-transparent outline-none w-full p-0 border-0 leading-5"
+                  />
+                : <Label
+                    className="cursor-text"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelect();
+                      setIsEditingLabel(true);
+                    }}
+                  >
+                    {block.label}
+                    {block.required && <span className="text-destructive ml-1">*</span>}
+                  </Label>
+            )}
+
+            {isEditingPlaceholder
+              ? <Textarea
+                  ref={placeholderInputRef}
+                  className="resize-none"
+                  value={editPlaceholderValue}
+                  onChange={(e) => setEditPlaceholderValue(e.target.value)}
+                  onBlur={handleSavePlaceholder}
+                  onKeyDown={handlePlaceholderKeyDown}
+                  style={{ 
+                    borderColor: inputColor || undefined, 
+                    backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined,
+                    color: inputTextColor || undefined,
+                    '--placeholder-color': getColor(inputTextColor) || undefined,
+                    '--focus-ring-color': accentColor || undefined
+                  }}
                 />
-              ) : (
-                <label
-                  className="text-sm font-medium text-foreground cursor-text block"
+              : <Textarea
+                  placeholder={block.placeholder}
+                  className="resize-none"
+                  style={{ 
+                    borderColor: inputColor || undefined, 
+                    backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined,
+                    color: inputTextColor || undefined,
+                    '--placeholder-color': getColor(inputTextColor) || undefined,
+                    '--focus-ring-color': accentColor || undefined
+                  }}
                   onClick={(e) => {
                     e.stopPropagation();
                     onSelect();
-                    setIsEditingLabel(true);
+                    setIsEditingPlaceholder(true);
                   }}
-                >
-                  {block.label}
-                  {block.required && <span className="text-destructive ml-1">*</span>}
-                </label>
-              )
-            )}
-            {isEditingPlaceholder ? (
-              <input
-                ref={placeholderInputRef}
-                type="text"
-                value={editPlaceholderValue}
-                onChange={(e) => setEditPlaceholderValue(e.target.value)}
-                onBlur={handleSavePlaceholder}
-                onKeyDown={handlePlaceholderKeyDown}
-                className="w-full px-3 py-2 rounded-md border border-input bg-input text-foreground outline-none"
-              />
-            ) : (
-              <textarea
-                placeholder={block.placeholder}
-                rows={3}
-                className="w-full px-3 py-2 rounded-md border border-input bg-input text-foreground placeholder:text-muted-foreground focus:outline-none resize-none cursor-text"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onSelect();
-                  setIsEditingPlaceholder(true);
-                }}
-                readOnly
-              />
-            )}
+                  readOnly
+                />
+            }
           </div>
-        );
+        )
+
       case 'dropdown':
         return (
           <div className="space-y-2">
             {showLabel && (
-              isEditingLabel ? (
-                <input
-                  ref={labelInputRef}
-                  type="text"
-                  value={editLabelValue}
-                  onChange={(e) => setEditLabelValue(e.target.value)}
-                  onBlur={handleSaveLabel}
-                  onKeyDown={handleLabelKeyDown}
-                  className="text-sm font-medium text-foreground bg-transparent outline-none w-full p-0 border-0 block leading-5"
-                />
-              ) : (
-                <label
-                  className="text-sm font-medium text-foreground cursor-text block"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSelect();
-                    setIsEditingLabel(true);
-                  }}
-                >
-                  {block.label}
-                  {block.required && <span className="text-destructive ml-1">*</span>}
-                </label>
-              )
+              isEditingLabel
+                ? <input
+                    ref={labelInputRef}
+                    type="text"
+                    value={editLabelValue}
+                    onChange={(e) => setEditLabelValue(e.target.value)}
+                    onBlur={handleSaveLabel}
+                    onKeyDown={handleLabelKeyDown}
+                    className="block text-sm font-medium bg-transparent outline-none w-full p-0 border-0 leading-5"
+                  />
+                : <Label
+                    className="cursor-text"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelect();
+                      setIsEditingLabel(true);
+                    }}
+                  >
+                    {block.label}
+                    {block.required && <span className="text-destructive ml-1">*</span>}
+                  </Label>
             )}
-            <select
-              className="w-full max-w-[300px] px-3 py-2 rounded-md border border-input bg-input text-muted-foreground"
-              disabled
-            >
-              <option>Select an option...</option>
-              {block.options?.map((opt, i) => (
-                <option key={i}>{opt}</option>
-              ))}
-            </select>
+
+            <Select
+              placeholder={block?.placeholder || 'Оберіть варіант...'}
+              options={block?.options}
+              className="w-full max-w-[300px]"
+              style={{ 
+                borderColor: inputColor || undefined, 
+                backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined,
+                color: inputTextColor || undefined,
+                '--placeholder-color': getColor(inputTextColor) || undefined,
+                '--focus-ring-color': getColor(accentColor, 0.7) || undefined
+              }}
+            />
           </div>
-        );
+        )
+
+
       case 'checkbox':
-        return (
-          <div className="space-y-2">
-            {showLabel && (
-              isEditingLabel ? (
-                <input
-                  ref={labelInputRef}
-                  type="text"
-                  value={editLabelValue}
-                  onChange={(e) => setEditLabelValue(e.target.value)}
-                  onBlur={handleSaveLabel}
-                  onKeyDown={handleLabelKeyDown}
-                  className="text-sm font-medium text-foreground bg-transparent outline-none w-full p-0 border-0 block leading-5"
-                />
-              ) : (
-                <label
-                  className="text-sm font-medium text-foreground cursor-text block"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSelect();
-                    setIsEditingLabel(true);
-                  }}
-                >
-                  {block.label}
-                  {block.required && <span className="text-destructive ml-1">*</span>}
-                </label>
-              )
-            )}
-            <div className="space-y-1.5">
-              {block.options?.map((opt, i) => (
-                <label key={i} className="flex items-center gap-2 text-sm text-foreground">
-                  <input type="checkbox" className="rounded border-input" disabled />
-                  {opt}
-                </label>
-              ))}
-            </div>
-          </div>
-        );
       case 'radio':
         return (
           <div className="space-y-2">
             {showLabel && (
-              isEditingLabel ? (
-                <input
-                  ref={labelInputRef}
-                  type="text"
-                  value={editLabelValue}
-                  onChange={(e) => setEditLabelValue(e.target.value)}
-                  onBlur={handleSaveLabel}
-                  onKeyDown={handleLabelKeyDown}
-                  className="text-sm font-medium text-foreground bg-transparent outline-none w-full p-0 border-0 block leading-5"
-                />
-              ) : (
-                <label
-                  className="text-sm font-medium text-foreground cursor-text block"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSelect();
-                    setIsEditingLabel(true);
-                  }}
-                >
-                  {block.label}
-                  {block.required && <span className="text-destructive ml-1">*</span>}
-                </label>
-              )
+              isEditingLabel
+                ? <input
+                    ref={labelInputRef}
+                    type="text"
+                    value={editLabelValue}
+                    onChange={(e) => setEditLabelValue(e.target.value)}
+                    onBlur={handleSaveLabel}
+                    onKeyDown={handleLabelKeyDown}
+                    className="block text-sm font-medium bg-transparent outline-none w-full p-0 border-0 leading-5"
+                  />
+                : <Label
+                    className="cursor-text"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelect();
+                      setIsEditingLabel(true);
+                    }}
+                  >
+                    {block.label}
+                    {block.required && <span className="text-destructive ml-1">*</span>}
+                  </Label>
             )}
-            <div className="space-y-1.5">
-              {block.options?.map((opt, i) => (
-                <label key={i} className="flex items-center gap-2 text-sm text-foreground">
-                  <input type="radio" name={block.id} className="border-input" disabled />
-                  {opt}
-                </label>
-              ))}
-            </div>
+
+            <BlockChoiceCard
+              block={block}
+              onUpdateBlock={onUpdateBlock}
+              isEditable
+              inputColor={inputColor}
+            />
           </div>
-        );
+        )
+
+
       case 'line-items':
         const lineItems = block.lineItems || [];
         const layout = block.lineItemsLayout || 'grid-2';
@@ -679,10 +699,10 @@ export const BlocksEditor = ({
           return (
             <div className="space-y-2">
               {showLabel && (
-                <label className="text-sm font-medium text-foreground block">
+                <Label className="cursor-text">
                   {block.label}
                   {block.required && <span className="text-destructive ml-1">*</span>}
-                </label>
+                </Label>
               )}
               <div className="p-4 border-2 border-dashed border-border rounded-lg bg-muted/30 text-center">
                 <p className="text-sm text-muted-foreground">
@@ -695,22 +715,33 @@ export const BlocksEditor = ({
 
         // Render actual Line items
         if (layout === 'list') {
+          // Determine if form text color is light (white) or dark (black)
+          // formTextColor could be 'text-[#ffffff]', 'text-white', 'text-foreground', etc.
+          const isLightText = formTextColor?.includes('#fff') || 
+                              formTextColor?.includes('white') || 
+                              formTextColor?.includes('slate-100') ||
+                              formTextColor?.includes('slate-50');
+          
+          // For dark text colors, use black with opacity; for light text colors, use white with opacity
+          const infoBgColor = isLightText 
+            ? 'white/[0.05]'
+            : 'black/[0.03]'
+
           return (
             <div className="space-y-2">
               {showLabel && (
-                <label className="text-sm font-medium text-foreground block">
+                <Label className="cursor-text">
                   {block.label}
                   {block.required && <span className="text-destructive ml-1">*</span>}
-                </label>
+                </Label>
               )}
               <div className="space-y-2">
                 {lineItems.map((lineItem) => (
                   <div
                     key={lineItem.id}
-                    className="flex rounded-lg border border-border bg-background overflow-hidden"
+                    className="flex items-stretch gap-0 rounded-lg cursor-pointer transition-all overflow-hidden relative"
                   >
-                    {/* Full height image, left aligned, no margin */}
-                    <div className="w-20 h-20 bg-muted flex-shrink-0 overflow-hidden">
+                    <div className="w-20 h-20 bg-muted flex-shrink-0 rounded-lg overflow-hidden relative">
                       {lineItem.images[0] ? (
                         <img
                           src={lineItem.images[0]}
@@ -723,9 +754,15 @@ export const BlocksEditor = ({
                         </div>
                       )}
                     </div>
-                    <div className="flex-1 min-w-0 p-3 flex flex-col justify-start">
-                      <h4 className="font-medium text-foreground truncate">{lineItem.name}</h4>
-                      <p className="text-sm text-muted-foreground">${lineItem.price.toFixed(2)}</p>
+                    <div className={`flex-1 min-w-0 flex items-center px-3 py-2 ml-2 bg-${infoBgColor} rounded-[10px] transition-all duration-200`}>
+                      <div>
+                        <h4 className="font-semibold text-base truncate leading-[1.2]">
+                          {lineItem.name}
+                        </h4>
+                        <p className="text-sm opacity-70">
+                          ${lineItem.price.toFixed(2)}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -739,18 +776,18 @@ export const BlocksEditor = ({
         return (
           <div className="space-y-2">
             {showLabel && (
-              <label className="text-sm font-medium text-foreground block">
+              <Label className="cursor-text">
                 {block.label}
                 {block.required && <span className="text-destructive ml-1">*</span>}
-              </label>
+              </Label>
             )}
             <div className={cn('grid gap-4', gridCols)}>
               {lineItems.map((lineItem) => (
                 <div
                   key={lineItem.id}
-                  className="rounded-lg border border-border overflow-hidden bg-background"
+                  className="rounded-lg overflow-hidden cursor-pointer transition-all relative"
                 >
-                  <div className="aspect-square bg-muted relative">
+                  <div className="aspect-square bg-muted relative rounded-lg overflow-hidden">
                     {lineItem.images[0] ? (
                       <img
                         src={lineItem.images[0]}
@@ -763,56 +800,67 @@ export const BlocksEditor = ({
                       </div>
                     )}
                   </div>
-                  <div className="p-3">
-                    <h4 className="font-medium text-foreground truncate text-sm">{lineItem.name}</h4>
-                    <p className="text-sm text-muted-foreground">${lineItem.price.toFixed(2)}</p>
+                  <div className="mt-1 px-3 py-2 rounded-[10px] transition-all duration-200">
+                    <h4 className="font-semibold text-base break-words leading-[1.2]">
+                      {lineItem.name}
+                    </h4>
+                    <p className="text-sm mt-0.5 opacity-70">
+                      ${lineItem.price.toFixed(2)}
+                    </p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        );
+        )
+
+
       case 'date':
         return (
           <div className="space-y-2">
             {showLabel && (
-              isEditingLabel ? (
-                <input
-                  ref={labelInputRef}
-                  type="text"
-                  value={editLabelValue}
-                  onChange={(e) => setEditLabelValue(e.target.value)}
-                  onBlur={handleSaveLabel}
-                  onKeyDown={handleLabelKeyDown}
-                  className="text-sm font-medium text-foreground bg-transparent outline-none w-full p-0 border-0 block leading-5"
-                />
-              ) : (
-                <label
-                  className="text-sm font-medium text-foreground cursor-text block"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSelect();
-                    setIsEditingLabel(true);
-                  }}
-                >
-                  {block.label}
-                  {block.required && <span className="text-destructive ml-1">*</span>}
-                </label>
-              )
+              isEditingLabel
+                ? <input
+                    ref={labelInputRef}
+                    type="text"
+                    value={editLabelValue}
+                    onChange={(e) => setEditLabelValue(e.target.value)}
+                    onBlur={handleSaveLabel}
+                    onKeyDown={handleLabelKeyDown}
+                    className="block text-sm font-medium bg-transparent outline-none w-full p-0 border-0 leading-5"
+                  />
+                : <Label
+                    className="cursor-text"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelect();
+                      setIsEditingLabel(true);
+                    }}
+                  >
+                    {block.label}
+                    {block.required && <span className="text-destructive ml-1">*</span>}
+                  </Label>
             )}
+
             <input
               type="date"
-              className="w-full max-w-[300px] px-3 py-2 rounded-md border border-input bg-input text-muted-foreground"
+              className="w-full max-w-[300px] px-3 py-2 rounded-md border text-muted-foreground"
+              style={{ 
+                borderColor: inputColor || undefined, 
+                backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined 
+              }}
               disabled
             />
           </div>
-        );
+        )
+
+
       case 'messenger-select':
         return <BlockMessengerSelect block={block} />;
       default:
-        return <div className="text-muted-foreground">Невідомий тип блоку</div>;
+        return <div className="text-muted-foreground">Невідомий тип блоку</div>
     }
-  };
+  }
 
   // messenger-select: draggable only (no duplicate/delete)
   const showDuplicateDelete = block.type !== 'messenger-select';
@@ -838,7 +886,7 @@ export const BlocksEditor = ({
       {/* gap-0.5 */}
       <div
         className={cn(
-          'absolute -left-9 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-[1px]',
+          'absolute -left-9 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-0.5',
           'opacity-0 transition-smooth group-hover:opacity-100'
         )}
       >

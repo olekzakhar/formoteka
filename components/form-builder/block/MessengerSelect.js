@@ -1,28 +1,28 @@
 'use client'
 
 import { cn } from '@/utils';
-// import { Instagram } from 'lucide-react';
-import { Send, MessageCircle } from 'lucide-react';
+import { Send, MessageCircle, ChevronDown } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { useState } from 'react';
 
 const messengerIcons = {
   telegram: Send,
   viber: MessageCircle,
-  // instagram: Instagram,
-};
+  // instagram: Instagram
+}
 
 const messengerNames = {
   telegram: 'Telegram',
   viber: 'Viber',
-  // instagram: 'Instagram',
-};
+  // instagram: 'Instagram'
+}
 
 export const BlockMessengerSelect = ({
   block,
   isPreview = false,
   selectedMessenger,
   onSelectMessenger,
+  style,
 }) => {
   const options = block.messengerOptions || [];
   const [localSelected, setLocalSelected] = useState(options[0]?.type || '');
@@ -37,21 +37,26 @@ export const BlockMessengerSelect = ({
   if (options.length === 0) {
     return (
       <div className="p-4 border border-dashed border-border rounded-lg text-center text-muted-foreground text-sm">
-        No messengers configured
+        Месенджери не налаштовані
       </div>
-    );
+    )
   }
 
   return (
     <div className="space-y-2">
-      <Label className="text-foreground">{block.label || 'Choose how to receive response'}</Label>
+      <Label className={!isPreview ? 'cursor-text' : ''}>
+        {block.label || 'Оберіть спосіб отримання відповіді'}
+      </Label>
       <div className="relative w-full max-w-[300px]">
         <select
           className={cn(
-            'flex h-10 w-full rounded-md border border-input bg-background pl-10 pr-3 py-2 text-sm appearance-none',
-            'focus:outline-none focus:ring-2 focus:ring-ring',
-            'cursor-pointer'
+            'flex h-[42px] w-full items-center justify-between rounded-md border border-input bg-input pl-9 pr-3 py-2 text-base',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+            'disabled:cursor-not-allowed disabled:opacity-50',
+            'appearance-none cursor-pointer',
+            'xs:text-sm'
           )}
+          style={style}
           value={currentValue}
           onChange={(e) => handleChange(e.target.value)}
         >
@@ -67,18 +72,19 @@ export const BlockMessengerSelect = ({
         </select>
         {/* Icon overlay */}
         {currentValue && messengerIcons[currentValue] && (
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+          <div 
+            className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+            style={{ color: style?.color }}
+          >
             {(() => {
               const Icon = messengerIcons[currentValue];
-              return <Icon className="w-4 h-4 text-muted-foreground" />;
+              return <Icon className="w-4 h-4" />;
             })()}
           </div>
         )}
         {/* Dropdown arrow */}
         <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-          <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
+          <ChevronDown className="h-4 w-4 opacity-80" />
         </div>
       </div>
     </div>

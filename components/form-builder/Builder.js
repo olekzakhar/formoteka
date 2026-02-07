@@ -617,7 +617,7 @@ export const Builder = ({ form }) => {
           const newBlock = {
             id: `block-${Date.now()}-messenger`,
             type: 'messenger-select',
-            label: 'Choose how to receive response',
+            label: 'Замовити через',
             messengerOptions: enabledMessengers,
           };
           return [...prev, newBlock];

@@ -107,7 +107,7 @@ export const SidePanel = ({
   }
 
   const activeTabClasses = 'border-b-2 bg-primary/[0.25] border-black/[0.8]! text-black/[0.8]'
-  const noActiveTabClasses = 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+  const noActiveTabClasses = 'text-muted-foreground hover:text-black/[0.8] hover:bg-muted/50'
 
   // Render main tabs (Add + Design + Settings)
   return (

@@ -118,70 +118,12 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
 
   // Helper to determine if a color is light or dark (for custom colors)
   const isLightColor = (hex) => {
-    const rgb = parseInt(hex.slice(1), 16);
-    const r = (rgb >> 16) & 0xff;
-    const g = (rgb >> 8) & 0xff;
-    const b = (rgb >> 0) & 0xff;
-    const luma = 0.299 * r + 0.587 * g + 0.114 * b;
-    return luma > 128;
-  };
-
-  const handleCustomBgColorChange = (color) => {
-    setCustomBgColor(color);
-    if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
-      // Auto-set text color based on background brightness
-      const textColorValue = isLightColor(color) ? 'text-slate-900' : 'text-slate-100';
-      // Preserve custom colors if they exist, otherwise use auto text color
-      const updatedHeadingColor = isCustomHeading ? design.headingColor : textColorValue;
-      const updatedTextColor = isCustomText ? design.textColor : textColorValue;
-      onUpdateDesign({
-        backgroundColor: `bg-[${color}]`,
-        textColor: updatedTextColor,
-        headingColor: updatedHeadingColor
-      });
-    }
-  };
-
-  const handleCustomTextColorChange = (color) => {
-    setCustomTextColor(color);
-    if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
-      onUpdateDesign({ textColor: `text-[${color}]` });
-    }
-  };
-
-  const handleCustomHeadingColorChange = (color) => {
-    setCustomHeadingColor(color);
-    if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
-      onUpdateDesign({ headingColor: `text-[${color}]` });
-    }
-  };
-
-  const handleAccentColorChange = (color) => {
-    setCustomAccentColor(color)
-    if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
-      onUpdateDesign({ accentColor: color })
-    }
-  }
-
-  const handleInputColorChange = (color) => {
-    setCustomInputColor(color)
-    if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
-      onUpdateDesign({ inputColor: color })
-    }
-  }
-
-  const handleInputBgColorChange = (color) => {
-    setCustomInputBgColor(color)
-    if (/^#[0-9A-Fa-f]{6}$/.test(color) || color === 'transparent') {
-      onUpdateDesign({ inputBgColor: color })
-    }
-  }
-
-  const handleInputTextColorChange = (color) => {
-    setCustomInputTextColor(color)
-    if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
-      onUpdateDesign({ inputTextColor: color })
-    }
+    const rgb = parseInt(hex.slice(1), 16)
+    const r = (rgb >> 16) & 0xff
+    const g = (rgb >> 8) & 0xff
+    const b = (rgb >> 0) & 0xff
+    const luma = 0.299 * r + 0.587 * g + 0.114 * b
+    return luma > 128
   }
 
   return (

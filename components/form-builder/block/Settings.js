@@ -53,9 +53,9 @@ const SlideshowPositionSettings = ({ block, onUpdate }) => {
 
   return (
     <div className="space-y-2">
-      <label className="text-sm font-medium text-foreground">Adjust Photo Positions</label>
+      <label className="text-sm font-medium text-foreground">Налаштувати положення фото</label>
       <p className="text-xs text-muted-foreground mb-2">
-        Click and drag on a photo to adjust which part is visible
+        Перетягніть фото, щоб обрати видиму частину
       </p>
       <div className="space-y-3 max-h-[300px] overflow-y-auto">
         {block.slideshowImages?.map((img, i) => {
@@ -143,7 +143,7 @@ const ImageSettings = ({ block, onUpdate }) => {
           {[1, 2, 3, 4, 5].map((count) => (
             <Button
               key={count}
-              onClick={() => handleImageCountChange(count)}
+              onClick={() => onUpdate({ imageCount })}
               size="black-editor"
               variant={(block.imageCount || 1) === count ? 'black-editor' : 'outline'}
             >
@@ -1089,51 +1089,42 @@ export const BlockSettings = ({ block, onUpdate }) => {
       {(block.blockWidth === '1/2' || block.blockWidth === '1/3') && (
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">Вертикальне вирівнювання</label>
-          <div className="flex gap-2">
-            {([
-              { value: 'top', label: 'Top' },
-              { value: 'center', label: 'Center' },
-              { value: 'bottom', label: 'Bottom' },
-            ]).map((option) => (
-              <Button
-                key={option.value}
-                onClick={() => onUpdate({ blockVerticalAlign: option.value })}
-                size="black-editor"
-                variant={(block.blockVerticalAlign || 'top') === option.value ? 'black-editor' : 'outline'}
-              >
-                {option.label}
-              </Button>
-            ))}
+          <div className="flex items-center gap-3">
+            <div className="grid grid-cols-3 gap-1 p-2 rounded-lg border border-border bg-muted/30">
+              {(['top', 'center', 'bottom']).map((vertical) => (
+                (['start', 'center', 'end']).map((horizontal) => {
+                  const isSelected = 
+                    (block.blockVerticalAlign || 'top') === vertical && 
+                    (block.blockHorizontalAlign || 'start') === horizontal;
+                  return (
+                    <button
+                      key={`${vertical}-${horizontal}`}
+                      onClick={() => onUpdate({ 
+                        blockVerticalAlign: vertical, 
+                        blockHorizontalAlign: horizontal 
+                      })}
+                      className={cn(
+                        'w-5 h-5 rounded-sm flex items-center justify-center transition-smooth',
+                        isSelected
+                          ? 'bg-primary'
+                          : 'bg-muted hover:bg-muted-foreground/20'
+                      )}
+                    >
+                      <span 
+                        className={cn(
+                          'w-2 h-2 rounded-full transition-smooth',
+                          isSelected ? 'bg-primary-foreground' : 'bg-muted-foreground/50'
+                        )}
+                      />
+                    </button>
+                  );
+                })
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground flex-1">
+              Вирівнювання блоку в межах простору
+            </p>
           </div>
-          <p className="text-xs text-muted-foreground">
-            Вирівнювання в ряду для блоків різної висоти
-          </p>
-        </div>
-      )}
-
-      {/* Horizontal Alignment - for 1/2 and 1/3 blocks */}
-      {(block.blockWidth === '1/2' || block.blockWidth === '1/3') && (
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Горизонтальне вирівнювання</label>
-          <div className="flex gap-2">
-            {([
-              { value: 'start', label: 'Start' },
-              { value: 'center', label: 'Center' },
-              { value: 'end', label: 'End' },
-            ]).map((option) => (
-              <Button
-                key={option.value}
-                onClick={() => onUpdate({ blockHorizontalAlign: option.value })}
-                size="black-editor"
-                variant={(block.blockHorizontalAlign || 'start') === option.value ? 'black-editor' : 'outline'}
-              >
-                {option.label}
-              </Button>
-            ))}
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Вирівнювання блоку в межах простору
-          </p>
         </div>
       )}
 
@@ -1927,31 +1918,133 @@ export const BlockSettings = ({ block, onUpdate }) => {
         </div>
       )}
 
-      {/* Options editor */}
+      {/* Choice block layout settings (checkbox/radio) */}
+      {(block.type === 'checkbox' || block.type === 'radio') && (
+        <>
+          {/* Columns per row - always visible */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Колонки</label>
+            <div className="flex gap-2">
+              {([1, 2, 3, 4]).map((cols) => (
+                <button
+                  key={cols}
+                  onClick={() => onUpdate({ choiceColumns: cols })}
+                  className={cn(
+                    'flex-1 px-3 py-2 rounded-lg border text-sm font-medium transition-smooth',
+                    (block.choiceColumns || 2) === cols
+                      ? 'border-primary bg-primary text-primary-foreground'
+                      : 'border-border text-foreground hover:border-primary/50'
+                  )}
+                >
+                  {cols}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Gap between options */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-medium text-foreground">Відступ</label>
+              <span className="text-xs text-muted-foreground">{block.choiceGap ?? 12}px</span>
+            </div>
+            <input
+              type="range"
+              min={2}
+              max={64}
+              value={block.choiceGap ?? 12}
+              onChange={(e) => onUpdate({ choiceGap: parseInt(e.target.value) })}
+              className="w-full"
+            />
+          </div>
+        </>
+      )}
+
+      {/* Options editor with images for checkbox/radio */}
       {hasOptions && (
         <div className="space-y-3">
           <label className="text-sm font-medium text-foreground">Опції</label>
-          <div className="space-y-2">
-            {block.options?.map((option, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={option}
-                  onChange={(e) => updateOption(index, e.target.value)}
-                  className={cn(
-                    'flex-1 px-3 py-2 rounded-md border border-input bg-background text-foreground',
-                    'focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary',
-                    'transition-smooth text-sm'
+          <div className="space-y-3">
+            {block.options?.map((option, index) => {
+              const optionImage = block.optionImages?.[index] || '';
+              const isChoiceBlock = block.type === 'checkbox' || block.type === 'radio';
+
+              return (
+                <div key={index} className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={option}
+                      onChange={(e) => updateOption(index, e.target.value)}
+                      className={cn(
+                        'flex-1 px-3 py-2 rounded-md border border-input bg-background text-foreground',
+                        'focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary',
+                        'transition-smooth text-sm'
+                      )}
+                    />
+                    <button
+                      onClick={() => removeOption(index)}
+                      className="p-2 rounded-md hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-smooth"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  {/* Image upload for choice blocks - always shown */}
+                  {isChoiceBlock && (
+                    <div className="ml-0">
+                      {optionImage
+                        ? <div className="relative w-20 h-14 rounded-lg overflow-hidden border border-border group">
+                            <img
+                              src={optionImage}
+                              alt={option}
+                              className="w-full h-full object-cover"
+                            />
+                            <button
+                              onClick={() => {
+                                const newImages = [...(block.optionImages || [])]
+                                newImages[index] = ''
+                                onUpdate({ optionImages: newImages })
+                              }}
+                              className="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/60 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        : <button
+                            onClick={() => {
+                              const input = document.createElement('input')
+                              input.type = 'file'
+                              input.accept = 'image/*'
+                              input.onchange = (e) => {
+                                const file = (e.target).files?.[0]
+                                if (file) {
+                                  const reader = new FileReader()
+                                  reader.onload = () => {
+                                    const newImages = [...(block.optionImages || [])]
+                                    newImages[index] = reader.result
+                                    onUpdate({ optionImages: newImages, choiceLayout: 'horizontal' })
+                                  }
+                                  reader.readAsDataURL(file)
+                                }
+                              };
+                              input.click()
+                            }}
+                            className={cn(
+                              'flex items-center gap-1.5 px-2 py-1 rounded-md text-xs',
+                              'border border-dashed border-border hover:border-primary/50',
+                              'text-muted-foreground hover:text-foreground transition-smooth'
+                            )}
+                          >
+                            <Plus className="w-3 h-3" />
+                            Додати зображення
+                          </button>
+                      }
+                    </div>
                   )}
-                />
-                <button
-                  onClick={() => removeOption(index)}
-                  className="p-2 rounded-md hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-smooth"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            ))}
+                </div>
+              )
+            })}
           </div>
           <button
             onClick={addOption}

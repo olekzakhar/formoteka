@@ -3,7 +3,6 @@
 import { BlocksEditor } from '@/components/form-builder/BlocksEditor';
 import { Plus, ArrowRight, CheckCircle, Settings as SettingsIcon, Monitor, Smartphone } from 'lucide-react';
 import { cn } from '@/utils';
-// import { FormDesign } from '@/components/form-builder/tabs/Design';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button'
 import { OrderButton } from '@/components/ui/OrderButton'
@@ -93,6 +92,8 @@ export const Canvas = ({
   const [draggedSuccessBlockIndex, setDraggedSuccessBlockIndex] = useState(null);
   const [isExternalDragging, setIsExternalDragging] = useState(false);
   const [previewMode, setPreviewMode] = useState('desktop');
+  // For inline blocks: track which side of the block we're hovering
+  const [inlineDropInfo, setInlineDropInfo] = useState(null);
   const dragGhostRef = useRef(null);
 
   useEffect(() => {
@@ -116,6 +117,7 @@ export const Canvas = ({
       setIsExternalDragging(false);
       setDropIndex(null);
       setSuccessDropIndex(null);
+      setInlineDropInfo(null);
     };
 
     window.addEventListener('dragend', reset);
@@ -216,6 +218,7 @@ export const Canvas = ({
   const handleBlockDragEnd = () => {
     setDraggedBlockIndex(null);
     setDropIndex(null);
+    setInlineDropInfo(null);
     setIsExternalDragging(false);
   };
 
@@ -286,6 +289,7 @@ export const Canvas = ({
     // Викликаємо onClearSelection тільки якщо є активний блок або success блок
     if (activeBlockId || activeSuccessBlockId) {
       onClearSelection()
+      onSelectSuccessBlock(null)
     }
   }
 
@@ -330,39 +334,76 @@ export const Canvas = ({
           "w-full mx-auto pt-2 pb-6 px-3 sm:px-6",
           previewMode === 'mobile' ? 'max-w-[375px]' : 'w-full max-w-4xl'
         )}>
-          {/* Preview Mode Toggle */}
-          <div className="flex justify-center mb-2">
-            <div className="inline-flex bg-white/20 rounded-lg p-1 border border-border">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setPreviewMode('desktop');
-                }}
-                className={cn(
-                  'p-2 rounded-md transition-smooth',
-                  previewMode === 'desktop'
-                    ? 'bg-muted text-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
-                )}
-                title="Десктопна версія"
-              >
-                <Monitor className="w-4 h-4" />
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setPreviewMode('mobile');
-                }}
-                className={cn(
-                  'p-2 rounded-md transition-smooth',
-                  previewMode === 'mobile'
-                    ? 'bg-muted text-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
-                )}
-                title="Мобільна версія"
-              >
-                <Smartphone className="w-4 h-4" />
-              </button>
+
+          <div className="relative justify-center flex gap-3.5">
+            {/* Pages Mode Toggle */}
+            <div className="flex justify-center mb-2 text-[12.5px] font-semibold">
+              <div className="inline-flex bg-white/25 rounded-lg p-[3px] border border-border">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPreviewMode('desktop');
+                  }}
+                  className={cn(
+                    'px-2.5 py-[5px] rounded-md transition-smooth',
+                    previewMode === 'desktop'
+                      ? 'bg-primary/[0.25] text-black/[0.8]'
+                      : 'text-muted-foreground hover:text-black/[0.8]'
+                  )}
+                >
+                  Форма
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPreviewMode('mobile');
+                  }}
+                  className={cn(
+                    'px-2.5 py-[5px] rounded-md transition-smooth',
+                    previewMode === 'mobile'
+                      ? 'bg-primary/[0.25] text-black/[0.8]'
+                      : 'text-muted-foreground hover:text-black/[0.8]'
+                  )}
+                >
+                  Після відправки
+                </button>
+              </div>
+            </div>
+
+            {/* Preview Mode Toggle */}
+            <div className="flex justify-center mb-2">
+              <div className="inline-flex bg-white/25 rounded-lg p-[3px] border border-border">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPreviewMode('desktop');
+                  }}
+                  className={cn(
+                    'px-2 py-[7px] rounded-md transition-smooth',
+                    previewMode === 'desktop'
+                      ? 'bg-primary/[0.25] text-black/[0.8]'
+                      : 'text-muted-foreground hover:text-black/[0.8]'
+                  )}
+                  title="Десктопна версія"
+                >
+                  <Monitor className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPreviewMode('mobile');
+                  }}
+                  className={cn(
+                    'px-2 py-[7px] rounded-md transition-smooth',
+                    previewMode === 'mobile'
+                      ? 'bg-primary/[0.25] text-black/[0.8]'
+                      : 'text-muted-foreground hover:text-black/[0.8]'
+                  )}
+                  title="Мобільна версія"
+                >
+                  <Smartphone className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           </div>
 
@@ -456,26 +497,43 @@ export const Canvas = ({
                             }[block.blockHorizontalAlign || 'start']
                           : '';
 
+                        const getInsertSideFromPointer = (e) => {
+                          const rect = (e.currentTarget).getBoundingClientRect()
+                          return e.clientX < rect.left + rect.width / 2 ? 'left' : 'right'
+                        }
+
                         const getInsertIndexFromPointer = (e) => {
-                          const rect = (e.currentTarget).getBoundingClientRect();
-                          const isBefore = e.clientX < rect.left + rect.width / 2;
-                          return isBefore ? index : index + 1;
-                        };
+                          const side = getInsertSideFromPointer(e)
+                          return side === 'left' ? index : index + 1
+                        }
 
                         const handleInlineDragOver = (e) => {
                           const insertIndex = getInsertIndexFromPointer(e);
+                          const side = getInsertSideFromPointer(e);
                           handleDragOver(e, insertIndex);
+                          // Track inline drop info for visual indicator
+                          if ((block.blockWidth === '1/2' || block.blockWidth === '1/3') && isDraggingBlocks) {
+                            setInlineDropInfo({ blockIndex: index, side });
+                          } else {
+                            setInlineDropInfo(null);
+                          }
                         };
 
                         const handleInlineDrop = (e) => {
                           const insertIndex = getInsertIndexFromPointer(e);
                           handleDrop(e, insertIndex);
+                          setInlineDropInfo(null);
                         };
+
+                        const isInlineBlock = block.blockWidth === '1/2' || block.blockWidth === '1/3';
+                        const showLeftIndicator = inlineDropInfo?.blockIndex === index && inlineDropInfo?.side === 'left' && isDraggingBlocks;
+                        const showRightIndicator = inlineDropInfo?.blockIndex === index && inlineDropInfo?.side === 'right' && isDraggingBlocks;
 
                         return (
                           <div
                             key={block.id}
                             className={cn(
+                              'relative',
                               widthClass,
                               verticalAlignClass,
                               horizontalAlignClass,
@@ -483,8 +541,14 @@ export const Canvas = ({
                             )}
                             onDragEnter={handleInlineDragOver}
                             onDragOver={handleInlineDragOver}
+                            onDragLeave={() => setInlineDropInfo(null)}
                             onDrop={handleInlineDrop}
                           >
+                            {/* Left drop indicator for inline blocks */}
+                            {isInlineBlock && showLeftIndicator && (
+                              <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-full z-10 -translate-x-2" />
+                            )}
+
                             <BlocksEditor
                               block={block}
                               isActive={activeBlockId === block.id}
@@ -499,12 +563,22 @@ export const Canvas = ({
                               onUpdateBlock={(updates) => onUpdateBlock(block.id, updates)}
                               headingColor={formDesign.headingColor || 'text-foreground'}
                               headingSize={headingSizeClass[formDesign.headingSize || 'medium']}
+                              inputColor={formDesign.inputColor}
+                              inputBgColor={formDesign.inputBgColor}
+                              inputTextColor={formDesign.inputTextColor}
+                              formTextColor={formDesign.textColor}
+                              accentColor={formDesign.accentColor}
                               dragHandleProps={{
                                 draggable: true,
                                 onDragStart: (e) => handleBlockDragStart(e, index),
                                 onDragEnd: handleBlockDragEnd,
                               }}
                             />
+
+                            {/* Right drop indicator for inline blocks */}
+                            {isInlineBlock && showRightIndicator && (
+                              <div className="absolute right-0 top-0 bottom-0 w-1 bg-primary rounded-full z-10 translate-x-2" />
+                            )}
 
                             {/* Drop zone after each block (only visible when dragging full-width blocks) */}
                             {(block.blockWidth || '1/1') === '1/1' && (
@@ -597,8 +671,15 @@ export const Canvas = ({
                   'rounded-xl transition-smooth p-3 bg-card border border-border',
                   isSubmitButtonSelected 
                     ? 'ring-2 ring-primary ring-offset-2' 
-                    : 'ring-0 group-hover/submit:ring-2 group-hover/submit:ring-border group-hover/submit:ring-offset-2'
+                    : 'ring-0 group-hover/submit:ring-2 group-hover/submit:ring-border group-hover/submit:ring-offset-2',
+                  bgColorHex && formDesign.backgroundColor,
+                  textColorHex && formDesign.textColor,
+                  fontSizeClass[formDesign.fontSize]
                 )}
+                style={{
+                  ...(!bgColorHex ? { backgroundColor: bgColorHex } : undefined),
+                  ...(!textColorHex ? { color: textColorHex } : undefined),
+                }}
               >
                 {/* <Button
                   variant="order"
@@ -640,8 +721,14 @@ export const Canvas = ({
           <div
             className={cn(
               "mt-8 rounded-2xl border border-border",
-              !bgColorHex && formDesign.backgroundColor)}
-            style={bgColorHex ? { backgroundColor: bgColorHex } : undefined}
+              bgColorHex && formDesign.backgroundColor,
+              textColorHex && formDesign.textColor,
+              fontSizeClass[formDesign.fontSize]
+            )}
+            style={{
+              ...(!bgColorHex ? { backgroundColor: bgColorHex } : undefined),
+              ...(!textColorHex ? { color: textColorHex } : undefined),
+            }}
           >
             <div className="py-8">
               {/* Success Page Blocks */}
@@ -721,6 +808,10 @@ export const Canvas = ({
                             onUpdateBlock={(updates) => onUpdateSuccessBlock(block.id, updates)}
                             headingColor={formDesign.headingColor || 'text-foreground'}
                             headingSize={headingSizeClass[formDesign.headingSize || 'medium']}
+                            inputColor={formDesign.inputColor}
+                            inputBgColor={formDesign.inputBgColor}
+                            inputTextColor={formDesign.inputTextColor}
+                            formTextColor={formDesign.textColor}
                             dragHandleProps={{
                               draggable: true,
                               onDragStart: (e) => handleSuccessBlockDragStart(e, index),

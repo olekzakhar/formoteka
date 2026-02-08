@@ -6,15 +6,16 @@ import { useState } from 'react';
 import { cn } from '@/utils';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { ColorPicker } from '@/components/form-builder/ColorPicker'
 
 // Background colors with associated text colors
 const backgroundColors = [
-  { value: 'bg-white', label: 'Білий', preview: 'bg-white', textColor: 'text-foreground' },
-  { value: 'bg-[#F9F8F7]', label: 'Молочний', preview: 'bg-[#F9F8F7]', textColor: 'text-slate-900' },
-  { value: 'bg-[#DAD6D3]', label: 'Піщаний', preview: 'bg-[#DAD6D3]', textColor: 'text-slate-900' },
-  { value: 'bg-[#BDC2C2]', label: 'Попелястий', preview: 'bg-[#BDC2C2]', textColor: 'text-slate-900' },
-  { value: 'bg-[#E7CBCB]', label: 'Пудровий', preview: 'bg-[#E7CBCB]', textColor: 'text-foreground' },
-  { value: 'bg-[#4B4913]', label: 'Оливковий', preview: 'bg-[#4B4913]', textColor: 'text-slate-900' },
+  { label: 'Білий', value: 'bg-white', preview: 'bg-white', textColor: 'text-foreground' },
+  { label: 'Молочний', value: 'bg-[#F9F8F7]', preview: 'bg-[#F9F8F7]', textColor: 'text-slate-900' },
+  { label: 'Піщаний', value: 'bg-[#DAD6D3]', preview: 'bg-[#DAD6D3]', textColor: 'text-slate-900' },
+  { label: 'Попелястий', value: 'bg-[#BDC2C2]', preview: 'bg-[#BDC2C2]', textColor: 'text-slate-900' },
+  { label: 'Пудровий', value: 'bg-[#E7CBCB]', preview: 'bg-[#E7CBCB]', textColor: 'text-foreground' },
+  { label: 'Оливковий', value: 'bg-[#4B4913]', preview: 'bg-[#4B4913]', textColor: 'text-slate-900' },
   // Dark backgrounds
   // { value: 'bg-slate-800', preview: 'bg-slate-800', textColor: 'text-slate-100' },
   // { value: 'bg-slate-900', preview: 'bg-slate-900', textColor: 'text-slate-100' },
@@ -22,17 +23,17 @@ const backgroundColors = [
 ]
 
 const headingColors = [
-  { value: 'text-foreground', label: 'Default', preview: 'bg-foreground' },
-  { value: 'text-slate-900', label: 'Dark', preview: 'bg-slate-900' },
-  { value: 'text-primary', label: 'Medium', preview: 'bg-primary' },
-  { value: 'text-slate-600', label: 'Primary', preview: 'bg-slate-600' },
+  { label: 'Default', value: 'text-foreground', preview: 'bg-foreground' },
+  { label: 'Dark', value: 'text-slate-900', preview: 'bg-slate-900' },
+  { label: 'Medium', value: 'text-primary', preview: 'bg-primary' },
+  { label: 'Primary', value: 'text-slate-600', preview: 'bg-slate-600' },
 ]
 
 const textColors = [
-  { value: 'text-foreground', label: 'Default', preview: 'bg-foreground' },
-  { value: 'text-slate-900', label: 'Dark', preview: 'bg-slate-900' },
-  { value: 'text-[#666666]', label: 'Medium', preview: 'bg-[#666666]' },
-  { value: 'text-primary', label: 'Primary', preview: 'bg-primary' },
+  { label: 'Default', value: 'text-foreground', preview: 'bg-foreground' },
+  { label: 'Dark', value: 'text-slate-900', preview: 'bg-slate-900' },
+  { label: 'Medium', value: 'text-[#666666]', preview: 'bg-[#666666]' },
+  { label: 'Primary', value: 'text-primary', preview: 'bg-primary' },
 ]
 
 const headingSizes = [
@@ -42,42 +43,78 @@ const headingSizes = [
   { value: 'xlarge', label: 'XL' },
 ]
 
-const textSizes = [
+const fontSizes = [
   { value: 'small', label: 'Small' },
   { value: 'medium', label: 'Medium' },
   { value: 'large', label: 'Large' },
 ]
 
+// Predefined accent colors
+const accentColors = [
+  { label: 'Чорний', value: '#000000', preview: 'bg-black' },
+  { label: 'Білий', value: '#ffffff', preview: 'bg-white' },
+  { label: 'Синій', value: '#3b82f6', preview: 'bg-blue-500' },
+  { label: 'Зелений', value: '#22c55e', preview: 'bg-green-500' },
+  { label: 'Жовтий', value: '#eab308', preview: 'bg-yellow-500' },
+  { label: 'Червоний', value: '#ef4444', preview: 'bg-red-500' },
+]
+
+// Predefined input background colors
+const inputBgColors = [
+  { label: 'Прозорий', value: 'transparent', preview: 'bg-transparent' },
+  { label: 'Білий', value: '#ffffff', preview: 'bg-white' },
+  { label: 'Світло-сірий', value: '#f9fafb', preview: 'bg-gray-50' },
+  { label: 'Сірий', value: '#f3f4f6', preview: 'bg-gray-100' },
+  { label: 'Темно-сірий', value: '#1f2937', preview: 'bg-gray-800' },
+  { label: 'Чорний', value: '#000000', preview: 'bg-black' },
+]
+
+// Predefined input colors
+const inputColors = [
+  { label: 'Світло-сірий', value: '#e5e7eb', preview: 'bg-gray-200' },
+  { label: 'Сірий', value: '#d1d5db', preview: 'bg-gray-300' },
+  { label: 'Темно-сірий', value: '#9ca3af', preview: 'bg-gray-400' },
+  { label: 'Чорний', value: '#000000', preview: 'bg-black' },
+  { label: 'Білий', value: '#ffffff', preview: 'bg-white' },
+  { label: 'Синій', value: '#3b82f6', preview: 'bg-blue-500' },
+]
+
+// Predefined input text colors
+const inputTextColors = [
+  { label: 'Чорний', value: '#000000', preview: 'bg-black' },
+  { label: 'Темно-сірий', value: '#1f2937', preview: 'bg-gray-800' },
+  { label: 'Сірий', value: '#374151', preview: 'bg-gray-700' },
+  { label: 'Білий', value: '#ffffff', preview: 'bg-white' },
+  { label: 'Світло-сірий', value: '#f9fafb', preview: 'bg-gray-50' },
+]
 
 
 export const TabsDesign = ({ design, onUpdateDesign }) => {
+  const [showCustomBgColor, setShowCustomBgColor] = useState(false);
+  const [customBgColor, setCustomBgColor] = useState('#ffffff');
+  const [showCustomHeadingColor, setShowCustomHeadingColor] = useState(false);
+  const [customHeadingColor, setCustomHeadingColor] = useState('#000000');
+  const [showCustomTextColor, setShowCustomTextColor] = useState(false);
+  const [customTextColor, setCustomTextColor] = useState('#000000');
+  const [showCustomAccentColor, setShowCustomAccentColor] = useState(false);
+  const [customAccentColor, setCustomAccentColor] = useState(design.accentColor || '#000000');
+  const [showCustomInputColor, setShowCustomInputColor] = useState(false);
+  const [customInputColor, setCustomInputColor] = useState(design.inputColor || '#e5e7eb');
+  const [showCustomInputBgColor, setShowCustomInputBgColor] = useState(false);
+  const [customInputBgColor, setCustomInputBgColor] = useState(design.inputBgColor || 'transparent');
+  const [showCustomInputTextColor, setShowCustomInputTextColor] = useState(false);
+  const [customInputTextColor, setCustomInputTextColor] = useState(design.inputTextColor || '#000000');
+
+  // Check if current colors are custom (hex or rgba)
+  const isCustomBg = design.backgroundColor.startsWith('bg-[#') || design.backgroundColor.startsWith('bg-[rgba');
+  const isCustomText = design.textColor.startsWith('text-[#') || design.textColor.startsWith('text-[rgba');
+  const isCustomHeading = design.headingColor?.startsWith('text-[#') || design.headingColor?.startsWith('text-[rgba');
+
   // Extract current custom colors from design
-  const getCurrentBgColor = () => {
-    const match = design.backgroundColor?.match(/bg-\[(#[0-9A-Fa-f]{6})\]/i)
-    return match ? match[1] : '#ffffff'
+  const getCurrentColor = (color) => {
+    const match = color?.match(/(?:bg-|text-)\[((?:#[0-9A-Fa-f]+|rgba?\([^)]+\)))\]/)?.[1]
+    return match || 'linear-gradient(135deg, #ff6b6b, #4ecdc4)'
   }
-  
-  const getCurrentTextColor = () => {
-    const match = design.textColor?.match(/text-\[(#[0-9A-Fa-f]{6})\]/i)
-    return match ? match[1] : '#000000'
-  }
-  
-  const getCurrentHeadingColor = () => {
-    const match = design.headingColor?.match(/text-\[(#[0-9A-Fa-f]{6})\]/i)
-    return match ? match[1] : '#000000'
-  }
-
-  const [showCustomBgColor, setShowCustomBgColor] = useState(false)
-  const [customBgColor, setCustomBgColor] = useState(getCurrentBgColor())
-  const [showCustomTextColor, setShowCustomTextColor] = useState(false)
-  const [customTextColor, setCustomTextColor] = useState(getCurrentTextColor())
-  const [showCustomHeadingColor, setShowCustomHeadingColor] = useState(false)
-  const [customHeadingColor, setCustomHeadingColor] = useState(getCurrentHeadingColor())
-
-  // Check if current colors are custom (not in predefined arrays)
-  const isCustomBg = !backgroundColors.some(c => c.value === design.backgroundColor);
-  const isCustomText = !textColors.some(c => c.value === design.textColor);
-  const isCustomHeading = !headingColors.some(c => c.value === (design.headingColor || 'text-foreground'));
 
   // Helper to determine if a color is light or dark (for custom colors)
   const isLightColor = (hex) => {
@@ -97,10 +134,10 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
       // Preserve custom colors if they exist, otherwise use auto text color
       const updatedHeadingColor = isCustomHeading ? design.headingColor : textColorValue;
       const updatedTextColor = isCustomText ? design.textColor : textColorValue;
-      onUpdateDesign({ 
-        backgroundColor: `bg-[${color}]`, 
-        textColor: updatedTextColor, 
-        headingColor: updatedHeadingColor 
+      onUpdateDesign({
+        backgroundColor: `bg-[${color}]`,
+        textColor: updatedTextColor,
+        headingColor: updatedHeadingColor
       });
     }
   };
@@ -118,6 +155,34 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
       onUpdateDesign({ headingColor: `text-[${color}]` });
     }
   };
+
+  const handleAccentColorChange = (color) => {
+    setCustomAccentColor(color)
+    if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
+      onUpdateDesign({ accentColor: color })
+    }
+  }
+
+  const handleInputColorChange = (color) => {
+    setCustomInputColor(color)
+    if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
+      onUpdateDesign({ inputColor: color })
+    }
+  }
+
+  const handleInputBgColorChange = (color) => {
+    setCustomInputBgColor(color)
+    if (/^#[0-9A-Fa-f]{6}$/.test(color) || color === 'transparent') {
+      onUpdateDesign({ inputBgColor: color })
+    }
+  }
+
+  const handleInputTextColorChange = (color) => {
+    setCustomInputTextColor(color)
+    if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
+      onUpdateDesign({ inputTextColor: color })
+    }
+  }
 
   return (
     <div className="p-4 space-y-6 animate-fade-in">
@@ -154,11 +219,12 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
           {/* Custom color button */}
           <button
             onClick={() => {
-              setShowCustomBgColor(!showCustomBgColor);
-              // Update state with current color when opening picker
-              if (!showCustomBgColor) {
-                setCustomBgColor(getCurrentBgColor());
+              // Підставляємо поточний колір при відкритті
+              if (!showCustomBgColor && isCustomBg) {
+                const match = getCurrentColor(design.backgroundColor)
+                if (match) setCustomBgColor(match)
               }
+              setShowCustomBgColor(!showCustomBgColor)
             }}
             className={cn(
               'flex flex-col items-center gap-2 p-3 rounded-lg border transition-smooth',
@@ -169,33 +235,28 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
           >
             <div 
               className="w-8 h-8 rounded-md border border-border"
-              style={{ 
-                background: isCustomBg 
-                  ? getCurrentBgColor()
-                  : 'linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1)'
-              }}
+              style={{ background: getCurrentColor(design.backgroundColor) }}
             />
-            <span className="text-xs text-muted-foreground">Custom</span>
+            <span className="text-xs text-muted-foreground">Власний</span>
           </button>
         </div>
         
         {/* Custom background color picker */}
         {showCustomBgColor && (
-          <div className="flex gap-2 items-center mt-2">
-            <input
-              type="color"
-              value={customBgColor}
-              onChange={(e) => handleCustomBgColorChange(e.target.value)}
-              className="w-10 h-10 rounded-md border border-border cursor-pointer"
-            />
-            <Input
-              value={customBgColor}
-              onChange={(e) => handleCustomBgColorChange(e.target.value)}
-              placeholder="#FFFFFF"
-              className="flex-1 uppercase"
-              maxLength={7}
-            />
-          </div>
+          <ColorPicker
+            key={`bg-${customBgColor}`}
+            value={customBgColor}
+            onChange={(color) => {
+              setCustomBgColor(color);
+              if (color.startsWith('rgba')) {
+                onUpdateDesign({ backgroundColor: `bg-[${color.replace(/\s/g, '')}]` });
+              } else if (/^#[0-9A-Fa-f]{6}$/i.test(color)) {
+                const textColorValue = isLightColor(color) ? 'text-slate-900' : 'text-slate-100';
+                onUpdateDesign({ backgroundColor: `bg-[${color}]`, textColor: textColorValue, headingColor: textColorValue });
+              }
+            }}
+            className="mt-2"
+          />
         )}
       </div>
 
@@ -225,11 +286,11 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
           {/* Custom heading color button */}
           <button
             onClick={() => {
-              setShowCustomHeadingColor(!showCustomHeadingColor);
-              // Update state with current color when opening picker
-              if (!showCustomHeadingColor) {
-                setCustomHeadingColor(getCurrentHeadingColor());
+              if (!showCustomHeadingColor && isCustomHeading) {
+                const match = getCurrentColor(design.headingColor)
+                if (match) setCustomHeadingColor(match)
               }
+              setShowCustomHeadingColor(!showCustomHeadingColor)
             }}
             className={cn(
               'flex items-center gap-3 p-3 rounded-lg border transition-smooth',
@@ -240,33 +301,27 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
           >
             <div 
               className="w-6 h-6 rounded-full border border-border"
-              style={{
-                background: isCustomHeading
-                  ? getCurrentHeadingColor()
-                  : 'linear-gradient(135deg, #ff6b6b, #4ecdc4)'
-              }}
+              style={{ background: getCurrentColor(design.headingColor) }}
             />
-            <span className="text-sm text-foreground">Custom</span>
+            <span className="text-sm text-foreground">Власний</span>
           </button>
         </div>
 
         {/* Custom heading color picker */}
         {showCustomHeadingColor && (
-          <div className="flex gap-2 items-center mt-2">
-            <input
-              type="color"
-              value={customHeadingColor}
-              onChange={(e) => handleCustomHeadingColorChange(e.target.value)}
-              className="w-10 h-10 rounded-md border border-border cursor-pointer"
-            />
-            <Input
-              value={customHeadingColor}
-              onChange={(e) => handleCustomHeadingColorChange(e.target.value)}
-              placeholder="#000000"
-              className="flex-1 uppercase"
-              maxLength={7}
-            />
-          </div>
+          <ColorPicker
+            key={`heading-${customHeadingColor}`}
+            value={customHeadingColor}
+            onChange={(color) => {
+              setCustomHeadingColor(color);
+              if (color.startsWith('rgba')) {
+                onUpdateDesign({ headingColor: `text-[${color.replace(/\s/g, '')}]` });
+              } else if (/^#[0-9A-Fa-f]{6}$/i.test(color)) {
+                onUpdateDesign({ headingColor: `text-[${color}]` });
+              }
+            }}
+            className="mt-2"
+          />
         )}
       </div>
 
@@ -296,11 +351,11 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
           {/* Custom text color button */}
           <button
             onClick={() => {
-              setShowCustomTextColor(!showCustomTextColor);
-              // Update state with current color when opening picker
-              if (!showCustomTextColor) {
-                setCustomTextColor(getCurrentTextColor());
+              if (!showCustomTextColor && isCustomText) {
+                const match = getCurrentColor(design.textColor)
+                if (match) setCustomTextColor(match)
               }
+              setShowCustomTextColor(!showCustomTextColor)
             }}
             className={cn(
               'flex items-center gap-3 p-3 rounded-lg border transition-smooth',
@@ -311,33 +366,27 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
           >
             <div 
               className="w-6 h-6 rounded-full border border-border"
-              style={{ 
-                background: isCustomText 
-                  ? getCurrentTextColor()
-                  : 'linear-gradient(135deg, #ff6b6b, #4ecdc4)'
-              }}
+              style={{ background: getCurrentColor(design.textColor) }}
             />
-            <span className="text-sm text-foreground">Custom</span>
+            <span className="text-sm text-foreground">Власний</span>
           </button>
         </div>
 
         {/* Custom text color picker */}
         {showCustomTextColor && (
-          <div className="flex gap-2 items-center mt-2">
-            <input
-              type="color"
-              value={customTextColor}
-              onChange={(e) => handleCustomTextColorChange(e.target.value)}
-              className="w-10 h-10 rounded-md border border-border cursor-pointer"
-            />
-            <Input
-              value={customTextColor}
-              onChange={(e) => handleCustomTextColorChange(e.target.value)}
-              placeholder="#000000"
-              className="flex-1 uppercase"
-              maxLength={7}
-            />
-          </div>
+          <ColorPicker
+            key={`text-${customTextColor}`}
+            value={customTextColor}
+            onChange={(color) => {
+              setCustomTextColor(color);
+              if (color.startsWith('rgba')) {
+                onUpdateDesign({ textColor: `text-[${color.replace(/\s/g, '')}]` });
+              } else if (/^#[0-9A-Fa-f]{6}$/i.test(color)) {
+                onUpdateDesign({ textColor: `text-[${color}]` });
+              }
+            }}
+            className="mt-2"
+          />
         )}
       </div>
 
@@ -358,11 +407,11 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
         </div>
       </div>
 
-      {/* Text Size */}
+      {/* Font Size */}
       <div className="space-y-3">
         <label className="text-sm font-medium text-foreground">Розмір тексту</label>
         <div className="flex gap-2">
-          {textSizes.map((size) => (
+          {fontSizes.map((size) => (
             <Button
               key={size.value}
               onClick={() => onUpdateDesign({ fontSize: size.value })}
@@ -372,6 +421,239 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
               {size.label}
             </Button>
           ))}
+        </div>
+      </div>
+
+      {/* Accent Color (for product selection) */}
+      <div className="space-y-3">
+        <label className="text-sm font-medium text-foreground">Акцентний колір</label>
+        <p className="text-xs text-muted-foreground -mt-1">Використовується для індикатора вибору позиції та керування кількістю, а також для інших елементів</p>
+        <div className="flex gap-2 flex-wrap">
+          {accentColors.map((color) => (
+            <button
+              key={color.value}
+              onClick={() => {
+                setShowCustomAccentColor(false);
+                onUpdateDesign({ accentColor: color.value });
+              }}
+              className={cn(
+                'w-9 h-9 rounded-full border-2 transition-smooth',
+                color.preview,
+                design.accentColor === color.value
+                  ? 'border-transparent! ring-3 ring-primary'
+                  : 'border-border! hover:border-primary/70!'
+              )}
+              title={color.label}
+            />
+          ))}
+          {/* Custom accent color button */}
+          <button
+            onClick={() => setShowCustomAccentColor(!showCustomAccentColor)}
+            className={cn(
+              'w-9 h-9 rounded-full border-2 transition-smooth overflow-hidden',
+              (showCustomAccentColor || (design.accentColor && !accentColors.some(c => c.value === design.accentColor)))
+                ? 'border-transparent! border-0! ring-3 ring-primary'
+                : 'border-border! hover:border-primary/70!'
+            )}
+            title="Власний колір"
+          >
+            <div 
+              className="w-full h-full rounded-full"
+              style={{ 
+                background: design.accentColor && !accentColors.some(c => c.value === design.accentColor)
+                  ? design.accentColor
+                  : 'linear-gradient(135deg, #ff6b6b, #4ecdc4)'
+              }}
+            />
+          </button>
+        </div>
+
+        {/* Custom accent color picker */}
+        {showCustomAccentColor && (
+          <ColorPicker
+            key={`accent-${customAccentColor}`}
+            value={customAccentColor}
+            onChange={(color) => {
+              setCustomAccentColor(color);
+              if (color.startsWith('rgba') || /^#[0-9A-Fa-f]{6}$/i.test(color)) {
+                onUpdateDesign({ accentColor: color });
+              }
+            }}
+            className="mt-2"
+          />
+        )}
+      </div>
+
+      {/* Input Fields Settings - Grouped */}
+      <div className="space-y-2 p-4 rounded-lg border border-border bg-muted/20">
+        <h3 className="text-sm font-semibold text-foreground">Поля введення</h3>
+        
+        {/* Input Text Color */}
+        <div className="space-y-2">
+          <label className="text-xs font-medium text-muted-foreground">Колір тексту</label>
+          <div className="flex gap-2 flex-wrap">
+            {inputTextColors.map((color) => (
+              <button
+                key={color.value}
+                onClick={() => {
+                  setShowCustomInputTextColor(false);
+                  onUpdateDesign({ inputTextColor: color.value });
+                }}
+                className={cn(
+                  'w-7 h-7 rounded-full border-2 transition-smooth',
+                  color.preview,
+                  design.inputTextColor === color.value
+                    ? 'border-transparent! ring-3 ring-primary'
+                    : 'border-border! hover:border-primary/70!'
+                )}
+                title={color.label}
+              />
+            ))}
+            <button
+              onClick={() => setShowCustomInputTextColor(!showCustomInputTextColor)}
+              className={cn(
+                'w-7 h-7 rounded-full border-2 transition-smooth overflow-hidden',
+                (showCustomInputTextColor || (design.inputTextColor && !inputTextColors.some(c => c.value === design.inputTextColor)))
+                  ? 'border-transparent! border-0! ring-3 ring-primary'
+                  : 'border-border! hover:border-primary/70!'
+              )}
+              title="Власний колір"
+            >
+              <div 
+                className="w-full h-full rounded-full"
+                style={{ 
+                  background: design.inputTextColor && !inputTextColors.some(c => c.value === design.inputTextColor)
+                    ? design.inputTextColor
+                    : 'linear-gradient(135deg, #ff6b6b, #4ecdc4)'
+                }}
+              />
+            </button>
+          </div>
+          {showCustomInputTextColor && (
+            <ColorPicker
+              key={`inputText-${customInputTextColor}`}
+              value={customInputTextColor}
+              onChange={(color) => {
+                setCustomInputTextColor(color);
+                if (color.startsWith('rgba') || /^#[0-9A-Fa-f]{6}$/i.test(color)) {
+                  onUpdateDesign({ inputTextColor: color });
+                }
+              }}
+              className="mt-2"
+            />
+          )}
+        </div>
+
+        {/* Input Border Color */}
+        <div className="space-y-2">
+          <label className="text-xs font-medium text-muted-foreground">Колір рамки</label>
+          <div className="flex gap-2 flex-wrap">
+            {inputColors.map((color) => (
+              <button
+                key={color.value}
+                onClick={() => {
+                  setShowCustomInputColor(false);
+                  onUpdateDesign({ inputColor: color.value });
+                }}
+                className={cn(
+                  'w-7 h-7 rounded-full border-2 transition-smooth',
+                  color.preview,
+                  design.inputColor === color.value
+                    ? 'border-transparent! ring-3 ring-primary'
+                    : 'border-border! hover:border-primary/70!'
+                )}
+                title={color.label}
+              />
+            ))}
+            <button
+              onClick={() => setShowCustomInputColor(!showCustomInputColor)}
+              className={cn(
+                'w-7 h-7 rounded-full border-2 transition-smooth overflow-hidden',
+                (showCustomInputColor || (design.inputColor && !inputColors.some(c => c.value === design.inputColor)))
+                  ? 'border-transparent! border-0! ring-3 ring-primary'
+                  : 'border-border! hover:border-primary/70!'
+              )}
+              title="Власний колір"
+            >
+              <div 
+                className="w-full h-full rounded-full"
+                style={{ 
+                  background: design.inputColor && !inputColors.some(c => c.value === design.inputColor)
+                    ? design.inputColor
+                    : 'linear-gradient(135deg, #ff6b6b, #4ecdc4)'
+                }}
+              />
+            </button>
+          </div>
+          {showCustomInputColor && (
+            <ColorPicker
+              key={`inputBorder-${customInputColor}`}
+              value={customInputColor}
+              onChange={(color) => {
+                setCustomInputColor(color);
+                if (color.startsWith('rgba') || /^#[0-9A-Fa-f]{6}$/i.test(color)) {
+                  onUpdateDesign({ inputColor: color });
+                }
+              }}
+              className="mt-2"
+            />
+          )}
+        </div>
+
+        {/* Input Background Color */}
+        <div className="space-y-2">
+          <label className="text-xs font-medium text-muted-foreground">Колір фону</label>
+          <div className="flex gap-2 flex-wrap">
+            {inputBgColors.map((color) => (
+              <button
+                key={color.value}
+                onClick={() => {
+                  setShowCustomInputBgColor(false);
+                  onUpdateDesign({ inputBgColor: color.value });
+                }}
+                className={cn(
+                  'w-7 h-7 rounded-full border-2 transition-smooth',
+                  color.preview,
+                  (design.inputBgColor || 'transparent') === color.value
+                    ? 'border-transparent! ring-3 ring-primary'
+                    : 'border-border! hover:border-primary/70!'
+                )}
+                title={color.label}
+              />
+            ))}
+            <button
+              onClick={() => setShowCustomInputBgColor(!showCustomInputBgColor)}
+              className={cn(
+                'w-7 h-7 rounded-full border-2 transition-smooth overflow-hidden',
+                (showCustomInputBgColor || (design.inputBgColor && !inputBgColors.some(c => c.value === design.inputBgColor)))
+                  ? 'border-transparent! border-0! ring-3 ring-primary'
+                  : 'border-border! hover:border-primary/70!'
+              )}
+              title="Власний колір"
+            >
+              <div 
+                className="w-full h-full rounded-full"
+                style={{ 
+                  background: design.inputBgColor && !inputBgColors.some(c => c.value === design.inputBgColor)
+                    ? design.inputBgColor
+                    : 'linear-gradient(135deg, #ff6b6b, #4ecdc4)'
+                }}
+              />
+            </button>
+          </div>
+          {showCustomInputBgColor && (
+            <ColorPicker
+              key={`inputBg-${customInputBgColor}`}
+              value={customInputBgColor}
+              onChange={(color) => {
+                setCustomInputBgColor(color);
+                if (color.startsWith('rgba') || /^#[0-9A-Fa-f]{6}$/i.test(color)) {
+                  onUpdateDesign({ inputBgColor: color });
+                }
+              }}
+              className="mt-2"
+            />
+          )}
         </div>
       </div>
     </div>

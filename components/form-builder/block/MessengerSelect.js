@@ -44,11 +44,12 @@ export const BlockMessengerSelect = ({
 
   return (
     <div className="space-y-2">
-      <Label className={!isPreview ? 'cursor-text' : ''}>
+      <Label htmlFor={block.id} className={!isPreview ? 'cursor-text' : ''}>
         {block.label || 'Оберіть спосіб отримання відповіді'}
       </Label>
       <div className="relative w-full max-w-[300px]">
         <select
+          {...(isPreview && { id: block.id })}
           className={cn(
             'flex h-[42px] w-full items-center justify-between rounded-md border border-input bg-input pl-9 pr-3 py-2 text-base',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',

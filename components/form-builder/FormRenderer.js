@@ -2,14 +2,14 @@
 
 'use client'
 
+import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Label } from '@/components/ui/label'
+import { Select } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, CheckCircle, Image } from 'lucide-react'
+import { ArrowRight, Image } from 'lucide-react'
 import { useState } from 'react'
-import { cn, getImageUrl } from '@/utils'
+import { cn, getImageUrl, getColor } from '@/utils'
 import { BlockLineItemsRenderer } from '@/components/form-builder/block/LineItemsRenderer'
 import { OrderButton } from '@/components/ui/OrderButton'
 import { BlockSlideshow } from '@/components/form-builder/block/Slideshow'
@@ -20,6 +20,7 @@ import { BlockIcon } from '@/components/form-builder/block/Icon'
 import { BlockAvatar } from '@/components/form-builder/block/Avatar'
 import { BlockMessengerSelect } from '@/components/form-builder/block/MessengerSelect'
 import { BlockList } from '@/components/form-builder/block/List'
+import { BlockChoiceCard } from '@/components/form-builder/block/ChoiceCard';
 
 const fontSizeClass = {
   small: 'text-sm',
@@ -32,6 +33,47 @@ const headingSizeClass = {
   medium: 'text-xl',
   large: 'text-2xl',
   xlarge: 'text-3xl',
+}
+
+// Internal component for choice blocks with state
+const BlockChoicePreview = ({ 
+  block, 
+  formDesign, 
+  showLabel 
+}) => {
+  const [selectedValues, setSelectedValues] = useState([])
+  const isCheckbox = block.type === 'checkbox'
+
+  const handleSelect = (value) => {
+    if (isCheckbox) {
+      setSelectedValues(prev => 
+        prev.includes(value) 
+          ? prev.filter(v => v !== value)
+          : [...prev, value]
+      );
+    } else {
+      setSelectedValues([value]);
+    }
+  }
+
+  return (
+    <div className="space-y-3">
+      {showLabel && (
+        <Label htmlFor={block.id}>
+          {block.label}
+          {block.required && <span className="text-destructive ml-1">*</span>}
+        </Label>
+      )}
+      <BlockChoiceCard
+        block={block}
+        isPreview
+        inputColor={formDesign.inputColor}
+        accentColor={formDesign.accentColor}
+        selectedValues={selectedValues}
+        onSelect={handleSelect}
+      />
+    </div>
+  )
 }
 
 export const FormRenderer = ({
@@ -48,8 +90,8 @@ export const FormRenderer = ({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedLineItems, setSelectedLineItems] = useState([])
 
-  const textColorHex = formDesign.textColor?.match(/text-\[(#[0-9A-Fa-f]{6})\]/)?.[1]
-  const bgColorHex = formDesign.backgroundColor?.match(/bg-\[(#[0-9A-Fa-f]{6})\]/)?.[1]
+  const textColorHex = formDesign.textColor?.match(/text-\[((?:#[0-9A-Fa-f]{6}|rgba?\([^)]+\)))\]/)?.[1]
+  const bgColorHex = formDesign.backgroundColor?.match(/bg-\[((?:#[0-9A-Fa-f]{6}|rgba?\([^)]+\)))\]/)?.[1]
 
   const handleSelectLineItem = (lineItemId, quantity) => {
     setSelectedLineItems((prev) => {
@@ -72,7 +114,7 @@ export const FormRenderer = ({
 
     if (isSubmitting) return
     setIsSubmitting(true)
-
+    
     try {
       const formElement = e?.target?.tagName === 'FORM'
         ? e.target
@@ -126,7 +168,7 @@ export const FormRenderer = ({
                 }
               : null
           }).filter(Boolean)
-
+          
           orderData.lineItems = lineItemDetails
         } else if (block.type === 'checkbox') {
           const checkedValues = []
@@ -151,6 +193,7 @@ export const FormRenderer = ({
             required: block.required || false,
           }
         } else {
+          // Handle other input types (short-text, long-text, email, number, date, dropdown)
           const input = formElement?.querySelector?.(`[name="${block.id}"]`)
           orderData.fields[fieldKey] = {
             label: fieldLabel,
@@ -161,17 +204,18 @@ export const FormRenderer = ({
         }
       })
 
+      // Calculate totals for lineItems
       if (orderData.lineItems.length > 0) {
         orderData.lineItemsTotal = orderData.lineItems.reduce(
           (sum, p) => sum + (p?.subtotal || 0),
           0
         )
       }
-
-      if (isPreview) {
-        console.log('Form Configuration:', formConfiguration)
-        console.log('Order Data:', orderData)
-      }
+    
+      // if (isPreview) {
+      //   console.log('Form Configuration:', formConfiguration)
+      //   console.log('Order Data:', orderData)
+      // }
 
       if (onSubmitSuccess) {
         await onSubmitSuccess({ formConfiguration, orderData })
@@ -272,20 +316,20 @@ export const FormRenderer = ({
                 height: `${block.dividerThickness || 1}px`,
                 backgroundColor:
                   block.dividerStyle === 'solid'
-                    ? block.dividerColor || '#e5e7eb'
+                    ? (block.dividerColor || '#e5e7eb')
                     : 'transparent',
                 backgroundImage:
-                  block.dividerStyle === 'dashed'
+                  block.dividerStyle === 'dashed' 
                     ? `repeating-linear-gradient(to right, ${block.dividerColor || '#e5e7eb'} 0, ${
                         block.dividerColor || '#e5e7eb'
                       } 8px, transparent 8px, transparent 14px)`
-                    : block.dividerStyle === 'dotted'
-                      ? `repeating-linear-gradient(to right, ${block.dividerColor || '#e5e7eb'} 0, ${
-                          block.dividerColor || '#e5e7eb'
-                        } ${(block.dividerThickness || 1) * 2}px, transparent ${
-                          (block.dividerThickness || 1) * 2
-                        }px, transparent ${(block.dividerThickness || 1) * 4}px)`
-                      : 'none',
+                  : block.dividerStyle === 'dotted'
+                    ? `repeating-linear-gradient(to right, ${block.dividerColor || '#e5e7eb'} 0, ${
+                        block.dividerColor || '#e5e7eb'
+                      } ${(block.dividerThickness || 1) * 2}px, transparent ${
+                        (block.dividerThickness || 1) * 2
+                      }px, transparent ${(block.dividerThickness || 1) * 4}px)`
+                    : 'none',
                 borderRadius: block.dividerStyle === 'dotted' ? `${(block.dividerThickness || 1) / 2}px` : '0',
               }}
             />
@@ -320,13 +364,22 @@ export const FormRenderer = ({
         return <BlockAvatar block={block} />
 
       case 'messenger-select':
-        return <BlockMessengerSelect block={block} isPreview={isPreview} />
+        return <BlockMessengerSelect
+                 block={block}
+                 isPreview={isPreview}
+                 style={{ 
+                   borderColor: formDesign.inputColor || undefined,
+                   backgroundColor: formDesign.inputBgColor && formDesign.inputBgColor !== 'transparent' ? formDesign.inputBgColor : undefined,
+                   color: formDesign.inputTextColor || undefined,
+                   '--focus-ring-color': getColor(formDesign.accentColor, 0.7) || undefined
+                 }}
+               />
 
       case 'line-items':
         return (
           <div className="space-y-2">
             {showLabel && (
-              <Label className="text-foreground">
+              <Label htmlFor={block.id}>
                 {block.label}
                 {block.required && <span className="text-destructive ml-1">*</span>}
               </Label>
@@ -336,6 +389,8 @@ export const FormRenderer = ({
               selectedLineItems={selectedLineItems}
               onSelectLineItem={handleSelectLineItem}
               isPreview={isPreview}
+              accentColor={formDesign.accentColor}
+              formTextColor={formDesign.textColor}
             />
           </div>
         )
@@ -353,8 +408,8 @@ export const FormRenderer = ({
           block.textAlign === 'center'
             ? 'text-center'
             : block.textAlign === 'right'
-                ? 'text-right'
-                : 'text-left'
+              ? 'text-right'
+              : 'text-left'
         return (
           <div style={block.textColor ? { color: block.textColor } : undefined}>
             <p className={cn('whitespace-pre-wrap break-words', 'opacity-80', paragraphAlign)}>{block.label}</p>
@@ -368,17 +423,25 @@ export const FormRenderer = ({
         return (
           <div className="space-y-2">
             {showLabel && (
-              <Label className="text-foreground">
+              <Label htmlFor={block.id}>
                 {block.label}
                 {block.required && <span className="text-destructive ml-1">*</span>}
               </Label>
             )}
             <Input
+              id={block.id}
               name={block.id}
               className="max-w-[300px]"
               type={block.type === 'email' ? 'email' : block.type === 'number' ? 'number' : 'text'}
               placeholder={block.placeholder}
               required={block.required}
+              style={{ 
+                borderColor: formDesign.inputColor || undefined,
+                backgroundColor: formDesign.inputBgColor && formDesign.inputBgColor !== 'transparent' ? formDesign.inputBgColor : undefined,
+                color: formDesign.inputTextColor || undefined,
+                '--placeholder-color': getColor(formDesign.inputTextColor) || undefined,
+                '--focus-ring-color': getColor(formDesign.accentColor, 0.7) || undefined
+              }}
             />
           </div>
         )
@@ -387,12 +450,25 @@ export const FormRenderer = ({
         return (
           <div className="space-y-2">
             {showLabel && (
-              <Label className="text-foreground">
+              <Label htmlFor={block.id}>
                 {block.label}
                 {block.required && <span className="text-destructive ml-1">*</span>}
               </Label>
             )}
-            <Textarea name={block.id} className="w-full" placeholder={block.placeholder} required={block.required} />
+            <Textarea
+              id={block.id}
+              name={block.id}
+              className="w-full"
+              placeholder={block.placeholder}
+              required={block.required}
+              style={{ 
+                borderColor: formDesign.inputColor || undefined,
+                backgroundColor: formDesign.inputBgColor && formDesign.inputBgColor !== 'transparent' ? formDesign.inputBgColor : undefined,
+                color: formDesign.inputTextColor || undefined,
+                '--placeholder-color': getColor(formDesign.inputTextColor) || undefined,
+                '--focus-ring-color': getColor(formDesign.accentColor, 0.7) || undefined
+              }}
+            />
           </div>
         )
 
@@ -400,12 +476,25 @@ export const FormRenderer = ({
         return (
           <div className="space-y-2">
             {showLabel && (
-              <Label className="text-foreground">
+              <Label htmlFor={block.id}>
                 {block.label}
                 {block.required && <span className="text-destructive ml-1">*</span>}
               </Label>
             )}
-            <Input name={block.id} className="max-w-[300px]" type="date" required={block.required} />
+            <Input
+              id={block.id}
+              name={block.id}
+              className="max-w-[300px]"
+              type="date"
+              required={block.required}
+              style={{
+                borderColor: formDesign.inputColor || undefined,
+                backgroundColor: formDesign.inputBgColor && formDesign.inputBgColor !== 'transparent' ? formDesign.inputBgColor : undefined,
+                color: formDesign.inputTextColor || undefined,
+                '--placeholder-color': getColor(formDesign.inputTextColor) || undefined,
+                '--focus-ring-color': getColor(formDesign.accentColor, 0.7) || undefined
+              }}
+            />
           </div>
         )
 
@@ -413,78 +502,38 @@ export const FormRenderer = ({
         return (
           <div className="space-y-2">
             {showLabel && (
-              <Label className="text-foreground">
+              <Label htmlFor={block.id}>
                 {block.label}
                 {block.required && <span className="text-destructive ml-1">*</span>}
               </Label>
             )}
-            <select
+            <Select
+              id={block.id}
               name={block.id}
-              className="flex h-10 w-full max-w-[300px] rounded-md border border-input bg-input px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              placeholder={block?.placeholder || 'Оберіть варіант'}
+              options={block?.options}
+              className="max-w-[300px]"
               defaultValue=""
               required={block.required}
-            >
-              <option value="" disabled>
-                {block.placeholder || 'Select an option'}
-              </option>
-              {block.options?.map((option, idx) => (
-                <option key={idx} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
+              style={{ 
+                borderColor: formDesign.inputColor || undefined,
+                backgroundColor: formDesign.inputBgColor && formDesign.inputBgColor !== 'transparent' ? formDesign.inputBgColor : undefined,
+                color: formDesign.inputTextColor || undefined,
+                '--focus-ring-color': getColor(formDesign.accentColor, 0.7) || undefined
+              }}
+              accentColor={formDesign.accentColor}
+            />
           </div>
         )
 
       case 'checkbox':
-        return (
-          <div className="space-y-3">
-            {showLabel && (
-              <Label className="text-foreground">
-                {block.label}
-                {block.required && <span className="text-destructive ml-1">*</span>}
-              </Label>
-            )}
-            <div className="space-y-2">
-              {block.options?.map((option, idx) => (
-                <div key={idx} className="flex items-center gap-2">
-                  <Checkbox id={`${block.id}-${idx}`} />
-                  <Label htmlFor={`${block.id}-${idx}`} className="font-normal cursor-pointer">
-                    {option}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </div>
-        )
-
       case 'radio':
         return (
-          <div className="space-y-3">
-            {showLabel && (
-              <Label className="text-foreground">
-                {block.label}
-                {block.required && <span className="text-destructive ml-1">*</span>}
-              </Label>
-            )}
-            <div className="space-y-2">
-              {block.options?.map((option, idx) => (
-                <div key={idx} className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name={block.id}
-                    value={option}
-                    id={`${block.id}-${idx}`}
-                    className="w-4 h-4 text-primary border-border focus:ring-primary"
-                    required={block.required && idx === 0}
-                  />
-                  <Label htmlFor={`${block.id}-${idx}`} className="font-normal cursor-pointer">
-                    {option}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </div>
+          <BlockChoicePreview
+            block={block}
+            formDesign={formDesign}
+            showLabel={showLabel}
+          />
         )
 
       default:
@@ -492,7 +541,7 @@ export const FormRenderer = ({
     }
   }
 
-  // Calculate Line Item totals
+  // Calculate Line Item totals for sticky button
   const hasLineItemsBlock = blocks.some((b) => b.type === 'line-items')
   const totalQuantity = selectedLineItems.reduce((sum, sp) => sum + sp.quantity, 0)
   const totalAmount = selectedLineItems.reduce((sum, sp) => {
@@ -539,9 +588,7 @@ export const FormRenderer = ({
           ) : isSubmitted ? (
             <div className="py-8 flex items-center justify-center min-h-[300px]">
               <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-accent mx-auto mb-4 flex items-center justify-center">
-                  <CheckCircle className="w-8 h-8 text-primary" />
-                </div>
+                {/* Render success blocks */}
                 <div className="space-y-2">
                   {successBlocks.map((block) => (
                     <div key={block.id}>{renderBlock(block)}</div>
@@ -570,12 +617,12 @@ export const FormRenderer = ({
 
                 const horizontalAlignClass =
                   block.blockWidth !== '1/1'
-                    ? {
-                        start: '',
-                        center: 'mx-auto',
-                        end: 'ml-auto',
-                      }[block.blockHorizontalAlign || 'start']
-                    : ''
+                  ? {
+                      start: '',
+                      center: 'mx-auto',
+                      end: 'ml-auto',
+                    }[block.blockHorizontalAlign || 'start']
+                  : ''
 
                 return (
                   <div

@@ -64,6 +64,7 @@ const formatColor = (hex, alpha) => {
 export const ColorPicker = ({
   value,
   onChange,
+  defaultValue,
   className,
 }) => {
   const parsed = parseColor(value);
@@ -104,9 +105,18 @@ export const ColorPicker = ({
     onChange(formatColor(hex, newAlpha));
   };
 
+  const handleReset = () => {
+    if (defaultValue) {
+      onChange(defaultValue);
+    }
+  };
+
+  // Check if current value differs from default
+  const isModified = defaultValue && value !== defaultValue;
+
   return (
-    <div className={cn('space-y-4', className)}>
-      <div className="flex items-center gap-2">
+    <div className={cn('mt-4 space-y-4', className)}>
+      <div className="mb-4 flex items-center gap-2">
         {/* Color picker input */}
         <div className="relative w-10 h-10 flex-shrink-0">
           <input
@@ -137,14 +147,20 @@ export const ColorPicker = ({
           className="flex-1 uppercase"
           maxLength={7}
         />
+
+        {/* Reset button */}
+        {isModified && (
+          <button
+            onClick={handleReset}
+            className="text-xs text-muted-foreground hover:text-primary transition-smooth whitespace-nowrap"
+          >
+            Скинути
+          </button>
+        )}
       </div>
 
       {/* Opacity slider */}
-      <div className="space-y-2">
-        <div className="flex justify-between text-sm">
-          <span>Прозорість</span>
-          <span>{Math.round(alpha * 100)}%</span>
-        </div>
+      <div className="mb-5 space-y-2">
         <Slider
           className="cursor-pointer"
           value={[alpha * 100]}
@@ -153,6 +169,11 @@ export const ColorPicker = ({
           min={1}
           step={1}
         />
+        <div className="flex justify-between text-xs text-muted-foreground">
+          <span>1%</span>
+          <span className="font-medium text-foreground">{Math.round(alpha * 100)}%</span>
+          <span>100%</span>
+        </div>
       </div>
     </div>
   )

@@ -5,7 +5,6 @@ export const BlockIcon = ({ block }) => {
   const size = block.iconSize ?? 32;
   const color = block.iconColor || '#22c55e';
   const bgColor = block.iconBgColor || '#22c55e';
-  const bgOpacity = block.iconBgOpacity ?? 15;
   const padding = block.iconBgPadding ?? 16;
   const shape = block.iconBgShape || 'circle';
   const customRadius = block.iconBgRadius ?? 8;
@@ -26,13 +25,6 @@ export const BlockIcon = ({ block }) => {
     }
   };
 
-  // Convert hex to rgba for background
-  const hexToRgba = (hex, opacity) => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    if (!result) return `rgba(34, 197, 94, ${opacity / 100})`;
-    return `rgba(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}, ${opacity / 100})`;
-  };
-
   return (
     <div className="flex justify-center">
       <div
@@ -41,7 +33,7 @@ export const BlockIcon = ({ block }) => {
           width: size + padding * 2,
           height: size + padding * 2,
           borderRadius: getBorderRadius(),
-          backgroundColor: hexToRgba(bgColor, bgOpacity),
+          backgroundColor: bgColor,
         }}
       >
         {Icon ? (

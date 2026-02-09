@@ -50,15 +50,14 @@ export const getDefaultBlock = (type) => {
     reviews: { label: 'Відгуки', reviews: [], reviewsLayout: 'cards', reviewsShowAvatar: true },
     faq: { label: 'Питання / відповіді', faqItems: [] },
     icon: { 
-      label: 'Іконка', 
-      iconName: 'CheckCircle', 
-      iconSize: 32, 
-      iconColor: '#22c55e', 
-      iconBgColor: '#22c55e', 
-      iconBgOpacity: 15, 
-      iconBgPadding: 16, 
-      iconBgShape: 'circle', 
-      iconBgRadius: 8 
+      label: 'Іконка',
+      iconName: 'CheckCircle',
+      iconSize: 32,
+      iconColor: 'rgba(255,255,255,0.85)',
+      iconBgColor: 'rgba(0,0,0,0.20)',
+      iconBgPadding: 16,
+      iconBgShape: 'circle',
+      iconBgRadius: 8
     },
     'messenger-select': { label: 'Оберіть месенджер', messengerOptions: [] },
     list: {

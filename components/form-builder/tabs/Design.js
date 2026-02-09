@@ -210,7 +210,6 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
                 headingColor: isCustomHeading ? design.headingColor : textColorValue
               })
             }}
-            className="mt-2"
           />
         )}
       </div>
@@ -275,7 +274,6 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
               setCustomHeadingColor(color)
               onUpdateDesign({ headingColor: color })
             }}
-            className="mt-2"
           />
         )}
       </div>
@@ -340,7 +338,6 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
               setCustomTextColor(color)
               onUpdateDesign({ textColor: color })
             }}
-            className="mt-2"
           />
         )}
       </div>
@@ -431,7 +428,6 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
               setCustomAccentColor(color)
               onUpdateDesign({ accentColor: color })
             }}
-            className="mt-2"
           />
         )}
       </div>
@@ -488,7 +484,6 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
                 setCustomInputTextColor(color)
                 onUpdateDesign({ inputTextColor: color })
               }}
-              className="mt-2"
             />
           )}
         </div>
@@ -541,7 +536,6 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
                 setCustomInputColor(color)
                 onUpdateDesign({ inputColor: color })
               }}
-              className="mt-2"
             />
           )}
         </div>
@@ -594,7 +588,6 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
                 setCustomInputBgColor(color)
                 onUpdateDesign({ inputBgColor: color })
               }}
-              className="mt-2"
             />
           )}
         </div>

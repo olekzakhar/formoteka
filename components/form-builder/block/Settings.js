@@ -14,6 +14,8 @@ import { availableIcons } from '@/components/form-builder/block/Icon';
 import { listIconOptions } from '@/components/form-builder/block/List';
 import * as LucideIcons from 'lucide-react';
 import { Button } from '@/components/ui/button'
+import { SliderControl } from '@/components/form-builder/SliderControl'
+import { ColorPicker } from '@/components/form-builder/ColorPicker';
 
 // Slideshow position settings component with proper drag handling
 const SlideshowPositionSettings = ({ block, onUpdate }) => {
@@ -303,12 +305,6 @@ const IconSettings = ({ block, onUpdate }) => {
     ? availableIcons.filter(name => name.toLowerCase().includes(iconSearch.toLowerCase()))
     : availableIcons;
 
-  const hexToRgba = (hex, opacity) => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    if (!result) return `rgba(34, 197, 94, ${opacity / 100})`;
-    return `rgba(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}, ${opacity / 100})`;
-  };
-
   const getBorderRadius = () => {
     const shape = block.iconBgShape || 'circle';
     const customRadius = block.iconBgRadius || 8;
@@ -332,7 +328,7 @@ const IconSettings = ({ block, onUpdate }) => {
               width: (block.iconSize || 32) + (block.iconBgPadding || 16) * 2,
               height: (block.iconSize || 32) + (block.iconBgPadding || 16) * 2,
               borderRadius: getBorderRadius(),
-              backgroundColor: hexToRgba(block.iconBgColor || '#22c55e', block.iconBgOpacity ?? 15),
+              backgroundColor: block.iconBgColor
             }}
           >
             {Icon && <Icon style={{ width: block.iconSize || 32, height: block.iconSize || 32, color: block.iconColor || '#22c55e' }} />}
@@ -342,7 +338,7 @@ const IconSettings = ({ block, onUpdate }) => {
 
       {/* Icon Picker */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Icon</label>
+        <label className="text-sm font-medium text-foreground">Іконка</label>
         <button
           onClick={() => setShowIconPicker(!showIconPicker)}
           className={cn(
@@ -350,7 +346,7 @@ const IconSettings = ({ block, onUpdate }) => {
             'border-border hover:border-primary/50 bg-background'
           )}
         >
-          {Icon && <Icon className="w-5 h-5" style={{ color: block.iconColor || '#22c55e' }} />}
+          {Icon && <Icon className="w-5 h-5" />}
           <span className="flex-1 text-left">{selectedIcon}</span>
           <ChevronDown className={cn('w-4 h-4 text-muted-foreground transition-transform', showIconPicker && 'rotate-180')} />
         </button>
@@ -397,60 +393,31 @@ const IconSettings = ({ block, onUpdate }) => {
         )}
       </div>
 
-      {/* Icon Size */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-foreground">Розмір Іконки</label>
-          {block.iconSize !== 32 && (
-            <button
-              onClick={() => onUpdate({ iconSize: 32 })}
-              className="text-xs text-muted-foreground hover:text-primary transition-smooth"
-            >
-              Скинути
-            </button>
-          )}
-        </div>
-        <input
-          type="range"
-          min={16}
-          max={80}
-          value={block.iconSize ?? 32}
-          onChange={(e) => onUpdate({ iconSize: parseInt(e.target.value) })}
-          className="w-full"
-        />
-        <div className="flex justify-between text-xs text-muted-foreground">
-          <span>16px</span>
-          <span className="font-medium text-foreground">{block.iconSize ?? 32}px</span>
-          <span>80px</span>
-        </div>
-      </div>
+      {/* Icon Size */} 
+      <SliderControl
+        label="Розмір Іконки"
+        value={block.iconSize}
+        onChange={(value) => onUpdate({ iconSize: value })}
+        defaultValue={32}
+        min={16}
+        max={80}
+        step={1}
+        unit="px"
+      />
 
       {/* Icon Color */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Колір Іконки</label>
-        <div className="flex gap-2">
-          <input
-            type="color"
-            value={block.iconColor || '#22c55e'}
-            onChange={(e) => onUpdate({ iconColor: e.target.value })}
-            className="w-10 h-10 rounded-md border border-input cursor-pointer"
-          />
-          <input
-            type="text"
-            value={block.iconColor || '#22c55e'}
-            onChange={(e) => onUpdate({ iconColor: e.target.value })}
-            className={cn(
-              'flex-1 px-3 py-2 rounded-md border border-input bg-background text-foreground',
-              'focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary',
-              'transition-smooth'
-            )}
-          />
-        </div>
+        <label className="text-sm font-medium text-foreground">Колір іконки</label>
+        <ColorPicker
+          value={block.iconColor ?? 'rgba(255, 255, 255, 0.85)'}
+          defaultValue="rgba(255, 255, 255, 0.85)"
+          onChange={(color) => onUpdate({ iconColor: color })}
+        />
       </div>
 
       {/* Background Shape */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Форма Фону</label>
+        <label className="text-sm font-medium text-foreground">Форма фону</label>
         <div className="flex gap-2">
           {([
             { value: 'square', label: 'Квадрат' },
@@ -501,85 +468,28 @@ const IconSettings = ({ block, onUpdate }) => {
 
       {/* Background Color */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Колір Фону</label>
-        <div className="flex gap-2">
-          <input
-            type="color"
-            value={block.iconBgColor || '#22c55e'}
-            onChange={(e) => onUpdate({ iconBgColor: e.target.value })}
-            className="w-10 h-10 rounded-md border border-input cursor-pointer"
-          />
-          <input
-            type="text"
-            value={block.iconBgColor || '#22c55e'}
-            onChange={(e) => onUpdate({ iconBgColor: e.target.value })}
-            className={cn(
-              'flex-1 px-3 py-2 rounded-md border border-input bg-background text-foreground',
-              'focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary',
-              'transition-smooth'
-            )}
-          />
-        </div>
-      </div>
-
-      {/* Background Opacity */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-foreground">Прозорість Фону</label>
-          {block.iconBgOpacity !== 15 && (
-            <button
-              onClick={() => onUpdate({ iconBgOpacity: 15 })}
-              className="text-xs text-muted-foreground hover:text-primary transition-smooth"
-            >
-              Скинути
-            </button>
-          )}
-        </div>
-        <input
-          type="range"
-          min={0}
-          max={100}
-          value={block.iconBgOpacity ?? 15}
-          onChange={(e) => onUpdate({ iconBgOpacity: parseInt(e.target.value) })}
-          className="w-full"
+        <label className="text-sm font-medium text-foreground">Колір фону</label>
+        <ColorPicker
+          value={block.iconBgColor ?? 'rgba(0, 0, 0, 0.20)'}
+          defaultValue="rgba(0, 0, 0, 0.20)"
+          onChange={(color) => onUpdate({ iconBgColor: color })}
         />
-        <div className="flex justify-between text-xs text-muted-foreground">
-          <span>0%</span>
-          <span className="font-medium text-foreground">{block.iconBgOpacity ?? 15}%</span>
-          <span>100%</span>
-        </div>
       </div>
 
       {/* Background Padding */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-foreground">Відступи Фону</label>
-          {block.iconBgPadding !== 16 && (
-            <button
-              onClick={() => onUpdate({ iconBgPadding: 16 })}
-              className="text-xs text-muted-foreground hover:text-primary transition-smooth"
-            >
-              Скинути
-            </button>
-          )}
-        </div>
-        <input
-          type="range"
-          min={0}
-          max={48}
-          value={block.iconBgPadding ?? 16}
-          onChange={(e) => onUpdate({ iconBgPadding: parseInt(e.target.value) })}
-          className="w-full"
-        />
-        <div className="flex justify-between text-xs text-muted-foreground">
-          <span>0px</span>
-          <span className="font-medium text-foreground">{block.iconBgPadding ?? 16}px</span>
-          <span>48px</span>
-        </div>
-      </div>
+      <SliderControl
+        label="Відступи фону"
+        value={block.iconBgPadding}
+        onChange={(value) => onUpdate({ iconBgPadding: value })}
+        defaultValue={16}
+        min={0}
+        max={48}
+        step={1}
+        unit="px"
+      />
     </div>
-  );
-};
+  )
+}
 
 // List settings component
 const ListSettings = ({ block, onUpdate }) => {

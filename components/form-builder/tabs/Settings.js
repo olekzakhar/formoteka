@@ -7,8 +7,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/utils';
 import { Instagram, MessageCircle, Send, ChevronRight, Mail } from 'lucide-react';
 import { TabsDesign } from '@/components/form-builder/tabs/Design';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/Switch'
 
 export const TabsSettings = ({
   formDesign,
@@ -41,20 +42,12 @@ export const TabsSettings = ({
           <label className="text-sm font-medium text-foreground">Увімкнути форму</label>
           <p className="text-xs text-muted-foreground -mt-[6px]">Коли увімкнено, форма доступна для користувачів</p>
         </div>
-        <button
-          onClick={() => onUpdateIsPublic(!isPublic)}
-          className={cn(
-            'relative w-11 h-6 shrink-0 rounded-full transition-smooth',
-            isPublic ? 'bg-primary' : 'bg-muted'
-          )}
-        >
-          <span
-            className={cn(
-              'absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-background shadow-soft transition-smooth',
-              isPublic && 'translate-x-5'
-            )}
-          />
-        </button>
+        <Switch
+          checked={isPublic}
+          onCheckedChange={onUpdateIsPublic}
+          className="shrink-0"
+          big
+        />
       </div>
 
       {/* Submit Button Settings Link */}

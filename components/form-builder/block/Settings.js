@@ -14,8 +14,9 @@ import { availableIcons } from '@/components/form-builder/block/Icon';
 import { listIconOptions } from '@/components/form-builder/block/List';
 import * as LucideIcons from 'lucide-react';
 import { Button } from '@/components/ui/button'
-import { SliderControl } from '@/components/form-builder/SliderControl'
-import { ColorPicker } from '@/components/form-builder/ColorPicker';
+import { SliderControl } from '@/components/ui/SliderControl'
+import { Switch } from '@/components/ui/Switch'
+import { ColorPicker } from '@/components/ui/ColorPicker'
 
 // Slideshow position settings component with proper drag handling
 const SlideshowPositionSettings = ({ block, onUpdate }) => {
@@ -678,7 +679,7 @@ const AvatarSettings = ({ block, onUpdate }) => {
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      onUpdate({ avatarImage });
+      onUpdate({ avatarImage: reader.result })
     };
     reader.readAsDataURL(file);
   };
@@ -1288,20 +1289,11 @@ export const BlockSettings = ({ block, onUpdate }) => {
           {/* Show Avatar */}
           <div className="flex items-center justify-between">
             <label className="text-sm font-medium text-foreground">Показати аватар</label>
-            <button
-              onClick={() => onUpdate({ reviewsShowAvatar: block.reviewsShowAvatar === false ? true : false })}
-              className={cn(
-                'relative w-11 h-6 rounded-full transition-smooth',
-                block.reviewsShowAvatar !== false ? 'bg-primary' : 'bg-muted'
-              )}
-            >
-              <span
-                className={cn(
-                  'absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-background shadow-soft transition-smooth',
-                  block.reviewsShowAvatar !== false && 'translate-x-5'
-                )}
-              />
-            </button>
+            <Switch
+              checked={block.reviewsShowAvatar !== false}
+              onCheckedChange={(checked) => onUpdate({ reviewsShowAvatar: checked })}
+              large
+            />
           </div>
 
           {/* Review count */}
@@ -1772,20 +1764,10 @@ export const BlockSettings = ({ block, onUpdate }) => {
       {isInputBlock && (
         <div className="flex items-center justify-between">
           <label className="text-sm font-medium text-foreground">Показувати назву</label>
-          <button
-            onClick={() => onUpdate({ showLabel: block.showLabel === false ? true : false })}
-            className={cn(
-              'relative w-11 h-6 rounded-full transition-smooth',
-              block.showLabel !== false ? 'bg-primary' : 'bg-muted'
-            )}
-          >
-            <span
-              className={cn(
-                'absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-background shadow-soft transition-smooth',
-                block.showLabel !== false && 'translate-x-5'
-              )}
-            />
-          </button>
+          <Switch
+            checked={block.showLabel !== false}
+            onCheckedChange={(checked) => onUpdate({ showLabel: checked })}
+          />
         </div>
       )}
 
@@ -1807,24 +1789,15 @@ export const BlockSettings = ({ block, onUpdate }) => {
         </div>
       )}
 
+      {/* Required toggle */}  
       {/* Required toggle */}
       {!['heading', 'paragraph', 'spacer', 'image', 'icon', 'divider', 'slideshow', 'map', 'reviews', 'faq', 'avatar', 'messenger-select', 'grid'].includes(block.type) && (
         <div className="flex items-center justify-between">
           <label className="text-sm font-medium text-foreground">Обовʼязкове</label>
-          <button
-            onClick={() => onUpdate({ required: !block.required })}
-            className={cn(
-              'relative w-11 h-6 rounded-full transition-smooth',
-              block.required ? 'bg-primary' : 'bg-muted'
-            )}
-          >
-            <span
-              className={cn(
-                'absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-background shadow-soft transition-smooth',
-                block.required && 'translate-x-5'
-              )}
-            />
-          </button>
+          <Switch
+            checked={block.required}
+            onCheckedChange={(checked) => onUpdate({ required: checked })}
+          />
         </div>
       )}
 

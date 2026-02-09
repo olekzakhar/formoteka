@@ -1,4 +1,4 @@
-// components/form-builder/block/Item
+// components/form-builder/block/BlocksEditor
 
 'use client'
 

@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { cn } from '@/utils';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ColorPicker } from '@/components/form-builder/ColorPicker'
+import { ColorPicker } from '@/components/ui/ColorPicker'
 
 // Background colors with associated text colors
 const backgroundColors = [

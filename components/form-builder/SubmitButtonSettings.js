@@ -1,5 +1,6 @@
 import { cn } from '@/utils'
 import { Button } from '@/components/ui/button'
+import { Switch } from '@/components/ui/Switch'
 import { ArrowRight } from 'lucide-react'
 
 export const SubmitButtonSettings = ({
@@ -68,20 +69,11 @@ export const SubmitButtonSettings = ({
               Закріплено внизу екрана
             </p>
           </div>
-          <button
-            onClick={() => onUpdateDesign({ stickyButton: !formDesign.stickyButton })}
-            className={cn(
-              'relative w-11 h-6 rounded-full transition-smooth',
-              formDesign.stickyButton ? 'bg-primary' : 'bg-muted'
-            )}
-          >
-            <span
-              className={cn(
-                'absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-background shadow-soft transition-smooth',
-                formDesign.stickyButton && 'translate-x-5'
-              )}
-            />
-          </button>
+          <Switch
+            checked={formDesign.stickyButton}
+            onCheckedChange={(checked) => onUpdateDesign({ stickyButton: checked })}
+            big
+          />
         </div>
         
         {formDesign.stickyButton && (

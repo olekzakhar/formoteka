@@ -11,11 +11,11 @@ export const BlockReviews = ({ block, onUpdateBlock, isPreview = false }) => {
   
   const [editingField, setEditingField] = useState(null);
   const [editValue, setEditValue] = useState('');
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-  const [dropTargetIndex, setDropTargetIndex] = useState<number | null>(null);
-  const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [uploadingAvatarId, setUploadingAvatarId] = useState<string | null>(null);
+  const [draggedIndex, setDraggedIndex] = useState(null);
+  const [dropTargetIndex, setDropTargetIndex] = useState(null);
+  const inputRef = useRef(null);
+  const fileInputRef = useRef(null);
+  const [uploadingAvatarId, setUploadingAvatarId] = useState(null);
 
   const autoResizeTextarea = useCallback((el) => {
     if (!el) return;
@@ -30,7 +30,7 @@ export const BlockReviews = ({ block, onUpdateBlock, isPreview = false }) => {
       const len = inputRef.current.value.length;
       inputRef.current.setSelectionRange(len, len);
 
-      if (inputRef.current instanceof HTMLTextAreaElement) {
+      if (inputRef.current) {
         requestAnimationFrame(() => {
           autoResizeTextarea(inputRef.current);
         });
@@ -40,7 +40,7 @@ export const BlockReviews = ({ block, onUpdateBlock, isPreview = false }) => {
 
   useLayoutEffect(() => {
     if (editingField?.field !== 'text') return;
-    if (!(inputRef.current instanceof HTMLTextAreaElement)) return;
+    if (!(inputRef.current)) return;
     autoResizeTextarea(inputRef.current);
   }, [editValue, editingField, autoResizeTextarea]);
 

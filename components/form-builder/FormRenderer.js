@@ -535,7 +535,7 @@ export const FormRenderer = ({
   }, 0)
 
   const showLineItemInfo = formDesign.stickyButton && hasLineItemsBlock && totalQuantity > 0
-  const displayButtonText = formDesign.stickyButton && hasLineItemsBlock ? 'Order' : submitButtonText
+  const displayButtonText = formDesign.stickyButton && hasLineItemsBlock ? 'Замовити' : submitButtonText
 
   // ✅ В preview краще sticky, на slug — fixed
   const stickyWrapperClass = isPreview ? 'sticky bottom-0' : 'fixed bottom-0 left-0 right-0'

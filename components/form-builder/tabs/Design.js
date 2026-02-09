@@ -155,7 +155,7 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
               }}
               className={cn(
                 'flex flex-col items-center gap-2 p-3 rounded-lg border transition-smooth',
-                design.backgroundColor === color.value && !isCustomBg
+                design.backgroundColor === color.value && !showCustomBgColor
                   ? 'border-primary bg-accent/50'
                   : 'border-border hover:border-primary/50'
               )}
@@ -172,21 +172,24 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
             onClick={() => {
               // Підставляємо поточний колір при відкритті
               if (!showCustomBgColor && isCustomBg) {
-                const match = design?.backgroundColor
-                if (match) setCustomBgColor(match)
+                setCustomBgColor(design.backgroundColor)
               }
               setShowCustomBgColor(!showCustomBgColor)
             }}
             className={cn(
               'flex flex-col items-center gap-2 p-3 rounded-lg border transition-smooth',
-              (showCustomBgColor || isCustomBg)
+              (showCustomBgColor || (isCustomBg && !backgroundColors.some(c => c.value === design.backgroundColor)))
                 ? 'border-primary bg-accent/50'
                 : 'border-border hover:border-primary/50'
             )}
           >
             <div 
               className="w-8 h-8 rounded-md border border-border"
-              style={{ background: design?.backgroundColor || customGradient }}
+              style={{ 
+                background: (isCustomBg && !backgroundColors.some(c => c.value === design.backgroundColor))
+                  ? design.backgroundColor
+                  : customGradient 
+              }}
             />
             <span className="text-xs text-muted-foreground">Власний</span>
           </button>
@@ -225,8 +228,7 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
               }}
               className={cn(
                 'flex items-center gap-3 p-3 rounded-lg border transition-smooth',
-                // color.preview,
-                (design.headingColor || 'text-foreground') === color.value && !isCustomHeading
+                design.headingColor === color.value && !showCustomHeadingColor
                   ? 'border-primary bg-accent/50'
                   : 'border-border hover:border-primary/50'
               )}
@@ -242,21 +244,24 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
           <button
             onClick={() => {
               if (!showCustomHeadingColor && isCustomHeading) {
-                const match = design?.headingColor
-                if (match) setCustomHeadingColor(match)
+                setCustomHeadingColor(design.headingColor)
               }
               setShowCustomHeadingColor(!showCustomHeadingColor)
             }}
             className={cn(
               'flex items-center gap-3 p-3 rounded-lg border transition-smooth',
-              (showCustomHeadingColor || isCustomHeading)
+              (showCustomHeadingColor || (isCustomHeading && !headingColors.some(c => c.value === design.headingColor)))
                 ? 'border-primary bg-accent/50'
                 : 'border-border hover:border-primary/50'
             )}
           >
             <div 
               className="w-6 h-6 rounded-full border border-border"
-              style={{ background: design?.headingColor || customGradient }}
+              style={{ 
+                background: (isCustomHeading && !headingColors.some(c => c.value === design.headingColor))
+                  ? design.headingColor
+                  : customGradient 
+              }}
             />
             <span className="text-sm text-foreground">Власний</span>
           </button>
@@ -288,8 +293,7 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
               }}
               className={cn(
                 'flex items-center gap-3 p-3 rounded-lg border transition-smooth',
-                // color.preview,
-                design.textColor === color.value && !isCustomText
+                design.textColor === color.value && !showCustomTextColor
                   ? 'border-primary bg-accent/50'
                   : 'border-border hover:border-primary/50'
               )}
@@ -305,21 +309,24 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
           <button
             onClick={() => {
               if (!showCustomTextColor && isCustomText) {
-                const match = design?.textColor
-                if (match) setCustomTextColor(match)
+                setCustomTextColor(design.textColor)
               }
               setShowCustomTextColor(!showCustomTextColor)
             }}
             className={cn(
               'flex items-center gap-3 p-3 rounded-lg border transition-smooth',
-              (showCustomTextColor || isCustomText)
+              (showCustomTextColor || (isCustomText && !textColors.some(c => c.value === design.textColor)))
                 ? 'border-primary bg-accent/50'
                 : 'border-border hover:border-primary/50'
             )}
           >
             <div 
               className="w-6 h-6 rounded-full border border-border"
-              style={{ background: design?.textColor || customGradient }}
+              style={{ 
+                background: (isCustomText && !textColors.some(c => c.value === design.textColor))
+                  ? design.textColor
+                  : customGradient 
+              }}
             />
             <span className="text-sm text-foreground">Власний</span>
           </button>

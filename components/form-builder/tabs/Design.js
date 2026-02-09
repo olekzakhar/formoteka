@@ -428,10 +428,8 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
           <ColorPicker
             value={customAccentColor}
             onChange={(color) => {
-              setCustomAccentColor(color);
-              if (color.startsWith('rgba') || /^#[0-9A-Fa-f]{6}$/i.test(color)) {
-                onUpdateDesign({ accentColor: color });
-              }
+              setCustomAccentColor(color)
+              onUpdateDesign({ accentColor: color })
             }}
             className="mt-2"
           />
@@ -487,10 +485,8 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
             <ColorPicker
               value={customInputTextColor}
               onChange={(color) => {
-                setCustomInputTextColor(color);
-                if (color.startsWith('rgba') || /^#[0-9A-Fa-f]{6}$/i.test(color)) {
-                  onUpdateDesign({ inputTextColor: color });
-                }
+                setCustomInputTextColor(color)
+                onUpdateDesign({ inputTextColor: color })
               }}
               className="mt-2"
             />
@@ -542,10 +538,8 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
             <ColorPicker
               value={customInputColor}
               onChange={(color) => {
-                setCustomInputColor(color);
-                if (color.startsWith('rgba') || /^#[0-9A-Fa-f]{6}$/i.test(color)) {
-                  onUpdateDesign({ inputColor: color });
-                }
+                setCustomInputColor(color)
+                onUpdateDesign({ inputColor: color })
               }}
               className="mt-2"
             />
@@ -597,10 +591,8 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
             <ColorPicker
               value={customInputBgColor}
               onChange={(color) => {
-                setCustomInputBgColor(color);
-                if (color.startsWith('rgba') || /^#[0-9A-Fa-f]{6}$/i.test(color)) {
-                  onUpdateDesign({ inputBgColor: color });
-                }
+                setCustomInputBgColor(color)
+                onUpdateDesign({ inputBgColor: color })
               }}
               className="mt-2"
             />

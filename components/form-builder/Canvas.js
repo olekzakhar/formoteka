@@ -411,7 +411,7 @@ export const Canvas = ({
                   <div
                     className="w-full max-w-[700px] mx-auto"
                     style={{
-                      color: getColor(formDesign.textColor, 0.7),
+                      color: formDesign.textColor,
                       fontSize: formDesign.fontSize
                     }}
                   >

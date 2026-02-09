@@ -142,10 +142,11 @@ export const ColorPicker = ({
       {/* Opacity slider */}
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span>Opacity</span>
+          <span>Прозорість</span>
           <span>{Math.round(alpha * 100)}%</span>
         </div>
         <Slider
+          className="cursor-pointer"
           value={[alpha * 100]}
           onValueChange={handleAlphaChange}
           max={100}

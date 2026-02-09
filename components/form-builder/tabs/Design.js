@@ -10,12 +10,12 @@ import { ColorPicker } from '@/components/form-builder/ColorPicker'
 
 // Background colors with associated text colors
 const backgroundColors = [
-  { label: 'Білий', value: 'bg-white', preview: 'bg-white', textColor: 'text-foreground' },
-  { label: 'Молочний', value: 'bg-[#F9F8F7]', preview: 'bg-[#F9F8F7]', textColor: 'text-slate-900' },
-  { label: 'Піщаний', value: 'bg-[#DAD6D3]', preview: 'bg-[#DAD6D3]', textColor: 'text-slate-900' },
-  { label: 'Попелястий', value: 'bg-[#BDC2C2]', preview: 'bg-[#BDC2C2]', textColor: 'text-slate-900' },
-  { label: 'Пудровий', value: 'bg-[#E7CBCB]', preview: 'bg-[#E7CBCB]', textColor: 'text-foreground' },
-  { label: 'Оливковий', value: 'bg-[#4B4913]', preview: 'bg-[#4B4913]', textColor: 'text-slate-900' },
+  { label: 'Білий', value: '#ffffff', preview: '#ffffff', textColor: '#131720' }, //text-foreground
+  { label: 'Молочний', value: '#F9F8F7', preview: '#F9F8F7', textColor: '#0f172a' }, // text-slate-900
+  { label: 'Піщаний', value: '#DAD6D3', preview: '#DAD6D3', textColor: '#0f172a' }, // text-slate-900
+  { label: 'Попелястий', value: '#BDC2C2', preview: '#BDC2C2', textColor: '#0f172a' }, // text-slate-900
+  { label: 'Пудровий', value: '#E7CBCB', preview: '#E7CBCB', textColor: '#131720' }, //text-foreground
+  { label: 'Оливковий', value: '#4B4913', preview: '#4B4913', textColor: '#0f172a' }, // text-slate-900
   // Dark backgrounds
   // { value: 'bg-slate-800', preview: 'bg-slate-800', textColor: 'text-slate-100' },
   // { value: 'bg-slate-900', preview: 'bg-slate-900', textColor: 'text-slate-100' },
@@ -23,69 +23,67 @@ const backgroundColors = [
 ]
 
 const headingColors = [
-  { label: 'Default', value: 'text-foreground', preview: 'bg-foreground' },
-  { label: 'Dark', value: 'text-slate-900', preview: 'bg-slate-900' },
-  { label: 'Medium', value: 'text-primary', preview: 'bg-primary' },
-  { label: 'Primary', value: 'text-slate-600', preview: 'bg-slate-600' },
+  { label: 'Default', value: '#131720', preview: '#131720' }, // text-foreground bg-foreground
+  { label: 'Dark', value: '#0f172a', preview: '#0f172a' }, // text-slate-900 bg-slate-900
+  { label: 'Primary', value: '#475569', preview: '#475569' }, // text-slate-600 bg-slate-600
 ]
 
 const textColors = [
-  { label: 'Default', value: 'text-foreground', preview: 'bg-foreground' },
-  { label: 'Dark', value: 'text-slate-900', preview: 'bg-slate-900' },
-  { label: 'Medium', value: 'text-[#666666]', preview: 'bg-[#666666]' },
-  { label: 'Primary', value: 'text-primary', preview: 'bg-primary' },
+  { label: 'Default', value: '#131720', preview: '#131720' }, // text-foreground bg-foreground
+  { label: 'Dark', value: '#0f172a', preview: '#0f172a' }, // text-slate-900 bg-slate-900
+  { label: 'Medium', value: '#666666', preview: '#666666' },
 ]
 
 const headingSizes = [
-  { value: 'small', label: 'S' },
-  { value: 'medium', label: 'M' },
-  { value: 'large', label: 'L' },
-  { value: 'xlarge', label: 'XL' },
+  { value: '16px', label: 'S' },
+  { value: '20px', label: 'M' },
+  { value: '28px', label: 'L' },
+  { value: '32px', label: 'XL' },
 ]
 
 const fontSizes = [
-  { value: 'small', label: 'Small' },
-  { value: 'medium', label: 'Medium' },
-  { value: 'large', label: 'Large' },
+  { value: '14px', label: 'Small' },
+  { value: '16px', label: 'Medium' },
+  { value: '20px', label: 'Large' },
 ]
 
 // Predefined accent colors
 const accentColors = [
-  { label: 'Чорний', value: '#000000', preview: 'bg-black' },
-  { label: 'Білий', value: '#ffffff', preview: 'bg-white' },
-  { label: 'Синій', value: '#3b82f6', preview: 'bg-blue-500' },
-  { label: 'Зелений', value: '#22c55e', preview: 'bg-green-500' },
-  { label: 'Жовтий', value: '#eab308', preview: 'bg-yellow-500' },
-  { label: 'Червоний', value: '#ef4444', preview: 'bg-red-500' },
+  { label: 'Чорний', value: '#000000', preview: '#000000' },
+  { label: 'Білий', value: '#ffffff', preview: '#ffffff' },
+  { label: 'Синій', value: '#3b82f6', preview: '#3b82f6' }, // bg-blue-500
+  { label: 'Зелений', value: '#22c55e', preview: '#22c55e' }, // bg-green-500
+  { label: 'Жовтий', value: '#eab308', preview: '#eab308' }, // bg-yellow-500
+  { label: 'Червоний', value: '#ef4444', preview: '#ef4444' }, // bg-red-500
 ]
 
 // Predefined input background colors
 const inputBgColors = [
-  { label: 'Прозорий', value: 'transparent', preview: 'bg-transparent' },
-  { label: 'Білий', value: '#ffffff', preview: 'bg-white' },
-  { label: 'Світло-сірий', value: '#f9fafb', preview: 'bg-gray-50' },
-  { label: 'Сірий', value: '#f3f4f6', preview: 'bg-gray-100' },
-  { label: 'Темно-сірий', value: '#1f2937', preview: 'bg-gray-800' },
-  { label: 'Чорний', value: '#000000', preview: 'bg-black' },
+  { label: 'Прозорий', value: 'transparent', preview: 'transparent' },
+  { label: 'Білий', value: '#ffffff', preview: '#ffffff' },
+  { label: 'Світло-сірий', value: '#f9fafb', preview: '#f9fafb' }, // bg-gray-50
+  { label: 'Сірий', value: '#f3f4f6', preview: '#f3f4f6' }, // bg-gray-100
+  { label: 'Темно-сірий', value: '#1f2937', preview: '#1f2937' }, // bg-gray-800
+  { label: 'Чорний', value: '#000000', preview: '#000000' },
 ]
 
 // Predefined input colors
 const inputColors = [
-  { label: 'Світло-сірий', value: '#e5e7eb', preview: 'bg-gray-200' },
-  { label: 'Сірий', value: '#d1d5db', preview: 'bg-gray-300' },
-  { label: 'Темно-сірий', value: '#9ca3af', preview: 'bg-gray-400' },
-  { label: 'Чорний', value: '#000000', preview: 'bg-black' },
-  { label: 'Білий', value: '#ffffff', preview: 'bg-white' },
-  { label: 'Синій', value: '#3b82f6', preview: 'bg-blue-500' },
+  { label: 'Світло-сірий', value: '#e5e7eb', preview: '#e5e7eb' }, // bg-gray-200
+  { label: 'Сірий', value: '#d1d5db', preview: '#d1d5db' }, // bg-gray-300
+  { label: 'Темно-сірий', value: '#9ca3af', preview: '#9ca3af' }, // bg-gray-400
+  { label: 'Чорний', value: '#000000', preview: '#000000' },
+  { label: 'Білий', value: '#ffffff', preview: '#ffffff' },
+  { label: 'Синій', value: '#3b82f6', preview: '#3b82f6' }, // bg-blue-500
 ]
 
 // Predefined input text colors
 const inputTextColors = [
-  { label: 'Чорний', value: '#000000', preview: 'bg-black' },
-  { label: 'Темно-сірий', value: '#1f2937', preview: 'bg-gray-800' },
-  { label: 'Сірий', value: '#374151', preview: 'bg-gray-700' },
-  { label: 'Білий', value: '#ffffff', preview: 'bg-white' },
-  { label: 'Світло-сірий', value: '#f9fafb', preview: 'bg-gray-50' },
+  { label: 'Чорний', value: '#000000', preview: '#000000' },
+  { label: 'Темно-сірий', value: '#1f2937', preview: '#1f2937' }, // bg-gray-800
+  { label: 'Сірий', value: '#374151', preview: '#374151' }, // bg-gray-700
+  { label: 'Білий', value: '#ffffff', preview: '#ffffff' },
+  { label: 'Світло-сірий', value: '#f9fafb', preview: '#f9fafb' }, // bg-gray-50
 ]
 
 
@@ -106,24 +104,32 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
   const [customInputTextColor, setCustomInputTextColor] = useState(design.inputTextColor || '#000000');
 
   // Check if current colors are custom (hex or rgba)
-  const isCustomBg = design.backgroundColor.startsWith('bg-[#') || design.backgroundColor.startsWith('bg-[rgba');
-  const isCustomText = design.textColor.startsWith('text-[#') || design.textColor.startsWith('text-[rgba');
-  const isCustomHeading = design.headingColor?.startsWith('text-[#') || design.headingColor?.startsWith('text-[rgba');
+  const isCustomBg = design.backgroundColor.startsWith('#') || design.backgroundColor.startsWith('rgb');
+  const isCustomText = design.textColor.startsWith('#') || design.textColor.startsWith('rgb');
+  const isCustomHeading = design.headingColor?.startsWith('#') || design.headingColor?.startsWith('rgb');
 
   // Extract current custom colors from design
-  const getCurrentColor = (color) => {
-    const match = color?.match(/(?:bg-|text-)\[((?:#[0-9A-Fa-f]+|rgba?\([^)]+\)))\]/)?.[1]
-    return match || 'linear-gradient(135deg, #ff6b6b, #4ecdc4)'
-  }
+  const customGradient = 'linear-gradient(135deg, #ff6b6b, #4ecdc4)'
 
   // Helper to determine if a color is light or dark (for custom colors)
-  const isLightColor = (hex) => {
-    const rgb = parseInt(hex.slice(1), 16)
-    const r = (rgb >> 16) & 0xff
-    const g = (rgb >> 8) & 0xff
-    const b = (rgb >> 0) & 0xff
-    const luma = 0.299 * r + 0.587 * g + 0.114 * b
-    return luma > 128
+  const isLightColor = (color) => {
+    let r, g, b
+    
+    if (color.startsWith('#')) {
+      const hex = color.slice(1)
+      const rgb = parseInt(hex, 16)
+      r = (rgb >> 16) & 0xff
+      g = (rgb >> 8) & 0xff
+      b = (rgb >> 0) & 0xff
+    } else if (color.startsWith('rgb')) {
+      const match = color.match(/\d+/g)
+      if (match) {
+        [r, g, b] = match.map(Number)
+      }
+    }
+    
+    const luma = 0.299 * r + 0.587 * g + 0.114 * b;
+    return luma > 128;
   }
 
   return (
@@ -154,7 +160,10 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
                   : 'border-border hover:border-primary/50'
               )}
             >
-              <div className={cn('w-8 h-8 rounded-md border border-border', color.preview)} />
+              <div
+                className="w-8 h-8 rounded-md border border-border"
+                style={{ backgroundColor: color.preview }}
+              />
               <span className="text-xs text-muted-foreground">{color.label}</span>
             </button>
           ))}
@@ -163,7 +172,7 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
             onClick={() => {
               // Підставляємо поточний колір при відкритті
               if (!showCustomBgColor && isCustomBg) {
-                const match = getCurrentColor(design.backgroundColor)
+                const match = design?.backgroundColor
                 if (match) setCustomBgColor(match)
               }
               setShowCustomBgColor(!showCustomBgColor)
@@ -177,7 +186,7 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
           >
             <div 
               className="w-8 h-8 rounded-md border border-border"
-              style={{ background: getCurrentColor(design.backgroundColor) }}
+              style={{ background: design?.backgroundColor || customGradient }}
             />
             <span className="text-xs text-muted-foreground">Власний</span>
           </button>
@@ -186,16 +195,17 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
         {/* Custom background color picker */}
         {showCustomBgColor && (
           <ColorPicker
-            key={`bg-${customBgColor}`}
             value={customBgColor}
             onChange={(color) => {
-              setCustomBgColor(color);
-              if (color.startsWith('rgba')) {
-                onUpdateDesign({ backgroundColor: `bg-[${color.replace(/\s/g, '')}]` });
-              } else if (/^#[0-9A-Fa-f]{6}$/i.test(color)) {
-                const textColorValue = isLightColor(color) ? 'text-slate-900' : 'text-slate-100';
-                onUpdateDesign({ backgroundColor: `bg-[${color}]`, textColor: textColorValue, headingColor: textColorValue });
-              }
+              setCustomBgColor(color)
+              // Визначаємо колір тексту на основі яскравості фону
+              const textColorValue = isLightColor(color) ? '#0f172a' : '#f1f5f9'
+              
+              onUpdateDesign({
+                backgroundColor: color,
+                textColor: isCustomText ? design.textColor : textColorValue,
+                headingColor: isCustomHeading ? design.headingColor : textColorValue
+              })
             }}
             className="mt-2"
           />
@@ -221,7 +231,10 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
                   : 'border-border hover:border-primary/50'
               )}
             >
-              <div className={cn('w-6 h-6 rounded-full', color.preview)} />
+              <div
+                className="w-6 h-6 rounded-full"
+                style={{ backgroundColor: color.preview }}
+              />
               <span className="text-sm text-foreground">{color.label}</span>
             </button>
           ))}
@@ -229,7 +242,7 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
           <button
             onClick={() => {
               if (!showCustomHeadingColor && isCustomHeading) {
-                const match = getCurrentColor(design.headingColor)
+                const match = design?.headingColor
                 if (match) setCustomHeadingColor(match)
               }
               setShowCustomHeadingColor(!showCustomHeadingColor)
@@ -243,7 +256,7 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
           >
             <div 
               className="w-6 h-6 rounded-full border border-border"
-              style={{ background: getCurrentColor(design.headingColor) }}
+              style={{ background: design?.headingColor || customGradient }}
             />
             <span className="text-sm text-foreground">Власний</span>
           </button>
@@ -252,15 +265,10 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
         {/* Custom heading color picker */}
         {showCustomHeadingColor && (
           <ColorPicker
-            key={`heading-${customHeadingColor}`}
             value={customHeadingColor}
             onChange={(color) => {
-              setCustomHeadingColor(color);
-              if (color.startsWith('rgba')) {
-                onUpdateDesign({ headingColor: `text-[${color.replace(/\s/g, '')}]` });
-              } else if (/^#[0-9A-Fa-f]{6}$/i.test(color)) {
-                onUpdateDesign({ headingColor: `text-[${color}]` });
-              }
+              setCustomHeadingColor(color)
+              onUpdateDesign({ headingColor: color })
             }}
             className="mt-2"
           />
@@ -286,7 +294,10 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
                   : 'border-border hover:border-primary/50'
               )}
             >
-              <div className={cn('w-6 h-6 rounded-full', color.preview)} />
+              <div
+                className="w-6 h-6 rounded-full"
+                style={{ backgroundColor: color.preview }}
+              />
               <span className="text-sm text-foreground">{color.label}</span>
             </button>
           ))}
@@ -294,7 +305,7 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
           <button
             onClick={() => {
               if (!showCustomTextColor && isCustomText) {
-                const match = getCurrentColor(design.textColor)
+                const match = design?.textColor
                 if (match) setCustomTextColor(match)
               }
               setShowCustomTextColor(!showCustomTextColor)
@@ -308,7 +319,7 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
           >
             <div 
               className="w-6 h-6 rounded-full border border-border"
-              style={{ background: getCurrentColor(design.textColor) }}
+              style={{ background: design?.textColor || customGradient }}
             />
             <span className="text-sm text-foreground">Власний</span>
           </button>
@@ -317,15 +328,10 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
         {/* Custom text color picker */}
         {showCustomTextColor && (
           <ColorPicker
-            key={`text-${customTextColor}`}
             value={customTextColor}
             onChange={(color) => {
-              setCustomTextColor(color);
-              if (color.startsWith('rgba')) {
-                onUpdateDesign({ textColor: `text-[${color.replace(/\s/g, '')}]` });
-              } else if (/^#[0-9A-Fa-f]{6}$/i.test(color)) {
-                onUpdateDesign({ textColor: `text-[${color}]` });
-              }
+              setCustomTextColor(color)
+              onUpdateDesign({ textColor: color })
             }}
             className="mt-2"
           />
@@ -380,11 +386,11 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
               }}
               className={cn(
                 'w-9 h-9 rounded-full border-2 transition-smooth',
-                color.preview,
                 design.accentColor === color.value
                   ? 'border-transparent! ring-3 ring-primary'
                   : 'border-border! hover:border-primary/70!'
               )}
+              style={{ backgroundColor: color.preview }}
               title={color.label}
             />
           ))}
@@ -413,7 +419,6 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
         {/* Custom accent color picker */}
         {showCustomAccentColor && (
           <ColorPicker
-            key={`accent-${customAccentColor}`}
             value={customAccentColor}
             onChange={(color) => {
               setCustomAccentColor(color);
@@ -443,11 +448,11 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
                 }}
                 className={cn(
                   'w-7 h-7 rounded-full border-2 transition-smooth',
-                  color.preview,
                   design.inputTextColor === color.value
                     ? 'border-transparent! ring-3 ring-primary'
                     : 'border-border! hover:border-primary/70!'
                 )}
+                style={{ backgroundColor: color.preview }}
                 title={color.label}
               />
             ))}
@@ -466,14 +471,13 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
                 style={{ 
                   background: design.inputTextColor && !inputTextColors.some(c => c.value === design.inputTextColor)
                     ? design.inputTextColor
-                    : 'linear-gradient(135deg, #ff6b6b, #4ecdc4)'
+                    : customGradient
                 }}
               />
             </button>
           </div>
           {showCustomInputTextColor && (
             <ColorPicker
-              key={`inputText-${customInputTextColor}`}
               value={customInputTextColor}
               onChange={(color) => {
                 setCustomInputTextColor(color);
@@ -499,11 +503,11 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
                 }}
                 className={cn(
                   'w-7 h-7 rounded-full border-2 transition-smooth',
-                  color.preview,
                   design.inputColor === color.value
                     ? 'border-transparent! ring-3 ring-primary'
                     : 'border-border! hover:border-primary/70!'
                 )}
+                style={{ backgroundColor: color.preview }}
                 title={color.label}
               />
             ))}
@@ -522,14 +526,13 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
                 style={{ 
                   background: design.inputColor && !inputColors.some(c => c.value === design.inputColor)
                     ? design.inputColor
-                    : 'linear-gradient(135deg, #ff6b6b, #4ecdc4)'
+                    : customGradient
                 }}
               />
             </button>
           </div>
           {showCustomInputColor && (
             <ColorPicker
-              key={`inputBorder-${customInputColor}`}
               value={customInputColor}
               onChange={(color) => {
                 setCustomInputColor(color);
@@ -555,11 +558,11 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
                 }}
                 className={cn(
                   'w-7 h-7 rounded-full border-2 transition-smooth',
-                  color.preview,
                   (design.inputBgColor || 'transparent') === color.value
                     ? 'border-transparent! ring-3 ring-primary'
                     : 'border-border! hover:border-primary/70!'
                 )}
+                style={{ backgroundColor: color.preview }}
                 title={color.label}
               />
             ))}
@@ -578,14 +581,13 @@ export const TabsDesign = ({ design, onUpdateDesign }) => {
                 style={{ 
                   background: design.inputBgColor && !inputBgColors.some(c => c.value === design.inputBgColor)
                     ? design.inputBgColor
-                    : 'linear-gradient(135deg, #ff6b6b, #4ecdc4)'
+                    : customGradient
                 }}
               />
             </button>
           </div>
           {showCustomInputBgColor && (
             <ColorPicker
-              key={`inputBg-${customInputBgColor}`}
               value={customInputBgColor}
               onChange={(color) => {
                 setCustomInputBgColor(color);

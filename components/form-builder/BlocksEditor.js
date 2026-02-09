@@ -31,8 +31,8 @@ export const BlocksEditor = ({
   onUpdateBlock,
   draggableProps,
   dragHandleProps,
-  headingColor = 'text-foreground',
-  headingSize = 'text-xl',
+  headingColor = '#131720', // text-foreground 
+  headingSize = '20px',
   inputColor,
   inputBgColor,
   inputTextColor,
@@ -410,7 +410,6 @@ export const BlocksEditor = ({
 
 
       case 'heading':
-        const headingAlignClass = block.textAlign === 'center' ? 'text-center' : block.textAlign === 'right' ? 'text-right' : 'text-left';
         return isEditingLabel
           ? <input
               ref={labelInputRef}
@@ -419,14 +418,24 @@ export const BlocksEditor = ({
               onChange={(e) => setEditLabelValue(e.target.value)}
               onBlur={handleSaveLabel}
               onKeyDown={handleLabelKeyDown}
-              className={cn("font-semibold bg-transparent outline-none w-full", headingSize, headingColor, headingAlignClass)}
+              className="font-semibold bg-transparent outline-none w-full"
+              style={{
+                color: headingColor,
+                fontSize: headingSize,
+                textAlign: block.textAlign
+              }}
             />
           : <h3
-              className={cn("font-semibold cursor-text", headingSize, headingColor, headingAlignClass)}
               onClick={(e) => {
                 e.stopPropagation();
                 onSelect();
                 setIsEditingLabel(true);
+              }}
+              className="font-semibold cursor-text"
+              style={{
+                color: headingColor,
+                fontSize: headingSize,
+                textAlign: block.textAlign
               }}
             >
               {block.label}
@@ -434,12 +443,6 @@ export const BlocksEditor = ({
 
 
       case 'paragraph':
-        const paragraphAlignClass =
-          block.textAlign === 'center'
-            ? 'text-center'
-            : block.textAlign === 'right'
-              ? 'text-right'
-              : 'text-left';
         return isEditingLabel
           ? <textarea
               ref={textareaRef}
@@ -457,16 +460,16 @@ export const BlocksEditor = ({
                   setIsEditingLabel(false);
                 }
               }}
-              className={cn(
-                'bg-transparent outline-none w-full resize-none overflow-hidden block',
-                'leading-normal p-0 m-0 whitespace-pre-wrap break-words',
-                'opacity-80',
-                paragraphAlignClass
-              )}
-              style={{ lineHeight: '1.5' }}
+              className="bg-transparent outline-none w-full resize-none overflow-hidden block
+                         leading-normal p-0 m-0 whitespace-pre-wrap break-words opacity-80"
+              style={{
+                lineHeight: '1.5',
+                textAlign: block.textAlign
+              }}
             />
           : <p
-              className={cn('cursor-text whitespace-pre-wrap break-words', 'opacity-80', paragraphAlignClass)}
+              className="cursor-text whitespace-pre-wrap break-words opacity-80"
+              style={{ textAlign: block.textAlign }}
               onClick={(e) => {
                 e.stopPropagation();
                 onSelect();

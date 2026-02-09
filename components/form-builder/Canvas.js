@@ -2,23 +2,10 @@
 
 import { BlocksEditor } from '@/components/form-builder/BlocksEditor';
 import { Plus, ArrowRight, CheckCircle, Settings as SettingsIcon, Monitor, Smartphone } from 'lucide-react';
-import { cn } from '@/utils';
+import { cn, getColor } from '@/utils';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button'
 import { OrderButton } from '@/components/ui/OrderButton'
-
-const fontSizeClass = {
-  small: 'text-sm',
-  medium: 'text-base',
-  large: 'text-lg',
-};
-
-const headingSizeClass = {
-  small: 'text-lg',
-  medium: 'text-xl',
-  large: 'text-2xl',
-  xlarge: 'text-3xl',
-};
 
 const DropZone = ({
   active,
@@ -85,13 +72,15 @@ export const Canvas = ({
   onUpdateSuccessBlock,
   onMoveSuccessBlock,
   onOpenAddSuccessBlock,
+  onPageModeChange
 }) => {
   const [dropIndex, setDropIndex] = useState(null);
   const [successDropIndex, setSuccessDropIndex] = useState(null);
   const [draggedBlockIndex, setDraggedBlockIndex] = useState(null);
   const [draggedSuccessBlockIndex, setDraggedSuccessBlockIndex] = useState(null);
   const [isExternalDragging, setIsExternalDragging] = useState(false);
-  const [previewMode, setPreviewMode] = useState('desktop');
+  const [pageMode, setPageMode] = useState('form'); // 'form' or 'success'
+  const [previewMode, setPreviewMode] = useState('desktop'); // 'desktop' or 'mobile'
   // For inline blocks: track which side of the block we're hovering
   const [inlineDropInfo, setInlineDropInfo] = useState(null);
   const dragGhostRef = useRef(null);
@@ -130,6 +119,13 @@ export const Canvas = ({
       ghost.remove();
     };
   }, []);
+
+  // Повідомляємо батьківський компонент про зміну режиму перегляду
+  useEffect(() => {
+    if (onPageModeChange) {
+      onPageModeChange(pageMode)
+    }
+  }, [pageMode, onPageModeChange])
 
   const getDraggedBlockType = (e) => {
     return (e.dataTransfer.getData('blockType') || e.dataTransfer.getData('text/plain'));
@@ -296,9 +292,6 @@ export const Canvas = ({
   const isDraggingBlocks = draggedBlockIndex !== null || isExternalDragging;
   const isDraggingSuccessBlocks = draggedSuccessBlockIndex !== null || isExternalDragging;
 
-  const textColorHex = formDesign.textColor.match(/text-\[(#[0-9A-Fa-f]{6})\]/)?.[1];
-  const bgColorHex = formDesign.backgroundColor.match(/bg-\[(#[0-9A-Fa-f]{6})\]/)?.[1];
-
   return (
     <div
       className="w-full h-full overflow-y-auto"
@@ -342,11 +335,11 @@ export const Canvas = ({
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    setPreviewMode('desktop');
+                    setPageMode('form');
                   }}
                   className={cn(
                     'px-2.5 py-[5px] rounded-md transition-smooth',
-                    previewMode === 'desktop'
+                    pageMode === 'form'
                       ? 'bg-primary/[0.25] text-black/[0.8]'
                       : 'text-muted-foreground hover:text-black/[0.8]'
                   )}
@@ -356,11 +349,11 @@ export const Canvas = ({
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    setPreviewMode('mobile');
+                    setPageMode('success');
                   }}
                   className={cn(
                     'px-2.5 py-[5px] rounded-md transition-smooth',
-                    previewMode === 'mobile'
+                    pageMode === 'success'
                       ? 'bg-primary/[0.25] text-black/[0.8]'
                       : 'text-muted-foreground hover:text-black/[0.8]'
                   )}
@@ -407,201 +400,249 @@ export const Canvas = ({
             </div>
           </div>
 
-          {/* Form Container */}
-          <div
-            className={cn('rounded-2xl border-2 border-[#2f3032]/90!', !bgColorHex && formDesign.backgroundColor)}
-            style={bgColorHex ? { backgroundColor: bgColorHex } : undefined}
-          >
-            <div className="w-full pt-6 pb-10 px-4 sm:px-6">
+          {/* Form Container - показується тільки коли pageMode === 'form' */}
+          {pageMode === 'form' && (
+            <>
               <div
-                className={cn(
-                  'w-full max-w-[700px] mx-auto',
-                  !textColorHex && formDesign.textColor,
-                  fontSizeClass[formDesign.fontSize]
-                )}
-                style={textColorHex ? { color: textColorHex } : undefined}
+                className="rounded-2xl border-2 border-[#2f3032]/90!"
+                style={{ backgroundColor: formDesign.backgroundColor }}
               >
-              {/* Blocks */}
-              <div className="space-y-2">
-                {blocks.length === 0 ? (
+                <div className="w-full pt-6 pb-10 px-4 sm:px-6">
                   <div
-                    className={cn(
-                      'border-2 border-dashed rounded-lg p-12 text-center transition-smooth',
-                      dropIndex === 0
-                        ? 'border-primary bg-accent/50'
-                        : 'border-border hover:border-muted-foreground/50'
-                    )}
-                    onDragEnter={(e) => handleDragOver(e, 0)}
-                    onDragOver={(e) => handleDragOver(e, 0)}
-                    onDrop={(e) => handleDrop(e, 0)}
-                  >
-                    <div className="w-16 h-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
-                      <Plus className="w-8 h-8 text-muted-foreground" />
-                    </div>
-                    <p className="text-muted-foreground mb-2">Ваша форма порожня</p>
-                    <p className="text-sm text-muted-foreground">Додайте або перетягніть сюди блоки з вкладки &quot;Додати&quot;</p>
-                  </div>
-                ) : (
-                  <div
-                    className="relative"
-                    onDragOver={(e) => {
-                      const bt = getDraggedBlockType(e);
-                      const fromIndex = getDraggedBlockIndex(e);
-                      const fromSuccessIndex = getDraggedSuccessBlockIndex(e);
-                      if (bt && fromIndex === null && fromSuccessIndex === null) {
-                        e.preventDefault();
-                        setIsExternalDragging(true);
-                      }
-                    }}
-                    onDrop={(e) => {
-                      const bt = getDraggedBlockType(e);
-                      const fromIndex = getDraggedBlockIndex(e);
-                      const fromSuccessIndex = getDraggedSuccessBlockIndex(e);
-                      if (bt && fromIndex === null && fromSuccessIndex === null) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        onAddBlockAt(bt, dropIndex ?? blocks.length);
-                        setDropIndex(null);
-                        setIsExternalDragging(false);
-                      }
+                    className="w-full max-w-[700px] mx-auto"
+                    style={{
+                      color: getColor(formDesign.textColor, 0.7),
+                      fontSize: formDesign.fontSize
                     }}
                   >
-                    <DropZone
-                      active={dropIndex === 0}
-                      isDragging={isDraggingBlocks}
-                      onDragOver={(e) => handleDragOver(e, 0)}
-                      onDragLeave={handleDragLeave}
-                      onDrop={(e) => handleDrop(e, 0)}
-                    />
-
-                    <div className="space-y-2">
-                      {blocks.map((block, index) => {
-                        const widthClass = {
-                          '1/1': 'w-full',
-                          '1/2': 'w-[calc(50%-0.5rem)]',
-                          '1/3': 'w-[calc(33.333%-0.67rem)]',
-                        }[block.blockWidth || '1/1'];
-
-                        const verticalAlignClass = {
-                          top: 'self-start',
-                          center: 'self-center',
-                          bottom: 'self-end',
-                        }[block.blockVerticalAlign || 'top'];
-
-                        // Horizontal positioning for inline blocks (when a row has remaining free space)
-                        const horizontalAlignClass = block.blockWidth !== '1/1'
-                          ? {
-                              start: '',
-                              center: 'mx-auto',
-                              end: 'ml-auto',
-                            }[block.blockHorizontalAlign || 'start']
-                          : '';
-
-                        const getInsertSideFromPointer = (e) => {
-                          const rect = (e.currentTarget).getBoundingClientRect()
-                          return e.clientX < rect.left + rect.width / 2 ? 'left' : 'right'
-                        }
-
-                        const getInsertIndexFromPointer = (e) => {
-                          const side = getInsertSideFromPointer(e)
-                          return side === 'left' ? index : index + 1
-                        }
-
-                        const handleInlineDragOver = (e) => {
-                          const insertIndex = getInsertIndexFromPointer(e);
-                          const side = getInsertSideFromPointer(e);
-                          handleDragOver(e, insertIndex);
-                          // Track inline drop info for visual indicator
-                          if ((block.blockWidth === '1/2' || block.blockWidth === '1/3') && isDraggingBlocks) {
-                            setInlineDropInfo({ blockIndex: index, side });
-                          } else {
-                            setInlineDropInfo(null);
+                  {/* Blocks */}
+                  <div className="space-y-2">
+                    {blocks.length === 0 ? (
+                      <div
+                        className={cn(
+                          'border-2 border-dashed rounded-lg p-12 text-center transition-smooth',
+                          dropIndex === 0
+                            ? 'border-primary bg-accent/50'
+                            : 'border-border hover:border-muted-foreground/50'
+                        )}
+                        onDragEnter={(e) => handleDragOver(e, 0)}
+                        onDragOver={(e) => handleDragOver(e, 0)}
+                        onDrop={(e) => handleDrop(e, 0)}
+                      >
+                        <div className="w-16 h-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
+                          <Plus className="w-8 h-8 text-muted-foreground" />
+                        </div>
+                        <p className="mb-2 text-sm">Ваша форма порожня</p>
+                        <p className="text-sm opacity-90">Додайте або перетягніть сюди блоки з вкладки &quot;Додати&quot;</p>
+                      </div>
+                    ) : (
+                      <div
+                        className="relative"
+                        onDragOver={(e) => {
+                          const bt = getDraggedBlockType(e);
+                          const fromIndex = getDraggedBlockIndex(e);
+                          const fromSuccessIndex = getDraggedSuccessBlockIndex(e);
+                          if (bt && fromIndex === null && fromSuccessIndex === null) {
+                            e.preventDefault();
+                            setIsExternalDragging(true);
                           }
-                        };
+                        }}
+                        onDrop={(e) => {
+                          const bt = getDraggedBlockType(e);
+                          const fromIndex = getDraggedBlockIndex(e);
+                          const fromSuccessIndex = getDraggedSuccessBlockIndex(e);
+                          if (bt && fromIndex === null && fromSuccessIndex === null) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            onAddBlockAt(bt, dropIndex ?? blocks.length);
+                            setDropIndex(null);
+                            setIsExternalDragging(false);
+                          }
+                        }}
+                      >
+                        <DropZone
+                          active={dropIndex === 0}
+                          isDragging={isDraggingBlocks}
+                          onDragOver={(e) => handleDragOver(e, 0)}
+                          onDragLeave={handleDragLeave}
+                          onDrop={(e) => handleDrop(e, 0)}
+                        />
 
-                        const handleInlineDrop = (e) => {
-                          const insertIndex = getInsertIndexFromPointer(e);
-                          handleDrop(e, insertIndex);
-                          setInlineDropInfo(null);
-                        };
+                        <div className="space-y-2">
+                          {blocks.map((block, index) => {
+                            const widthClass = {
+                              '1/1': 'w-full',
+                              '1/2': 'w-[calc(50%-0.5rem)]',
+                              '1/3': 'w-[calc(33.333%-0.67rem)]',
+                            }[block.blockWidth || '1/1'];
 
-                        const isInlineBlock = block.blockWidth === '1/2' || block.blockWidth === '1/3';
-                        const showLeftIndicator = inlineDropInfo?.blockIndex === index && inlineDropInfo?.side === 'left' && isDraggingBlocks;
-                        const showRightIndicator = inlineDropInfo?.blockIndex === index && inlineDropInfo?.side === 'right' && isDraggingBlocks;
+                            const verticalAlignClass = {
+                              top: 'self-start',
+                              center: 'self-center',
+                              bottom: 'self-end',
+                            }[block.blockVerticalAlign || 'top'];
 
-                        return (
-                          <div
-                            key={block.id}
-                            className={cn(
-                              'relative',
-                              widthClass,
-                              verticalAlignClass,
-                              horizontalAlignClass,
-                              draggedBlockIndex === index ? 'opacity-50' : ''
-                            )}
-                            onDragEnter={handleInlineDragOver}
-                            onDragOver={handleInlineDragOver}
-                            onDragLeave={() => setInlineDropInfo(null)}
-                            onDrop={handleInlineDrop}
-                          >
-                            {/* Left drop indicator for inline blocks */}
-                            {isInlineBlock && showLeftIndicator && (
-                              <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-full z-10 -translate-x-2" />
-                            )}
+                            // Horizontal positioning for inline blocks (when a row has remaining free space)
+                            const horizontalAlignClass = block.blockWidth !== '1/1'
+                              ? {
+                                  start: '',
+                                  center: 'mx-auto',
+                                  end: 'ml-auto',
+                                }[block.blockHorizontalAlign || 'start']
+                              : '';
 
-                            <BlocksEditor
-                              block={block}
-                              isActive={activeBlockId === block.id}
-                              onSelect={() => {
-                                onSelectSuccessBlock(null);
-                                onSelectBlock(block.id);
-                              }}
-                              onDelete={() => onDeleteBlock(block.id)}
-                              onDuplicate={() => onDuplicateBlock(block.id)}
-                              onOpenSettings={() => onOpenSettings(block.id)}
-                              onAddBlock={onOpenAddBlock}
-                              onUpdateBlock={(updates) => onUpdateBlock(block.id, updates)}
-                              headingColor={formDesign.headingColor || 'text-foreground'}
-                              headingSize={headingSizeClass[formDesign.headingSize || 'medium']}
-                              inputColor={formDesign.inputColor}
-                              inputBgColor={formDesign.inputBgColor}
-                              inputTextColor={formDesign.inputTextColor}
-                              formTextColor={formDesign.textColor}
-                              accentColor={formDesign.accentColor}
-                              dragHandleProps={{
-                                draggable: true,
-                                onDragStart: (e) => handleBlockDragStart(e, index),
-                                onDragEnd: handleBlockDragEnd,
-                              }}
-                            />
+                            const getInsertSideFromPointer = (e) => {
+                              const rect = (e.currentTarget).getBoundingClientRect()
+                              return e.clientX < rect.left + rect.width / 2 ? 'left' : 'right'
+                            }
 
-                            {/* Right drop indicator for inline blocks */}
-                            {isInlineBlock && showRightIndicator && (
-                              <div className="absolute right-0 top-0 bottom-0 w-1 bg-primary rounded-full z-10 translate-x-2" />
-                            )}
+                            const getInsertIndexFromPointer = (e) => {
+                              const side = getInsertSideFromPointer(e)
+                              return side === 'left' ? index : index + 1
+                            }
 
-                            {/* Drop zone after each block (only visible when dragging full-width blocks) */}
-                            {(block.blockWidth || '1/1') === '1/1' && (
-                              <DropZone
-                                active={dropIndex === index + 1}
-                                isDragging={isDraggingBlocks}
-                                onDragOver={(e) => handleDragOver(e, index + 1)}
-                                onDragLeave={handleDragLeave}
-                                onDrop={(e) => handleDrop(e, index + 1)}
-                              />
-                            )}
-                          </div>
-                        )
-                      })}
-                    </div>
+                            const handleInlineDragOver = (e) => {
+                              const insertIndex = getInsertIndexFromPointer(e);
+                              const side = getInsertSideFromPointer(e);
+                              handleDragOver(e, insertIndex);
+                              // Track inline drop info for visual indicator
+                              if ((block.blockWidth === '1/2' || block.blockWidth === '1/3') && isDraggingBlocks) {
+                                setInlineDropInfo({ blockIndex: index, side });
+                              } else {
+                                setInlineDropInfo(null);
+                              }
+                            };
+
+                            const handleInlineDrop = (e) => {
+                              const insertIndex = getInsertIndexFromPointer(e);
+                              handleDrop(e, insertIndex);
+                              setInlineDropInfo(null);
+                            };
+
+                            const isInlineBlock = block.blockWidth === '1/2' || block.blockWidth === '1/3';
+                            const showLeftIndicator = inlineDropInfo?.blockIndex === index && inlineDropInfo?.side === 'left' && isDraggingBlocks;
+                            const showRightIndicator = inlineDropInfo?.blockIndex === index && inlineDropInfo?.side === 'right' && isDraggingBlocks;
+
+                            return (
+                              <div
+                                key={block.id}
+                                className={cn(
+                                  'relative',
+                                  widthClass,
+                                  verticalAlignClass,
+                                  horizontalAlignClass,
+                                  draggedBlockIndex === index ? 'opacity-50' : ''
+                                )}
+                                onDragEnter={handleInlineDragOver}
+                                onDragOver={handleInlineDragOver}
+                                onDragLeave={() => setInlineDropInfo(null)}
+                                onDrop={handleInlineDrop}
+                              >
+                                {/* Left drop indicator for inline blocks */}
+                                {isInlineBlock && showLeftIndicator && (
+                                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-full z-10 -translate-x-2" />
+                                )}
+
+                                <BlocksEditor
+                                  block={block}
+                                  isActive={activeBlockId === block.id}
+                                  onSelect={() => {
+                                    onSelectSuccessBlock(null);
+                                    onSelectBlock(block.id);
+                                  }}
+                                  onDelete={() => onDeleteBlock(block.id)}
+                                  onDuplicate={() => onDuplicateBlock(block.id)}
+                                  onOpenSettings={() => onOpenSettings(block.id)}
+                                  onAddBlock={onOpenAddBlock}
+                                  onUpdateBlock={(updates) => onUpdateBlock(block.id, updates)}
+                                  headingColor={formDesign.headingColor}
+                                  headingSize={formDesign.headingSize}
+                                  inputColor={formDesign.inputColor}
+                                  inputBgColor={formDesign.inputBgColor}
+                                  inputTextColor={formDesign.inputTextColor}
+                                  formTextColor={formDesign.textColor}
+                                  accentColor={formDesign.accentColor}
+                                  dragHandleProps={{
+                                    draggable: true,
+                                    onDragStart: (e) => handleBlockDragStart(e, index),
+                                    onDragEnd: handleBlockDragEnd,
+                                  }}
+                                />
+
+                                {/* Right drop indicator for inline blocks */}
+                                {isInlineBlock && showRightIndicator && (
+                                  <div className="absolute right-0 top-0 bottom-0 w-1 bg-primary rounded-full z-10 translate-x-2" />
+                                )}
+
+                                {/* Drop zone after each block (only visible when dragging full-width blocks) */}
+                                {(block.blockWidth || '1/1') === '1/1' && (
+                                  <DropZone
+                                    active={dropIndex === index + 1}
+                                    isDragging={isDraggingBlocks}
+                                    onDragOver={(e) => handleDragOver(e, index + 1)}
+                                    onDragLeave={handleDragLeave}
+                                    onDrop={(e) => handleDrop(e, index + 1)}
+                                  />
+                                )}
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
+
+                  {/* Submit Button - Fixed at end (only if not sticky) */}
+                  {!formDesign.stickyButton && (
+                    <div className="mt-6 group/submit relative inline-block">
+                      {/* Settings icon on left */}
+                      <div
+                        className={cn(
+                          'absolute -left-9 top-1/2 -translate-y-1/2 z-20',
+                          'opacity-0 transition-smooth group-hover/submit:opacity-100'
+                        )}
+                      >
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onSubmitButtonClick();
+                          }}
+                          className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-accent-foreground transition-smooth"
+                          title="Button settings"
+                        >
+                          <SettingsIcon className="w-4 h-4" />
+                        </button>
+                      </div>
+                      {/* Button with hover/selected border */}
+                      <div
+                        className={cn(
+                          'rounded-lg transition-smooth',
+                          isSubmitButtonSelected 
+                            ? 'ring-2 ring-primary ring-offset-2' 
+                            : 'ring-0 group-hover/submit:ring-2 group-hover/submit:ring-border group-hover/submit:ring-offset-2'
+                        )}
+                      >
+                        <Button
+                          variant="black"
+                          size="black"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onSubmitButtonClick();
+                          }}
+                        >
+                          {submitButtonText}
+                          <ArrowRight className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                  </div>
+                </div>
               </div>
 
-              {/* Submit Button - Fixed at end (only if not sticky) */}
-              {!formDesign.stickyButton && (
-                <div className="mt-6 group/submit relative inline-block">
-                  {/* Settings icon on left */}
+              {/* Sticky Submit Button (when enabled) */}
+              {formDesign.stickyButton && (
+                <div className="mt-4 group/submit relative">
                   <div
                     className={cn(
                       'absolute -left-9 top-1/2 -translate-y-1/2 z-20',
@@ -619,221 +660,150 @@ export const Canvas = ({
                       <SettingsIcon className="w-4 h-4" />
                     </button>
                   </div>
-                  {/* Button with hover/selected border */}
                   <div
                     className={cn(
-                      'rounded-lg transition-smooth',
+                      'rounded-xl transition-smooth p-3 bg-card border border-border',
                       isSubmitButtonSelected 
                         ? 'ring-2 ring-primary ring-offset-2' 
                         : 'ring-0 group-hover/submit:ring-2 group-hover/submit:ring-border group-hover/submit:ring-offset-2'
                     )}
+                    style={{
+                      backgroundColor: formDesign.backgroundColor,
+                      color: formDesign.textColor,
+                      fontSize: formDesign.fontSize
+                    }}
                   >
-                    <Button
-                      variant="black"
-                      size="black"
+                    <OrderButton
+                      hasLineItems={blocks.some((b) => b.type === 'line-items')}
+                      quantityLineItems={1}
+                      totalAmount="0.00"
+                      submitButtonText={submitButtonText}
                       onClick={(e) => {
                         e.stopPropagation();
                         onSubmitButtonClick();
                       }}
-                    >
-                      {submitButtonText}
-                      <ArrowRight className="w-4 h-4" />
-                    </Button>
+                    />
                   </div>
                 </div>
               )}
-              </div>
-            </div>
-          </div>
+            </>
+          )}
 
-          {/* Sticky Submit Button (when enabled) */}
-          {formDesign.stickyButton && (
-            <div className="mt-4 group/submit relative">
-              <div
-                className={cn(
-                  'absolute -left-9 top-1/2 -translate-y-1/2 z-20',
-                  'opacity-0 transition-smooth group-hover/submit:opacity-100'
-                )}
-              >
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSubmitButtonClick();
-                  }}
-                  className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-accent-foreground transition-smooth"
-                  title="Button settings"
-                >
-                  <SettingsIcon className="w-4 h-4" />
-                </button>
-              </div>
-              <div
-                className={cn(
-                  'rounded-xl transition-smooth p-3 bg-card border border-border',
-                  isSubmitButtonSelected 
-                    ? 'ring-2 ring-primary ring-offset-2' 
-                    : 'ring-0 group-hover/submit:ring-2 group-hover/submit:ring-border group-hover/submit:ring-offset-2',
-                  bgColorHex && formDesign.backgroundColor,
-                  textColorHex && formDesign.textColor,
-                  fontSizeClass[formDesign.fontSize]
-                )}
-                style={{
-                  ...(!bgColorHex ? { backgroundColor: bgColorHex } : undefined),
-                  ...(!textColorHex ? { color: textColorHex } : undefined),
-                }}
-              >
-                {/* <Button
-                  variant="order"
-                  size="order"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSubmitButtonClick();
+          {/* Success Page Section - показується тільки коли pageMode === 'success' */}
+          {pageMode === 'success' && (
+            <div
+              className="rounded-2xl border-2 border-[#2f3032]/90! bg-white"
+              style={{
+                backgroundColor: formDesign.backgroundColor,
+                color: formDesign.textColor,
+                fontSize: formDesign.fontSize
+              }}
+            >
+              <div className="py-8">
+                {/* Success Page Blocks */}
+                <div
+                  className="space-y-2 w-full max-w-[700px] mx-auto px-4 sm:px-6"
+                  style={{
+                    backgroundColor: formDesign.backgroundColor,
+                    color: formDesign.textColor,
+                    fontSize: formDesign.fontSize
                   }}
                 >
-                  {blocks.some((b) => b.type === 'line-items') ? (
-                    <>
-                      <span className="flex items-center justify-center w-7 h-7 rounded-full bg-muted-foreground/30 text-sm">1</span>
-                      <span className="flex-1 text-center">Order</span>
-                      <span className="text-sm font-medium">$0.00</span>
-                    </>
+                  {successBlocks.length === 0 ? (
+                    <div
+                      className={cn(
+                        'border-2 border-dashed rounded-lg p-8 text-center transition-smooth',
+                        successDropIndex === 0
+                          ? 'border-primary bg-accent/50'
+                          : 'border-border hover:border-muted-foreground/50'
+                      )}
+                      onDragEnter={(e) => handleSuccessDragOver(e, 0)}
+                      onDragOver={(e) => handleSuccessDragOver(e, 0)}
+                      onDrop={(e) => handleSuccessDrop(e, 0)}
+                    >
+                      <p className="mb-2 text-sm">Сторінка успіху порожня</p>
+                      <p className="text-sm opacity-90">Додайте або перетягніть сюди блоки з вкладки &quot;Додати&quot;</p>
+                    </div>
                   ) : (
-                    <>
-                      <span className="flex-1 text-center">{submitButtonText}</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </>
-                  )}
-                </Button> */}
+                    <div
+                      className="relative"
+                      onDragOver={(e) => {
+                        const bt = getDraggedBlockType(e);
+                        const fromIndex = getDraggedBlockIndex(e);
+                        const fromSuccessIndex = getDraggedSuccessBlockIndex(e);
+                        if (bt && fromIndex === null && fromSuccessIndex === null) {
+                          e.preventDefault();
+                          setIsExternalDragging(true);
+                        }
+                      }}
+                      onDrop={(e) => {
+                        const bt = getDraggedBlockType(e);
+                        const fromIndex = getDraggedBlockIndex(e);
+                        const fromSuccessIndex = getDraggedSuccessBlockIndex(e);
+                        if (bt && fromIndex === null && fromSuccessIndex === null) {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          onAddSuccessBlockAt(bt, successDropIndex ?? successBlocks.length);
+                          setSuccessDropIndex(null);
+                          setIsExternalDragging(false);
+                        }
+                      }}
+                    >
+                      <DropZone
+                        active={successDropIndex === 0}
+                        isDragging={isDraggingSuccessBlocks}
+                        onDragOver={(e) => handleSuccessDragOver(e, 0)}
+                        onDragLeave={handleSuccessDragLeave}
+                        onDrop={(e) => handleSuccessDrop(e, 0)}
+                      />
 
-                <OrderButton
-                  hasLineItems={blocks.some((b) => b.type === 'line-items')}
-                  quantityLineItems={1}
-                  totalAmount="0.00"
-                  submitButtonText={submitButtonText}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSubmitButtonClick();
-                  }}
-                />
+                      <div className="space-y-2">
+                        {successBlocks.map((block, index) => (
+                          <div
+                            key={block.id}
+                            className={cn(draggedSuccessBlockIndex === index ? 'opacity-50' : '')}
+                          >
+                            <BlocksEditor
+                              block={block}
+                              isActive={activeSuccessBlockId === block.id}
+                              onSelect={() => {
+                                onSelectBlock(null);
+                                onSelectSuccessBlock(block.id);
+                              }}
+                              onDelete={() => onDeleteSuccessBlock(block.id)}
+                              onDuplicate={() => onDuplicateSuccessBlock(block.id)}
+                              onOpenSettings={() => onOpenSuccessSettings(block.id)}
+                              onAddBlock={onOpenAddSuccessBlock}
+                              onUpdateBlock={(updates) => onUpdateSuccessBlock(block.id, updates)}
+                              headingColor={formDesign.headingColor}
+                              headingSize={formDesign.headingSize}
+                              inputColor={formDesign.inputColor}
+                              inputBgColor={formDesign.inputBgColor}
+                              inputTextColor={formDesign.inputTextColor}
+                              formTextColor={formDesign.textColor}
+                              dragHandleProps={{
+                                draggable: true,
+                                onDragStart: (e) => handleSuccessBlockDragStart(e, index),
+                                onDragEnd: handleSuccessBlockDragEnd,
+                              }}
+                            />
+
+                            <DropZone
+                              active={successDropIndex === index + 1}
+                              isDragging={isDraggingSuccessBlocks}
+                              onDragOver={(e) => handleSuccessDragOver(e, index + 1)}
+                              onDragLeave={handleSuccessDragLeave}
+                              onDrop={(e) => handleSuccessDrop(e, index + 1)}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           )}
-
-          {/* Success Page Section */}
-          <div
-            className={cn(
-              "mt-8 rounded-2xl border border-border",
-              bgColorHex && formDesign.backgroundColor,
-              textColorHex && formDesign.textColor,
-              fontSizeClass[formDesign.fontSize]
-            )}
-            style={{
-              ...(!bgColorHex ? { backgroundColor: bgColorHex } : undefined),
-              ...(!textColorHex ? { color: textColorHex } : undefined),
-            }}
-          >
-            <div className="py-8">
-              {/* Success Page Blocks */}
-              <div
-                className={cn(
-                  "space-y-2 w-full max-w-[700px] mx-auto px-4 sm:px-6",
-                  !textColorHex && formDesign.textColor,
-                  fontSizeClass[formDesign.fontSize]
-                )}
-                style={textColorHex ? { color: textColorHex } : undefined}
-              >
-                {successBlocks.length === 0 ? (
-                  <div
-                    className={cn(
-                      'border-2 border-dashed rounded-lg p-8 text-center transition-smooth',
-                      successDropIndex === 0
-                        ? 'border-primary bg-accent/50'
-                        : 'border-border hover:border-muted-foreground/50'
-                    )}
-                    onDragEnter={(e) => handleSuccessDragOver(e, 0)}
-                    onDragOver={(e) => handleSuccessDragOver(e, 0)}
-                    onDrop={(e) => handleSuccessDrop(e, 0)}
-                  >
-                    <p className="text-muted-foreground mb-2">Сторінка успіху порожня</p>
-                    <p className="text-sm text-muted-foreground">Додайте або перетягніть сюди блоки з вкладки &quot;Додати&quot;</p>
-                  </div>
-                ) : (
-                  <div
-                    className="relative"
-                    onDragOver={(e) => {
-                      const bt = getDraggedBlockType(e);
-                      const fromIndex = getDraggedBlockIndex(e);
-                      const fromSuccessIndex = getDraggedSuccessBlockIndex(e);
-                      if (bt && fromIndex === null && fromSuccessIndex === null) {
-                        e.preventDefault();
-                        setIsExternalDragging(true);
-                      }
-                    }}
-                    onDrop={(e) => {
-                      const bt = getDraggedBlockType(e);
-                      const fromIndex = getDraggedBlockIndex(e);
-                      const fromSuccessIndex = getDraggedSuccessBlockIndex(e);
-                      if (bt && fromIndex === null && fromSuccessIndex === null) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        onAddSuccessBlockAt(bt, successDropIndex ?? successBlocks.length);
-                        setSuccessDropIndex(null);
-                        setIsExternalDragging(false);
-                      }
-                    }}
-                  >
-                    <DropZone
-                      active={successDropIndex === 0}
-                      isDragging={isDraggingSuccessBlocks}
-                      onDragOver={(e) => handleSuccessDragOver(e, 0)}
-                      onDragLeave={handleSuccessDragLeave}
-                      onDrop={(e) => handleSuccessDrop(e, 0)}
-                    />
-
-                    <div className="space-y-2">
-                      {successBlocks.map((block, index) => (
-                        <div
-                          key={block.id}
-                          className={cn(draggedSuccessBlockIndex === index ? 'opacity-50' : '')}
-                        >
-                          <BlocksEditor
-                            block={block}
-                            isActive={activeSuccessBlockId === block.id}
-                            onSelect={() => {
-                              onSelectBlock(null);
-                              onSelectSuccessBlock(block.id);
-                            }}
-                            onDelete={() => onDeleteSuccessBlock(block.id)}
-                            onDuplicate={() => onDuplicateSuccessBlock(block.id)}
-                            onOpenSettings={() => onOpenSuccessSettings(block.id)}
-                            onAddBlock={onOpenAddSuccessBlock}
-                            onUpdateBlock={(updates) => onUpdateSuccessBlock(block.id, updates)}
-                            headingColor={formDesign.headingColor || 'text-foreground'}
-                            headingSize={headingSizeClass[formDesign.headingSize || 'medium']}
-                            inputColor={formDesign.inputColor}
-                            inputBgColor={formDesign.inputBgColor}
-                            inputTextColor={formDesign.inputTextColor}
-                            formTextColor={formDesign.textColor}
-                            dragHandleProps={{
-                              draggable: true,
-                              onDragStart: (e) => handleSuccessBlockDragStart(e, index),
-                              onDragEnd: handleSuccessBlockDragEnd,
-                            }}
-                          />
-
-                          <DropZone
-                            active={successDropIndex === index + 1}
-                            isDragging={isDraggingSuccessBlocks}
-                            onDragOver={(e) => handleSuccessDragOver(e, index + 1)}
-                            onDragLeave={handleSuccessDragLeave}
-                            onDrop={(e) => handleSuccessDrop(e, index + 1)}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
         </div>
         {/* Це пустий блок щоб блок канвас залишався по центру а це імітує sidepanel */}
         {/* а 4px це додатковий відступ щоб канвас не впирався в sidepanel на меншій ширині */}

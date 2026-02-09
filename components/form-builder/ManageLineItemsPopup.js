@@ -315,7 +315,10 @@ export const ManageLineItemsPopup = ({
       <div className="fixed inset-0 bg-foreground/50" />
 
       <div
-        className={cn('relative bg-background rounded-2xl shadow-2xl flex flex-col', isMobile ? 'w-full' : 'w-[90vw] max-w-[1100px]')}
+        className={cn(
+          'relative bg-background rounded-2xl shadow-2xl flex flex-col',
+          isMobile ? 'w-full' : 'w-[90vw] max-w-[1100px]'
+        )}
         style={{ height: isMobile ? 'calc(100vh - 24px)' : 'calc(100vh - 64px)' }}
         onClick={(e) => e.stopPropagation()}
       >

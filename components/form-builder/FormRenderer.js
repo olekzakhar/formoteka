@@ -22,19 +22,6 @@ import { BlockMessengerSelect } from '@/components/form-builder/block/MessengerS
 import { BlockList } from '@/components/form-builder/block/List'
 import { BlockChoiceCard } from '@/components/form-builder/block/ChoiceCard';
 
-const fontSizeClass = {
-  small: 'text-sm',
-  medium: 'text-base',
-  large: 'text-lg',
-}
-
-const headingSizeClass = {
-  small: 'text-lg',
-  medium: 'text-xl',
-  large: 'text-2xl',
-  xlarge: 'text-3xl',
-}
-
 // Internal component for choice blocks with state
 const BlockChoicePreview = ({ 
   block, 
@@ -89,9 +76,6 @@ export const FormRenderer = ({
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedLineItems, setSelectedLineItems] = useState([])
-
-  const textColorHex = formDesign.textColor?.match(/text-\[((?:#[0-9A-Fa-f]{6}|rgba?\([^)]+\)))\]/)?.[1]
-  const bgColorHex = formDesign.backgroundColor?.match(/bg-\[((?:#[0-9A-Fa-f]{6}|rgba?\([^)]+\)))\]/)?.[1]
 
   const handleSelectLineItem = (lineItemId, quantity) => {
     setSelectedLineItems((prev) => {
@@ -398,8 +382,8 @@ export const FormRenderer = ({
       case 'heading': {
         const headingAlign =
           block.textAlign === 'center' ? 'text-center' : block.textAlign === 'right' ? 'text-right' : 'text-left'
-        const hColor = formDesign.headingColor || 'text-foreground'
-        const hSize = headingSizeClass[formDesign.headingSize || 'medium']
+        const hColor = formDesign.headingColor
+        const hSize = formDesign.headingSize
         return <h2 className={cn('font-semibold', hSize, hColor, headingAlign)}>{block.label}</h2>
       }
 
@@ -563,27 +547,21 @@ export const FormRenderer = ({
           - preview: absolute (stays inside modal)
       */}
       <div
-        className={cn(
-          isPreview
-            ? 'absolute inset-0 -z-10'
-            : 'fixed inset-0 -z-10',
-          !bgColorHex && formDesign.backgroundColor
-        )}
-        style={bgColorHex ? { backgroundColor: bgColorHex } : undefined}
+        className={isPreview ? 'absolute inset-0 -z-10' : 'fixed inset-0 -z-10'}
+        style={{ backgroundColor: formDesign.backgroundColor }}
       />
 
       <div className="w-full pt-6 pb-10 px-4 sm:px-6">
         <div
-          className={cn(
-            'w-full max-w-[700px] mx-auto',
-            !textColorHex && formDesign.textColor,
-            fontSizeClass[formDesign.fontSize]
-          )}
-          style={textColorHex ? { color: textColorHex } : undefined}
+          className="w-full max-w-[700px] mx-auto"
+          style={{
+            color: formDesign.textColor,
+            fontSize: formDesign.fontSize
+          }}
         >
           {blocks.length === 0 && !isSubmitted ? (
             <div className="flex items-center justify-center h-64">
-              <p className="text-muted-foreground">Немає блоків для відображення.</p>
+              <p>Немає блоків для відображення.</p>
             </div>
           ) : isSubmitted ? (
             <div className="py-8 flex items-center justify-center min-h-[300px]">

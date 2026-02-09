@@ -13,7 +13,7 @@ const MapComponentDynamic = dynamic(
     ssr: false,
     loading: () => (
       <div className="w-full flex items-center justify-center bg-muted/30 rounded-xl border border-border" style={{ height: 320 }}>
-        <div className="text-muted-foreground">Loading map...</div>
+        <div className="text-muted-foreground">Завантаження карти...</div>
       </div>
     )
   }

@@ -82,6 +82,8 @@ export default async function SlugTemplate({ params }) {
         blocks={form?.form_data?.blocks || []}
         successBlocks={form?.success_message || []}
         submitButtonText={form?.form_data?.submitButtonText || 'Надіслати'}
+        formSlug={slug}
+        formName={form.name}
         formDesign={form?.settings?.design || {
           backgroundColor: 'bg-background',
           textColor: 'text-foreground',
@@ -90,8 +92,6 @@ export default async function SlugTemplate({ params }) {
           headingSize: 'large',
           stickyButton: false,
         }}
-        formSlug={slug}
-        formName={form.name}
         isPreview={false}
         onSubmitSuccess={handleFormOrder}
       />

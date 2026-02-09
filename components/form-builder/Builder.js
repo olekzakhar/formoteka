@@ -24,6 +24,7 @@ export const Builder = ({ form }) => {
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [currentPageMode, setCurrentPageMode] = useState('form'); // Відстежуємо поточний режим (form/success)
   const supabase = createClient();
 
   // Parse saved data from database
@@ -41,11 +42,11 @@ export const Builder = ({ form }) => {
 
   const [formDesign, setFormDesign] = useState(
     savedSettings.design || {
-      backgroundColor: 'bg-white',
-      textColor: 'text-foreground',
-      headingColor: 'text-foreground',
-      headingSize: 'medium',
-      fontSize: 'medium',
+      backgroundColor: '#FFFFFF',
+      textColor: '#131720', // text-foreground
+      headingColor: '#131720', // text-foreground
+      headingSize: '20px',
+      fontSize: '16px',
       stickyButton: false,
       accentColor: '#000000',
       inputColor: '#e5e7eb',
@@ -332,11 +333,11 @@ export const Builder = ({ form }) => {
         blocks: formData.blocks || [],
         submitButtonText: formData.submitButtonText || 'Надіслати',
         formDesign: settings.design || {
-          backgroundColor: 'bg-white',
-          textColor: 'text-foreground',
-          headingColor: 'text-foreground',
-          headingSize: 'medium',
-          fontSize: 'medium',
+          backgroundColor: '#FFFFFF',
+          textColor: '#131720', // text-foreground
+          headingColor: '#131720', // text-foreground
+          headingSize: '20px',
+          fontSize: '16px',
           stickyButton: false,
           accentColor: '#000000',
           inputColor: '#e5e7eb',
@@ -349,8 +350,9 @@ export const Builder = ({ form }) => {
             label: 'Icon',
             iconName: 'CheckCircle',
             iconSize: 32,
-            iconColor: '#22c55e',
-            iconBgColor: '#22c55e',
+            iconColor: '#FFFFFF',
+            iconOpacity: 70,
+            iconBgColor: '#000000',
             iconBgOpacity: 15,
             iconBgPadding: 16,
             iconBgShape: 'circle',
@@ -487,10 +489,16 @@ export const Builder = ({ form }) => {
     setIsEditingSuccessBlock(false);
   };
 
+  // ОНОВЛЕНА ФУНКЦІЯ: Тепер перевіряє currentPageMode і додає блок у правильне місце
   const handleAddBlock = (type) => {
-    addBlock(type);
-    openBlockSettings();
-  };
+    if (currentPageMode === 'success') {
+      addSuccessBlock(type)
+      setIsEditingSuccessBlock(true)
+    } else {
+      addBlock(type)
+      openBlockSettings()
+    }
+  }
 
   const handleAddBlockAt = (type, index) => {
     addBlock(type, index);
@@ -667,6 +675,11 @@ export const Builder = ({ form }) => {
     setActiveTab('add');
   };
 
+  // НОВИЙ ОБРОБНИК: Отримує інформацію про зміну режиму з Canvas
+  const handlePageModeChange = (mode) => {
+    setCurrentPageMode(mode)
+  }
+
   const hasLineItemsBlock = blocks.some((b) => b.type === 'line-items');
 
   const sidePanelContent = (
@@ -754,6 +767,7 @@ export const Builder = ({ form }) => {
           onUpdateSuccessBlock={updateSuccessBlock}
           onMoveSuccessBlock={moveSuccessBlock}
           onOpenAddSuccessBlock={handleOpenAddSuccessBlock}
+          onPageModeChange={handlePageModeChange}
         />
 
         {/* Desktop side panel */}

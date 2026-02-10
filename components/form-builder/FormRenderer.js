@@ -382,9 +382,15 @@ export const FormRenderer = ({
       case 'heading': {
         const headingAlign =
           block.textAlign === 'center' ? 'text-center' : block.textAlign === 'right' ? 'text-right' : 'text-left'
-        const hColor = formDesign.headingColor
-        const hSize = formDesign.headingSize
-        return <h2 className={cn('font-semibold', hSize, hColor, headingAlign)}>{block.label}</h2>
+        return <h2
+                 className={cn('font-semibold', headingAlign)}
+                 style={{
+                  color: formDesign.headingColor,
+                  fontSize: formDesign.headingSize
+                }}
+               >
+                {block.label}
+              </h2>
       }
 
       case 'paragraph': {
@@ -396,7 +402,7 @@ export const FormRenderer = ({
               : 'text-left'
         return (
           <div style={block.textColor ? { color: block.textColor } : undefined}>
-            <p className={cn('whitespace-pre-wrap break-words', 'opacity-80', paragraphAlign)}>{block.label}</p>
+            <p className={cn('whitespace-pre-wrap break-words', paragraphAlign)}>{block.label}</p>
           </div>
         )
       }

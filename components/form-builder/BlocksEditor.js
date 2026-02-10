@@ -37,7 +37,9 @@ export const BlocksEditor = ({
   inputBgColor,
   inputTextColor,
   formTextColor,
-  accentColor
+  accentColor,
+  onContextMenuChange, // New callback to notify parent when context menu opens/closes
+  hasOpenContextMenu, // Whether ANY block has an open context menu
 }) => {
   const definition = blockDefinitions.find((d) => d.type === block.type);
   const [isEditingLabel, setIsEditingLabel] = useState(false);
@@ -45,17 +47,50 @@ export const BlocksEditor = ({
   const [editLabelValue, setEditLabelValue] = useState(block.label ?? '');
   const [editPlaceholderValue, setEditPlaceholderValue] = useState(block.placeholder ?? '');
   const [uploadingImages, setUploadingImages] = useState(new Set());
+  const [showContextMenu, setShowContextMenu] = useState(false);
   const labelInputRef = useRef(null);
   const placeholderInputRef = useRef(null);
   const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
+  const contextMenuRef = useRef(null);
+  const dragButtonRef = useRef(null);
 
   const showLabel = block.showLabel !== false;
+
+  // Notify parent when context menu state changes
+  useEffect(() => {
+    if (onContextMenuChange) {
+      onContextMenuChange(block.id, showContextMenu)
+    }
+  }, [showContextMenu, block.id, onContextMenuChange])
 
   useEffect(() => {
     setEditLabelValue(block.label);
     setEditPlaceholderValue(block.placeholder || '');
   }, [block.label, block.placeholder]);
+
+  // Close context menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        showContextMenu &&
+        contextMenuRef.current &&
+        !contextMenuRef.current.contains(event.target) &&
+        dragButtonRef.current &&
+        !dragButtonRef.current.contains(event.target)
+      ) {
+        setShowContextMenu(false)
+      }
+    };
+
+    if (showContextMenu) {
+      // Use mousedown instead of click for better responsiveness
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside)
+      };
+    }
+  }, [showContextMenu])
 
   // Auto-resize textarea for paragraph
   const autoResizeTextarea = () => {
@@ -461,14 +496,14 @@ export const BlocksEditor = ({
                 }
               }}
               className="bg-transparent outline-none w-full resize-none overflow-hidden block
-                         leading-normal p-0 m-0 whitespace-pre-wrap break-words opacity-80"
+                         leading-normal p-0 m-0 whitespace-pre-wrap break-words"
               style={{
                 lineHeight: '1.5',
                 textAlign: block.textAlign
               }}
             />
           : <p
-              className="cursor-text whitespace-pre-wrap break-words opacity-80"
+              className="cursor-text whitespace-pre-wrap break-words"
               style={{ textAlign: block.textAlign }}
               onClick={(e) => {
                 e.stopPropagation();
@@ -880,70 +915,120 @@ export const BlocksEditor = ({
   const showDuplicateDelete = block.type !== 'messenger-select';
 
   return (
-    <div
-      {...draggableProps}
-      data-block-root
-      className={cn(
-        'group relative transition-smooth py-2',
-        // border overlay that extends beyond block without affecting layout
-        "after:content-[''] after:absolute after:-inset-x-2 after:-inset-y-0 after:rounded-lg after:pointer-events-none after:transition-smooth",
-        isActive
-          ? 'after:border-2 after:border-primary'
-          : 'after:border after:border-transparent hover:after:border-border'
+    <>
+      {/* Overlay to block all interactions when context menu is open */}
+      {showContextMenu && (
+        <div 
+          className="fixed inset-0 z-[100]" 
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowContextMenu(false);
+          }}
+        />
       )}
-      onClick={(e) => {
-        e.stopPropagation();
-        onSelect();
-      }}
-    >
+
+      <div
+        {...draggableProps}
+        data-block-root
+        className={cn(
+          'group relative py-2',
+          // Only apply transition when no context menu is open anywhere
+          !hasOpenContextMenu && 'transition-smooth',
+          // border overlay that extends beyond block without affecting layout
+          "after:content-[''] after:absolute after:-inset-x-2 after:-inset-y-0 after:rounded-lg after:pointer-events-none",
+          !hasOpenContextMenu && 'after:transition-smooth',
+          // Border logic:
+          // - If active (selected in settings): primary border (thick)
+          // - If context menu is open but not active: border like hover (thin)
+          // - Otherwise: transparent border, show border on hover
+          isActive
+            ? 'after:border-2 after:border-primary'
+            : showContextMenu
+              ? 'after:border after:border-border'
+              : 'after:border after:border-transparent hover:after:border-border'
+        )}
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect();
+        }}
+      >
       {/* Left action bar - vertical, close to block */}
-      {/* gap-0.5 */}
       <div
         className={cn(
-          'absolute -left-9 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-0.5',
-          'opacity-0 transition-smooth group-hover:opacity-100'
+          'absolute -left-[30px] top-1/2 -translate-y-1/2',
+          // Always show when this block's context menu is open, otherwise show on hover only if no other menu is open
+          showContextMenu 
+            ? 'opacity-100 z-[101]' 
+            : hasOpenContextMenu 
+              ? 'opacity-0 z-20' 
+              : 'opacity-0 z-20 transition-smooth group-hover:opacity-100'
         )}
       >
-        {/* Drag handle */}
-        <div
-          {...dragHandleProps}
-          onMouseDown={(e) => e.stopPropagation()}
-          onClick={(e) => e.stopPropagation()}
-          className={cn(
-            'p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-smooth',
-            'cursor-grab active:cursor-grabbing'
-          )}
-          title="Drag to reorder"
-        >
-          <GripVertical className="w-4 h-4 pointer-events-none" />
-        </div>
+        {/* Invisible bridge to prevent gap between block and button */}
+        <div className="absolute right-0 top-0 bottom-0 w-[12px] translate-x-full" />
 
-        {showDuplicateDelete && (
-          <>
-            {/* Duplicate */}
-            <button
-              onClick={(e) => {
+        {/* Drag handle with click to show context menu */}
+        <div className="relative">
+          <div
+            ref={dragButtonRef}
+            {...dragHandleProps}
+            onMouseDown={(e) => {
+              // Allow dragging only if context menu is not shown
+              if (showContextMenu) {
                 e.stopPropagation();
-                onDuplicate();
-              }}
-              className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-accent-foreground transition-smooth"
-              title="Duplicate"
+                e.preventDefault();
+              }
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowContextMenu(!showContextMenu);
+            }}
+            className={cn(
+              'px-[1.5px] py-[5px] rounded-xl text-foreground transition-smooth bg-white/70 hover:bg-white/85 shadow-[1px_1px_0_rgba(0,0,0,0.7)] backdrop-blur-md relative z-10',
+              showContextMenu 
+                ? 'text-foreground' 
+                : 'cursor-grab active:cursor-grabbing'
+            )}
+            title="Перетягніть або натисніть"
+          >
+            <GripVertical className="w-4 h-4 pointer-events-none" />
+          </div>
+
+          {/* Context menu */}
+          {showContextMenu && showDuplicateDelete && (
+            <div
+              ref={contextMenuRef}
+              className="absolute left-[calc(100%+0.25rem)] top-1/2 -translate-y-1/2 px-1 py-1.5 bg-white/70 backdrop-blur-lg border border-black/70 rounded-lg shadow-[2px_2px_0_rgba(0,0,0,0.7)] overflow-hidden z-[101] min-w-[160px]"
+              onClick={(e) => e.stopPropagation()}
             >
-              <Copy className="w-4 h-4" />
-            </button>
-            {/* Delete */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete();
-              }}
-              className="p-1.5 rounded-md hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-smooth"
-              title="Delete"
-            >
-              <Trash2 className="w-4 h-4" />
-            </button>
-          </>
-        )}
+              {/* Duplicate */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onDuplicate()
+                  setShowContextMenu(false)
+                }}
+                className="w-full flex items-center gap-2 px-2.5 py-1 hover:bg-white/60 text-foreground text-sm rounded-md transition-smooth"
+              >
+                <Copy className="w-4 h-4" />
+                <span>Дублювати</span>
+              </button>
+
+              {/* Delete */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onDelete()
+                  setShowContextMenu(false)
+                }}
+                className="w-full flex items-center gap-2 px-2.5 py-1 hover:bg-white/60 text-destructive text-sm rounded-md transition-smooth"
+              >
+                <Trash2 className="w-4 h-4" />
+                <span>Видалити</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Block content */}
@@ -954,5 +1039,6 @@ export const BlocksEditor = ({
         {renderBlockContent()}
       </div>
     </div>
+    </>
   )
 }

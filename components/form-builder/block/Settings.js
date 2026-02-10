@@ -1789,7 +1789,6 @@ export const BlockSettings = ({ block, onUpdate }) => {
         </div>
       )}
 
-      {/* Required toggle */}  
       {/* Required toggle */}
       {!['heading', 'paragraph', 'spacer', 'image', 'icon', 'divider', 'slideshow', 'map', 'reviews', 'faq', 'avatar', 'messenger-select', 'grid'].includes(block.type) && (
         <div className="flex items-center justify-between">

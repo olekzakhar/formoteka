@@ -9,7 +9,7 @@ import { Select } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Image } from 'lucide-react'
 import { useState } from 'react'
-import { cn, getImageUrl, getColor } from '@/utils'
+import { cn, getImageUrl, getColor, dateChange } from '@/utils'
 import { BlockLineItemsRenderer } from '@/components/form-builder/block/LineItemsRenderer'
 import { OrderButton } from '@/components/ui/OrderButton'
 import { BlockSlideshow } from '@/components/form-builder/block/Slideshow'
@@ -21,6 +21,7 @@ import { BlockAvatar } from '@/components/form-builder/block/Avatar'
 import { BlockMessengerSelect } from '@/components/form-builder/block/MessengerSelect'
 import { BlockList } from '@/components/form-builder/block/List'
 import { BlockChoiceCard } from '@/components/form-builder/block/ChoiceCard';
+import { DatePicker } from '@/components/ui/DatePicker'
 
 // Internal component for choice blocks with state
 const BlockChoicePreview = ({ 
@@ -76,6 +77,7 @@ export const FormRenderer = ({
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedLineItems, setSelectedLineItems] = useState([])
+  const [dateValues, setDateValues] = useState({})
 
   const handleSelectLineItem = (lineItemId, quantity) => {
     setSelectedLineItems((prev) => {
@@ -353,7 +355,7 @@ export const FormRenderer = ({
                  isPreview={isPreview}
                  style={{ 
                    borderColor: formDesign.inputColor || undefined,
-                   backgroundColor: formDesign.inputBgColor && formDesign.inputBgColor !== 'transparent' ? formDesign.inputBgColor : undefined,
+                   backgroundColor: formDesign.inputBgColor ? formDesign.inputBgColor : undefined,
                    color: formDesign.inputTextColor || undefined,
                    '--focus-ring-color': getColor(formDesign.accentColor, 0.7) || undefined
                  }}
@@ -422,18 +424,38 @@ export const FormRenderer = ({
               id={block.id}
               name={block.id}
               className="max-w-[300px]"
-              type={block.type === 'email' ? 'email' : block.type === 'number' ? 'number' : 'text'}
+              type={
+                block.type === 'email'
+                  ? 'email'
+                  : block.type === 'number'
+                    ? 'number'
+                    : 'text'
+              }
               placeholder={block.placeholder}
               required={block.required}
-              style={{ 
+              style={{
                 borderColor: formDesign.inputColor || undefined,
-                backgroundColor: formDesign.inputBgColor && formDesign.inputBgColor !== 'transparent' ? formDesign.inputBgColor : undefined,
+                backgroundColor: formDesign.inputBgColor ? formDesign.inputBgColor : undefined,
                 color: formDesign.inputTextColor || undefined,
                 '--placeholder-color': getColor(formDesign.inputTextColor) || undefined,
                 '--focus-ring-color': getColor(formDesign.accentColor, 0.7) || undefined
               }}
             />
           </div>
+        )
+
+      case 'date':
+        return (
+          <DatePicker
+            className="max-w-[300px]"
+            value={dateValues[block.id]}
+            onChange={(date) => dateChange(block.id, date, setDateValues)}
+            placeholder={block?.placeholder}
+            inputColor={formDesign.inputColor}
+            inputBgColor={formDesign.inputBgColor}
+            inputTextColor={formDesign.inputTextColor}
+            accentColor={formDesign.accentColor}
+          />
         )
 
       case 'long-text':
@@ -453,33 +475,7 @@ export const FormRenderer = ({
               required={block.required}
               style={{ 
                 borderColor: formDesign.inputColor || undefined,
-                backgroundColor: formDesign.inputBgColor && formDesign.inputBgColor !== 'transparent' ? formDesign.inputBgColor : undefined,
-                color: formDesign.inputTextColor || undefined,
-                '--placeholder-color': getColor(formDesign.inputTextColor) || undefined,
-                '--focus-ring-color': getColor(formDesign.accentColor, 0.7) || undefined
-              }}
-            />
-          </div>
-        )
-
-      case 'date':
-        return (
-          <div className="space-y-2">
-            {showLabel && (
-              <Label htmlFor={block.id}>
-                {block.label}
-                {block.required && <span className="text-destructive ml-1">*</span>}
-              </Label>
-            )}
-            <Input
-              id={block.id}
-              name={block.id}
-              className="max-w-[300px]"
-              type="date"
-              required={block.required}
-              style={{
-                borderColor: formDesign.inputColor || undefined,
-                backgroundColor: formDesign.inputBgColor && formDesign.inputBgColor !== 'transparent' ? formDesign.inputBgColor : undefined,
+                backgroundColor: formDesign.inputBgColor ? formDesign.inputBgColor : undefined,
                 color: formDesign.inputTextColor || undefined,
                 '--placeholder-color': getColor(formDesign.inputTextColor) || undefined,
                 '--focus-ring-color': getColor(formDesign.accentColor, 0.7) || undefined
@@ -507,11 +503,11 @@ export const FormRenderer = ({
               required={block.required}
               style={{ 
                 borderColor: formDesign.inputColor || undefined,
-                backgroundColor: formDesign.inputBgColor && formDesign.inputBgColor !== 'transparent' ? formDesign.inputBgColor : undefined,
+                backgroundColor: formDesign.inputBgColor ? formDesign.inputBgColor : undefined,
                 color: formDesign.inputTextColor || undefined,
                 '--focus-ring-color': getColor(formDesign.accentColor, 0.7) || undefined
               }}
-              accentColor={formDesign.accentColor}
+              textColor={formDesign.inputTextColor}
             />
           </div>
         )

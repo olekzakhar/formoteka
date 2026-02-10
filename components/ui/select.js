@@ -3,7 +3,7 @@ import { ChevronDown } from "lucide-react"
 import { cn } from "@/utils"
 
 const Select = React.forwardRef(
-  ({ className, placeholder = "Оберіть варіант", options = [], style, accentColor, value, onValueChange, defaultValue, ...props }, ref) => {
+  ({ className, placeholder = "Оберіть варіант", options = [], style, textColor, value, onValueChange, defaultValue, ...props }, ref) => {
     const handleChange = (e) => {
       if (onValueChange) {
         onValueChange(e.target.value)
@@ -38,7 +38,7 @@ const Select = React.forwardRef(
         </select>
         <ChevronDown 
           className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none opacity-80"
-          style={{ color: accentColor }}
+          style={{ color: textColor }}
         />
       </div>
     )

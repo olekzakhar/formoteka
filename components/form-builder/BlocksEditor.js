@@ -3,8 +3,16 @@
 'use client'
 
 import { blockDefinitions } from '@/data/block-definitions';
-import { GripVertical, Copy, Trash2, Image, Image as ImageIcon, Loader2 } from 'lucide-react';
-import { cn, getImageUrl, getColor } from '@/utils';
+import {
+  GripVertical,
+  Copy,
+  Trash2,
+  Image,
+  Image as ImageIcon,
+  Loader2,
+  Calendar as CalendarIcon
+} from 'lucide-react';
+import { cn, getImageUrl, getColor, dateChange } from '@/utils';
 import { useState, useRef, useEffect } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -19,6 +27,7 @@ import { BlockAvatar } from '@/components/form-builder/block/Avatar';
 import { BlockMessengerSelect } from '@/components/form-builder/block/MessengerSelect';
 import { BlockList } from '@/components/form-builder/block/List';
 import { BlockChoiceCard } from '@/components/form-builder/block/ChoiceCard';
+import { DatePicker } from '@/components/ui/DatePicker'
 
 export const BlocksEditor = ({
   block,
@@ -41,19 +50,21 @@ export const BlocksEditor = ({
   onContextMenuChange, // New callback to notify parent when context menu opens/closes
   hasOpenContextMenu, // Whether ANY block has an open context menu
 }) => {
-  const definition = blockDefinitions.find((d) => d.type === block.type);
-  const [isEditingLabel, setIsEditingLabel] = useState(false);
-  const [isEditingPlaceholder, setIsEditingPlaceholder] = useState(false);
-  const [editLabelValue, setEditLabelValue] = useState(block.label ?? '');
-  const [editPlaceholderValue, setEditPlaceholderValue] = useState(block.placeholder ?? '');
-  const [uploadingImages, setUploadingImages] = useState(new Set());
-  const [showContextMenu, setShowContextMenu] = useState(false);
-  const labelInputRef = useRef(null);
-  const placeholderInputRef = useRef(null);
-  const textareaRef = useRef(null);
-  const fileInputRef = useRef(null);
-  const contextMenuRef = useRef(null);
-  const dragButtonRef = useRef(null);
+  const definition = blockDefinitions.find((d) => d.type === block.type)
+  const [isEditingLabel, setIsEditingLabel] = useState(false)
+  const [isEditingPlaceholder, setIsEditingPlaceholder] = useState(false)
+  const [editLabelValue, setEditLabelValue] = useState(block.label ?? '')
+  const [editPlaceholderValue, setEditPlaceholderValue] = useState(block.placeholder ?? '')
+  const [uploadingImages, setUploadingImages] = useState(new Set())
+  const [showContextMenu, setShowContextMenu] = useState(false)
+  const [dateValues, setDateValues] = useState({})
+
+  const labelInputRef = useRef(null)
+  const placeholderInputRef = useRef(null)
+  const textareaRef = useRef(null)
+  const fileInputRef = useRef(null)
+  const contextMenuRef = useRef(null)
+  const dragButtonRef = useRef(null)
 
   const showLabel = block.showLabel !== false;
 
@@ -547,28 +558,28 @@ export const BlocksEditor = ({
             {isEditingPlaceholder
               ? <Input
                   ref={placeholderInputRef}
-                  className="max-w-[300px]"
                   type="text"
+                  className="max-w-[300px]"
                   value={editPlaceholderValue}
                   onChange={(e) => setEditPlaceholderValue(e.target.value)}
                   onBlur={handleSavePlaceholder}
                   onKeyDown={handlePlaceholderKeyDown}
                   style={{ 
                     borderColor: inputColor || undefined, 
-                    backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined,
+                    backgroundColor: inputBgColor ? inputBgColor : undefined,
                     color: inputTextColor || undefined,
                     '--placeholder-color': getColor(inputTextColor) || undefined,
                     '--focus-ring-color': getColor(accentColor, 0.7) || undefined
                   }}
                 />
               : <Input
-                  className="max-w-[300px]"
                   type="text"
+                  className="max-w-[300px]"
                   value=""
                   placeholder={block.placeholder}
                   style={{ 
                     borderColor: inputColor || undefined, 
-                    backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined,
+                    backgroundColor: inputBgColor ? inputBgColor : undefined,
                     color: inputTextColor || undefined,
                     '--placeholder-color': getColor(inputTextColor) || undefined,
                     '--focus-ring-color': getColor(accentColor, 0.7) || undefined
@@ -583,6 +594,80 @@ export const BlocksEditor = ({
             }
           </div>
         )
+
+      case 'date':
+        return (
+          <div className="space-y-2">
+            {showLabel && (
+              isEditingLabel
+                ? <input
+                    ref={labelInputRef}
+                    type="text"
+                    value={editLabelValue}
+                    onChange={(e) => setEditLabelValue(e.target.value)}
+                    onBlur={handleSaveLabel}
+                    onKeyDown={handleLabelKeyDown}
+                    className="block text-sm font-medium bg-transparent outline-none w-full p-0 border-0 leading-5"
+                  />
+                : <Label
+                    className="cursor-text"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelect();
+                      setIsEditingLabel(true);
+                    }}
+                  >
+                    {block.label}
+                    {block.required && <span className="text-destructive ml-1">*</span>}
+                  </Label>
+            )}
+
+            {isEditingPlaceholder
+              ? <div className="relative max-w-[300px]">
+                  <Input
+                    ref={placeholderInputRef}
+                    type="text"
+                    className="h-[42px] pr-10 pt-[7px]"
+                    value={editPlaceholderValue}
+                    onChange={(e) => setEditPlaceholderValue(e.target.value)}
+                    onBlur={handleSavePlaceholder}
+                    onKeyDown={handlePlaceholderKeyDown}
+                    style={{ 
+                      borderColor: inputColor || undefined, 
+                      backgroundColor: inputBgColor || undefined,
+                      color: inputTextColor || undefined,
+                      '--placeholder-color': getColor(inputTextColor) || undefined,
+                      '--focus-ring-color': getColor(accentColor, 0.7) || undefined
+                    }}
+                  />
+                  <CalendarIcon 
+                    className="absolute right-[13px] top-1/2 -translate-y-1/2 h-4 w-4 shrink-0 opacity-90 pointer-events-none" 
+                    style={{ color: inputTextColor || 'currentColor' }}
+                  />
+                </div>
+              : <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelect();
+                    setIsEditingPlaceholder(true);
+                  }}
+                  className="max-w-[300px] cursor-text"
+                >
+                  <DatePicker
+                    className="w-full pointer-events-none"
+                    value={dateValues[block.id]}
+                    onChange={(date) => dateChange(block.id, date, setDateValues)}
+                    placeholder={block?.placeholder}
+                    inputColor={inputColor}
+                    inputBgColor={inputBgColor}
+                    inputTextColor={inputTextColor}
+                    accentColor={accentColor}
+                  />
+                </div>
+            }
+          </div>
+        )
+
 
       case 'long-text':
         return (
@@ -621,7 +706,7 @@ export const BlocksEditor = ({
                   onKeyDown={handlePlaceholderKeyDown}
                   style={{ 
                     borderColor: inputColor || undefined, 
-                    backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined,
+                    backgroundColor: inputBgColor ? inputBgColor : undefined,
                     color: inputTextColor || undefined,
                     '--placeholder-color': getColor(inputTextColor) || undefined,
                     '--focus-ring-color': getColor(accentColor, 0.7) || undefined
@@ -632,7 +717,7 @@ export const BlocksEditor = ({
                   className="resize-none"
                   style={{ 
                     borderColor: inputColor || undefined, 
-                    backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined,
+                    backgroundColor: inputBgColor ? inputBgColor : undefined,
                     color: inputTextColor || undefined,
                     '--placeholder-color': getColor(inputTextColor) || undefined,
                     '--focus-ring-color': getColor(accentColor, 0.7) || undefined
@@ -681,12 +766,12 @@ export const BlocksEditor = ({
               className="max-w-[300px]"
               style={{ 
                 borderColor: inputColor || undefined, 
-                backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined,
+                backgroundColor: inputBgColor ? inputBgColor : undefined,
                 color: inputTextColor || undefined,
                 '--placeholder-color': getColor(inputTextColor) || undefined,
                 '--focus-ring-color': getColor(accentColor, 0.7) || undefined
               }}
-              accentColor={accentColor}
+              textColor={inputTextColor}
             />
           </div>
         )
@@ -857,54 +942,12 @@ export const BlocksEditor = ({
         )
 
 
-      case 'date':
-        return (
-          <div className="space-y-2">
-            {showLabel && (
-              isEditingLabel
-                ? <input
-                    ref={labelInputRef}
-                    type="text"
-                    value={editLabelValue}
-                    onChange={(e) => setEditLabelValue(e.target.value)}
-                    onBlur={handleSaveLabel}
-                    onKeyDown={handleLabelKeyDown}
-                    className="block text-sm font-medium bg-transparent outline-none w-full p-0 border-0 leading-5"
-                  />
-                : <Label
-                    className="cursor-text"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onSelect();
-                      setIsEditingLabel(true);
-                    }}
-                  >
-                    {block.label}
-                    {block.required && <span className="text-destructive ml-1">*</span>}
-                  </Label>
-            )}
-
-            <Input
-              type="date"
-              className="max-w-[300px]"
-              style={{ 
-                borderColor: inputColor || undefined,
-                backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined,
-                '--placeholder-color': getColor(inputTextColor) || undefined,
-                '--focus-ring-color': getColor(accentColor, 0.7) || undefined
-              }}
-              disabled
-            />
-          </div>
-        )
-
-
       case 'messenger-select':
         return <BlockMessengerSelect
                  block={block}
                  style={{ 
                    borderColor: inputColor || undefined,
-                   backgroundColor: inputBgColor && inputBgColor !== 'transparent' ? inputBgColor : undefined,
+                   backgroundColor: inputBgColor ? inputBgColor : undefined,
                    color: inputTextColor || undefined,
                    '--focus-ring-color': getColor(accentColor, 0.7) || undefined
                  }}

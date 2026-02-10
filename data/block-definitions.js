@@ -33,7 +33,7 @@ export const getDefaultBlock = (type) => {
     dropdown: { label: 'Випадаючий список', options: ['Варіант 1', 'Варіант 2', 'Варіант 3'], showLabel: true },
     checkbox: { label: 'Прапорець', options: ['Варіант 1', 'Варіант 2'], showLabel: true },
     radio: { label: 'Група перемикачів', options: ['Варіант 1', 'Варіант 2', 'Варіант 3'], showLabel: true },
-    date: { label: 'Дата', placeholder: 'Оберіть дату', showLabel: true },
+    date: { label: 'Дата', placeholder: 'Виберіть дату', showLabel: true },
     'line-items': { label: 'Позиції', lineItems: [], lineItemsLayout: 'grid-2', showLabel: true },
     spacer: { label: 'Простір', height: 32 },
     image: { label: 'Зображення', imageCount: 1, images: [] },

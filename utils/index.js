@@ -123,6 +123,14 @@ export const getColor = (color, opacity = 0.7) => {
   return color
 }
 
+// Функція для оновлення дати у полі дата
+export const dateChange = (blockId, date, setDateValues) => {
+  setDateValues(prev => ({
+    ...prev,
+    [blockId]: date
+  }))
+}
+
 
 // export const getLogoUrl = form =>
 //   `${STORAGE_URL}logo/${form?.logo}?${form?.logo_cache}`

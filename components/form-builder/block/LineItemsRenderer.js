@@ -63,7 +63,7 @@ export const BlockLineItemsRenderer = ({
   if (lineItems.length === 0) {
     return (
       <div className="p-6 border-2 border-dashed border-border rounded-lg text-center">
-        <p className="text-muted-foreground">No line items added yet</p>
+        <p className="opacity-70">Позиції ще не додано</p>
       </div>
     );
   }

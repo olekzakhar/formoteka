@@ -1008,7 +1008,7 @@ export const BlocksEditor = ({
                   onDuplicate()
                   setShowContextMenu(false)
                 }}
-                className="w-full flex items-center gap-2 px-2.5 py-1 hover:bg-white/60 text-foreground text-sm rounded-md transition-smooth"
+                className="w-full flex items-center gap-2 px-2.5 py-1 hover:bg-black/[0.06] text-foreground text-sm rounded-md transition-smooth"
               >
                 <Copy className="w-4 h-4" />
                 <span>Дублювати</span>
@@ -1021,7 +1021,7 @@ export const BlocksEditor = ({
                   onDelete()
                   setShowContextMenu(false)
                 }}
-                className="w-full flex items-center gap-2 px-2.5 py-1 hover:bg-white/60 text-destructive text-sm rounded-md transition-smooth"
+                className="w-full flex items-center gap-2 px-2.5 py-1 hover:bg-black/[0.06] text-destructive text-sm rounded-md transition-smooth"
               >
                 <Trash2 className="w-4 h-4" />
                 <span>Видалити</span>

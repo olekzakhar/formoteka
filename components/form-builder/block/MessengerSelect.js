@@ -52,7 +52,7 @@ export const BlockMessengerSelect = ({
           {...(isPreview && { id: block.id })}
           className={cn(
             'flex h-[42px] w-full items-center justify-between rounded-md border border-input bg-input pl-9 pr-3 py-2 text-base',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+            'focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring',
             'disabled:cursor-not-allowed disabled:opacity-50',
             'appearance-none cursor-pointer',
             'xs:text-sm'

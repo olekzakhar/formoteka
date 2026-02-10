@@ -744,7 +744,10 @@ export const BlocksEditor = ({
                 </Label>
               )}
               <div className="p-4 border-2 border-dashed border-border rounded-lg bg-muted/30 text-center">
-                <p className="text-sm text-muted-foreground">
+                <p
+                  className="text-sm text-muted-foreground"
+                  style={{color: getColor(formTextColor, 0.7) }}
+                >
                   Позиції не додано. Керуйте ними в параметрах блоку.
                 </p>
               </div>

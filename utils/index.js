@@ -101,7 +101,7 @@ export const getImageUrl = (fileName) => {
 }
 
 
-export const getColor = (color, opacity = 0.5) => {
+export const getColor = (color, opacity = 0.7) => {
   if (!color) return undefined
 
   // Конвертуємо opacity (0-1) в hex (00-FF)

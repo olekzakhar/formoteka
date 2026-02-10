@@ -10,7 +10,8 @@ import {
   Image,
   Image as ImageIcon,
   Loader2,
-  Calendar as CalendarIcon
+  Calendar as CalendarIcon,
+  ChevronDown
 } from 'lucide-react';
 import { cn, getImageUrl, getColor, dateChange } from '@/utils';
 import { useState, useRef, useEffect } from 'react';
@@ -569,7 +570,7 @@ export const BlocksEditor = ({
                     backgroundColor: inputBgColor ? inputBgColor : undefined,
                     color: inputTextColor || undefined,
                     '--placeholder-color': getColor(inputTextColor) || undefined,
-                    '--focus-ring-color': getColor(accentColor, 0.7) || undefined
+                    '--focus-ring-color': getColor(accentColor, 0.6) || undefined
                   }}
                 />
               : <Input
@@ -582,7 +583,7 @@ export const BlocksEditor = ({
                     backgroundColor: inputBgColor ? inputBgColor : undefined,
                     color: inputTextColor || undefined,
                     '--placeholder-color': getColor(inputTextColor) || undefined,
-                    '--focus-ring-color': getColor(accentColor, 0.7) || undefined
+                    '--focus-ring-color': getColor(accentColor, 0.6) || undefined
                   }}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -637,7 +638,7 @@ export const BlocksEditor = ({
                       backgroundColor: inputBgColor || undefined,
                       color: inputTextColor || undefined,
                       '--placeholder-color': getColor(inputTextColor) || undefined,
-                      '--focus-ring-color': getColor(accentColor, 0.7) || undefined
+                      '--focus-ring-color': getColor(accentColor, 0.6) || undefined
                     }}
                   />
                   <CalendarIcon 
@@ -709,7 +710,7 @@ export const BlocksEditor = ({
                     backgroundColor: inputBgColor ? inputBgColor : undefined,
                     color: inputTextColor || undefined,
                     '--placeholder-color': getColor(inputTextColor) || undefined,
-                    '--focus-ring-color': getColor(accentColor, 0.7) || undefined
+                    '--focus-ring-color': getColor(accentColor, 0.6) || undefined
                   }}
                 />
               : <Textarea
@@ -720,7 +721,7 @@ export const BlocksEditor = ({
                     backgroundColor: inputBgColor ? inputBgColor : undefined,
                     color: inputTextColor || undefined,
                     '--placeholder-color': getColor(inputTextColor) || undefined,
-                    '--focus-ring-color': getColor(accentColor, 0.7) || undefined
+                    '--focus-ring-color': getColor(accentColor, 0.6) || undefined
                   }}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -760,19 +761,53 @@ export const BlocksEditor = ({
                   </Label>
             )}
 
-            <Select
-              placeholder={block?.placeholder || 'Оберіть варіант'}
-              options={block?.options}
-              className="max-w-[300px]"
-              style={{ 
-                borderColor: inputColor || undefined, 
-                backgroundColor: inputBgColor ? inputBgColor : undefined,
-                color: inputTextColor || undefined,
-                '--placeholder-color': getColor(inputTextColor) || undefined,
-                '--focus-ring-color': getColor(accentColor, 0.7) || undefined
-              }}
-              textColor={inputTextColor}
-            />
+            {isEditingPlaceholder
+              ? <div className="relative max-w-[300px]">
+                  <Input
+                    ref={placeholderInputRef}
+                    type="text"
+                    className="h-[42px] pr-10 pt-[7px]"
+                    value={editPlaceholderValue}
+                    onChange={(e) => setEditPlaceholderValue(e.target.value)}
+                    onBlur={handleSavePlaceholder}
+                    onKeyDown={handlePlaceholderKeyDown}
+                    style={{ 
+                      borderColor: inputColor || undefined, 
+                      backgroundColor: inputBgColor || undefined,
+                      color: inputTextColor || undefined,
+                      '--placeholder-color': getColor(inputTextColor) || undefined,
+                      '--focus-ring-color': getColor(accentColor, 0.6) || undefined
+                    }}
+                  />
+                  <ChevronDown 
+                    className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none opacity-80" 
+                    style={{ color: inputTextColor || 'currentColor' }}
+                  />
+                </div>
+              : <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelect();
+                    setIsEditingPlaceholder(true);
+                  }}
+                  className="max-w-[300px] cursor-text"
+                >
+                  <Select
+                    placeholder={block?.placeholder}
+                    options={block?.options}
+                    value=""
+                    className="pointer-events-none"
+                    style={{ 
+                      borderColor: inputColor || undefined, 
+                      backgroundColor: inputBgColor ? inputBgColor : undefined,
+                      color: inputTextColor || undefined,
+                      '--placeholder-color': getColor(inputTextColor) || undefined,
+                      '--focus-ring-color': getColor(accentColor, 0.6) || undefined
+                    }}
+                    textColor={inputTextColor}
+                  />
+                </div>
+            }
           </div>
         )
 
@@ -949,7 +984,7 @@ export const BlocksEditor = ({
                    borderColor: inputColor || undefined,
                    backgroundColor: inputBgColor ? inputBgColor : undefined,
                    color: inputTextColor || undefined,
-                   '--focus-ring-color': getColor(accentColor, 0.7) || undefined
+                   '--focus-ring-color': getColor(accentColor, 0.6) || undefined
                  }}
                />
       default:

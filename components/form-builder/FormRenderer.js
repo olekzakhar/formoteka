@@ -357,7 +357,7 @@ export const FormRenderer = ({
                    borderColor: formDesign.inputColor || undefined,
                    backgroundColor: formDesign.inputBgColor ? formDesign.inputBgColor : undefined,
                    color: formDesign.inputTextColor || undefined,
-                   '--focus-ring-color': getColor(formDesign.accentColor, 0.7) || undefined
+                   '--focus-ring-color': getColor(formDesign.accentColor, 0.6) || undefined
                  }}
                />
 
@@ -438,7 +438,7 @@ export const FormRenderer = ({
                 backgroundColor: formDesign.inputBgColor ? formDesign.inputBgColor : undefined,
                 color: formDesign.inputTextColor || undefined,
                 '--placeholder-color': getColor(formDesign.inputTextColor) || undefined,
-                '--focus-ring-color': getColor(formDesign.accentColor, 0.7) || undefined
+                '--focus-ring-color': getColor(formDesign.accentColor, 0.6) || undefined
               }}
             />
           </div>
@@ -486,7 +486,7 @@ export const FormRenderer = ({
                 backgroundColor: formDesign.inputBgColor ? formDesign.inputBgColor : undefined,
                 color: formDesign.inputTextColor || undefined,
                 '--placeholder-color': getColor(formDesign.inputTextColor) || undefined,
-                '--focus-ring-color': getColor(formDesign.accentColor, 0.7) || undefined
+                '--focus-ring-color': getColor(formDesign.accentColor, 0.6) || undefined
               }}
             />
           </div>
@@ -513,7 +513,7 @@ export const FormRenderer = ({
                 borderColor: formDesign.inputColor || undefined,
                 backgroundColor: formDesign.inputBgColor ? formDesign.inputBgColor : undefined,
                 color: formDesign.inputTextColor || undefined,
-                '--focus-ring-color': getColor(formDesign.accentColor, 0.7) || undefined
+                '--focus-ring-color': getColor(formDesign.accentColor, 0.6) || undefined
               }}
               textColor={formDesign.inputTextColor}
             />

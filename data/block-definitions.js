@@ -24,19 +24,65 @@ export const blockDefinitions = [
 
 export const getDefaultBlock = (type) => {
   const defaults = {
-    heading: { label: 'Новий заголовок', showLabel: true },
-    paragraph: { label: 'Введіть текст тут', showLabel: true },
-    'short-text': { label: 'Текст', placeholder: 'Введіть текст', showLabel: true },
-    'long-text': { label: 'Довгий текст', placeholder: 'Введіть відповідь', showLabel: true },
-    email: { label: 'Електронна пошта', placeholder: 'твій@email.com', showLabel: true },
-    number: { label: 'Число', placeholder: '0', showLabel: true },
-    dropdown: { label: 'Випадаючий список', options: ['Варіант 1', 'Варіант 2', 'Варіант 3'], showLabel: true },
-    checkbox: { label: 'Прапорець', options: ['Варіант 1', 'Варіант 2'], showLabel: true },
-    radio: { label: 'Група перемикачів', options: ['Варіант 1', 'Варіант 2', 'Варіант 3'], showLabel: true },
-    date: { label: 'Дата', placeholder: 'Виберіть дату', showLabel: true },
-    'line-items': { label: 'Позиції', lineItems: [], lineItemsLayout: 'grid-2', showLabel: true },
-    spacer: { label: 'Простір', height: 32 },
-    image: { label: 'Зображення', imageCount: 1, images: [] },
+    heading: {
+      label: 'Новий заголовок',
+      showLabel: true
+    },
+    paragraph: {
+      label: 'Введіть текст тут',
+      showLabel: true
+    },
+    'short-text': {
+      label: 'Текст',
+      placeholder: 'Введіть текст',
+      showLabel: true
+    },
+    'long-text': {
+      label: 'Довгий текст',
+      placeholder: 'Введіть відповідь',
+      showLabel: true
+    },
+    email: {
+      label: 'Електронна пошта',
+      placeholder: 'твій@email.com',
+      showLabel: true
+    },
+    number: {
+      label: 'Число',
+      placeholder: '0',
+      showLabel: true
+    },
+    dropdown: {
+      label: 'Випадаючий список',
+      options: ['Варіант 1', 'Варіант 2', 'Варіант 3'],
+      placeholder: 'Оберіть варіант',
+      showLabel: true
+    },
+    checkbox: {
+      label: 'Прапорець',
+      options: ['Варіант 1', 'Варіант 2'],
+      showLabel: true
+    },
+    radio: {
+      label: 'Група перемикачів',
+      options: ['Варіант 1', 'Варіант 2', 'Варіант 3'],
+      showLabel: true
+    },
+    date: {
+      label: 'Дата',
+      placeholder: 'Виберіть дату',
+      showLabel: true
+    },
+    'line-items': {
+      label: 'Позиції',
+      lineItems: [],
+      lineItemsLayout: 'grid-2',
+      showLabel: true
+    },
+    spacer: {
+      label: 'Простір', height: 32 },
+    image: {
+      label: 'Зображення', imageCount: 1, images: [] },
     avatar: { 
       label: 'Аватар', 
       avatarSize: 64, 
@@ -44,10 +90,33 @@ export const getDefaultBlock = (type) => {
       avatarRadius: 'circle',
       avatarPosition: { x: 50, y: 50 }
     },
-    slideshow: { label: 'Слайдер', slideshowImages: [], slideshowHeight: 200, slideshowGap: 12 },
-    map: { label: 'Мапа', mapQuery: 'New York, NY', mapZoom: 14, mapHeight: 320, mapCenterLat: 40.7128, mapCenterLng: -74.006 },
-    divider: { label: 'Розділювач', dividerColor: '#e5e7eb', dividerThickness: 1, dividerWidth: 100, dividerStyle: 'solid' },
-    reviews: { label: 'Відгуки', reviews: [], reviewsLayout: 'cards', reviewsShowAvatar: true },
+    slideshow: {
+      label: 'Слайдер',
+      slideshowImages: [],
+      slideshowHeight: 200,
+      slideshowGap: 12
+    },
+    map: {
+      label: 'Мапа',
+      mapQuery: 'New York, NY',
+      mapZoom: 14,
+      mapHeight: 320,
+      mapCenterLat: 40.7128,
+      mapCenterLng: -74.006
+    },
+    divider: {
+      label: 'Розділювач',
+      dividerColor: '#e5e7eb',
+      dividerThickness: 1,
+      dividerWidth: 100,
+      dividerStyle: 'solid'
+    },
+    reviews: {
+      label: 'Відгуки',
+      reviews: [],
+      reviewsLayout: 'cards',
+      reviewsShowAvatar: true
+    },
     faq: { label: 'Питання / відповіді', faqItems: [] },
     icon: { 
       label: 'Іконка',

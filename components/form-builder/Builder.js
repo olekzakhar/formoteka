@@ -526,6 +526,7 @@ export const Builder = ({ form }) => {
     selectBlock(id);
     setActiveSuccessBlockId(null);
     setIsEditingSuccessBlock(false);
+    setShowSubmitSettings(false);
     if (id) {
       openBlockSettings();
     }

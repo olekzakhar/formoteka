@@ -282,8 +282,8 @@ export const Canvas = ({
 
   const handleClearAll = () => {
     // Коли клікається на канвасі і відкрито Block Settings тоді буде ставати активною таба Додати а при інших умовах ні
-    // Викликаємо onClearSelection тільки якщо є активний блок або success блок
-    if (activeBlockId || activeSuccessBlockId) {
+    // Викликаємо onClearSelection тільки якщо є активний блок або success блок або вибрана кнопка submit
+    if (activeBlockId || activeSuccessBlockId || isSubmitButtonSelected) {
       onClearSelection()
       onSelectSuccessBlock(null)
     }
@@ -608,7 +608,7 @@ export const Canvas = ({
                             onSubmitButtonClick();
                           }}
                           className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-accent-foreground transition-smooth"
-                          title="Button settings"
+                          title="Налаштування кнопки"
                         >
                           <SettingsIcon className="w-4 h-4" />
                         </button>
@@ -642,37 +642,24 @@ export const Canvas = ({
 
               {/* Sticky Submit Button (when enabled) */}
               {formDesign.stickyButton && (
-                <div className="mt-4 group/submit relative">
-                  <div
-                    className={cn(
-                      'absolute -left-9 top-1/2 -translate-y-1/2 z-20',
-                      'opacity-0 transition-smooth group-hover/submit:opacity-100'
-                    )}
-                  >
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onSubmitButtonClick();
-                      }}
-                      className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-accent-foreground transition-smooth"
-                      title="Button settings"
-                    >
-                      <SettingsIcon className="w-4 h-4" />
-                    </button>
-                  </div>
-                  <div
-                    className={cn(
-                      'rounded-xl transition-smooth p-3 bg-card border border-border',
-                      isSubmitButtonSelected 
-                        ? 'ring-2 ring-primary ring-offset-2' 
-                        : 'ring-0 group-hover/submit:ring-2 group-hover/submit:ring-border group-hover/submit:ring-offset-2'
-                    )}
-                    style={{
-                      backgroundColor: formDesign.backgroundColor,
-                      color: formDesign.textColor,
-                      fontSize: formDesign.fontSize
-                    }}
-                  >
+                <div 
+                  className={cn(
+                    'group/sticky mt-4 rounded-xl p-3 bg-card border border-border cursor-pointer transition-smooth',
+                    isSubmitButtonSelected 
+                      ? 'ring-2 ring-primary ring-offset-2' 
+                      : 'ring-0 hover:ring-2 hover:ring-border hover:ring-offset-2'
+                  )}
+                  style={{
+                    backgroundColor: formDesign.backgroundColor,
+                    color: formDesign.textColor,
+                    fontSize: formDesign.fontSize
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSubmitButtonClick();
+                  }}
+                >
+                  <div className="group-hover/sticky:opacity-90 transition-smooth">
                     <OrderButton
                       hasLineItems={blocks.some((b) => b.type === 'line-items')}
                       quantityLineItems={1}
@@ -680,7 +667,6 @@ export const Canvas = ({
                       submitButtonText={submitButtonText}
                       onClick={(e) => {
                         e.stopPropagation();
-                        onSubmitButtonClick();
                       }}
                     />
                   </div>

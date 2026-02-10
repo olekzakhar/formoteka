@@ -984,7 +984,7 @@ export const BlocksEditor = ({
               setShowContextMenu(!showContextMenu);
             }}
             className={cn(
-              'px-[1.5px] py-[5px] rounded-xl text-foreground transition-smooth bg-white/70 hover:bg-white/85 shadow-[1px_1px_0_rgba(0,0,0,0.7)] backdrop-blur-md relative z-10',
+              'px-[1.5px] py-[5px] rounded-xl text-foreground transition-smooth bg-white/70 hover:bg-white/85 border border-black/10! shadow-[1px_1px_0_rgba(0,0,0,0.7)] backdrop-blur-md relative z-10',
               showContextMenu 
                 ? 'text-foreground' 
                 : 'cursor-grab active:cursor-grabbing'

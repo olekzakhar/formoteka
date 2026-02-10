@@ -446,16 +446,24 @@ export const FormRenderer = ({
 
       case 'date':
         return (
-          <DatePicker
-            className="max-w-[300px]"
-            value={dateValues[block.id]}
-            onChange={(date) => dateChange(block.id, date, setDateValues)}
-            placeholder={block?.placeholder}
-            inputColor={formDesign.inputColor}
-            inputBgColor={formDesign.inputBgColor}
-            inputTextColor={formDesign.inputTextColor}
-            accentColor={formDesign.accentColor}
-          />
+          <div className="space-y-2">
+            {showLabel && (
+              <Label htmlFor={block.id}>
+                {block.label}
+                {block.required && <span className="text-destructive ml-1">*</span>}
+              </Label>
+            )}
+            <DatePicker
+              className="max-w-[300px]"
+              value={dateValues[block.id]}
+              onChange={(date) => dateChange(block.id, date, setDateValues)}
+              placeholder={block?.placeholder}
+              inputColor={formDesign.inputColor}
+              inputBgColor={formDesign.inputBgColor}
+              inputTextColor={formDesign.inputTextColor}
+              accentColor={formDesign.accentColor}
+            />
+          </div>
         )
 
       case 'long-text':

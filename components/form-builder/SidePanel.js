@@ -41,11 +41,11 @@ export const SidePanel = ({
   // Render Block Settings view (for form blocks)
   if (showBlockSettings && activeBlock) {
     return (
-      <div className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shrink-0')}>
-        <div className="flex items-center gap-2 px-4 py-[11px] border-b border-border">
+      <div key="block-settings" className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shrink-0')}>
+        <div className="flex items-center gap-2 pl-3.5 pr-4 py-[11px] border-b border-border">
           <button
             onClick={onCloseBlockSettings}
-            className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-smooth"
+            className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-smooth shrink-0 w-7 h-7 flex items-center justify-center"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
@@ -61,15 +61,15 @@ export const SidePanel = ({
   // Render Success Block Settings view
   if (showSuccessBlockSettings && activeSuccessBlock) {
     return (
-      <div className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shrink-0')}>
-        <div className="flex items-center gap-2 px-4 py-3.5 border-b border-border">
+      <div key="success-block-settings" className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shrink-0')}>
+        <div className="flex items-center gap-2 pl-3.5 pr-4 py-[11px] border-b border-border">
           <button
             onClick={onCloseSuccessBlockSettings}
-            className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-smooth"
+            className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-smooth shrink-0 w-7 h-7 flex items-center justify-center"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
-          <span className="text-sm font-medium text-foreground">Success Block Settings</span>
+          <span className="text-sm font-medium text-foreground">Параметри блоку</span>
         </div>
         <div className="flex-1 overflow-y-auto">
           <BlockSettings block={activeSuccessBlock} onUpdate={onUpdateSuccessBlock} />
@@ -81,11 +81,11 @@ export const SidePanel = ({
   // Render Submit Button Settings view
   if (showSubmitSettings) {
     return (
-      <div className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shrink-0')}>
-        <div className="flex items-center gap-2 px-4 py-3.5 border-b border-border">
+      <div key="submit-settings" className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shrink-0')}>
+        <div className="flex items-center gap-2 pl-3.5 pr-4 py-[11px] border-b border-border">
           <button
             onClick={onCloseSubmitSettings}
-            className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-smooth"
+            className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-smooth shrink-0 w-7 h-7 flex items-center justify-center"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
@@ -111,7 +111,7 @@ export const SidePanel = ({
 
   // Render main tabs (Add + Design + Settings)
   return (
-    <div className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shrink-0 overflow-hidden')}>
+    <div key="main-tabs" className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shrink-0 overflow-hidden')}>
       {/* Tabs */}
       <div className="flex border-b border-border">
         <button

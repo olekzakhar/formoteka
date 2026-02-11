@@ -1,4 +1,4 @@
-// components/form-builder/block/BlocksEditor
+// components/form-builder/BlocksEditor
 
 'use client'
 
@@ -29,6 +29,7 @@ import { BlockMessengerSelect } from '@/components/form-builder/block/MessengerS
 import { BlockList } from '@/components/form-builder/block/List';
 import { BlockChoiceCard } from '@/components/form-builder/block/ChoiceCard';
 import { DatePicker } from '@/components/ui/DatePicker'
+import { SortableKnob } from 'react-easy-sort'
 
 export const BlocksEditor = ({
   block,
@@ -39,8 +40,6 @@ export const BlocksEditor = ({
   onOpenSettings,
   onAddBlock,
   onUpdateBlock,
-  draggableProps,
-  dragHandleProps,
   headingColor = '#131720', // text-foreground 
   headingSize = '20px',
   inputColor,
@@ -980,7 +979,7 @@ export const BlocksEditor = ({
       case 'messenger-select':
         return <BlockMessengerSelect
                  block={block}
-                 style={{ 
+                 style={{
                    borderColor: inputColor || undefined,
                    backgroundColor: inputBgColor ? inputBgColor : undefined,
                    color: inputTextColor || undefined,
@@ -988,7 +987,7 @@ export const BlocksEditor = ({
                  }}
                />
       default:
-        return <div className="text-muted-foreground">Невідомий тип блоку</div>
+        return <div>Невідомий тип блоку</div>
     }
   }
 
@@ -1009,7 +1008,6 @@ export const BlocksEditor = ({
       )}
 
       <div
-        {...draggableProps}
         data-block-root
         className={cn(
           'group relative py-2',
@@ -1050,30 +1048,24 @@ export const BlocksEditor = ({
 
         {/* Drag handle with click to show context menu */}
         <div className="relative">
-          <div
-            ref={dragButtonRef}
-            {...dragHandleProps}
-            onMouseDown={(e) => {
-              // Allow dragging only if context menu is not shown
-              if (showContextMenu) {
+          <SortableKnob>
+            <div
+              ref={dragButtonRef}
+              onClick={(e) => {
                 e.stopPropagation();
-                e.preventDefault();
-              }
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowContextMenu(!showContextMenu);
-            }}
-            className={cn(
-              'px-[1.5px] py-[5px] rounded-xl text-foreground transition-smooth bg-white/70 hover:bg-white/85 border border-black/10! shadow-[1px_1px_0_rgba(0,0,0,0.7)] backdrop-blur-md relative z-10',
-              showContextMenu 
-                ? 'text-foreground' 
-                : 'cursor-grab active:cursor-grabbing'
-            )}
-            title="Перетягніть або натисніть"
-          >
-            <GripVertical className="w-4 h-4 pointer-events-none" />
-          </div>
+                setShowContextMenu(!showContextMenu);
+              }}
+              className={cn(
+                'px-[1.5px] py-[5px] rounded-xl text-foreground transition-smooth bg-white/70 hover:bg-white/85 border border-black/10! shadow-[1px_1px_0_rgba(0,0,0,0.7)] backdrop-blur-md relative z-10',
+                showContextMenu 
+                  ? 'text-foreground' 
+                  : 'cursor-grab active:cursor-grabbing'
+              )}
+              title="Перетягніть або натисніть"
+            >
+              <GripVertical className="w-4 h-4 pointer-events-none" />
+            </div>
+          </SortableKnob>
 
           {/* Context menu */}
           {showContextMenu && showDuplicateDelete && (

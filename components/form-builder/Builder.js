@@ -497,11 +497,6 @@ export const Builder = ({ form }) => {
     }
   }
 
-  const handleAddBlockAt = (type, index) => {
-    addBlock(type, index);
-    openBlockSettings();
-  };
-
   const handleOpenSettings = (id) => {
     selectBlock(id);
     openBlockSettings();
@@ -662,10 +657,6 @@ export const Builder = ({ form }) => {
     setIsEditingSuccessBlock(true);
   };
 
-  const handleAddSuccessBlockAt = (type, index) => {
-    addSuccessBlock(type, index);
-  };
-
   const handleOpenAddSuccessBlock = () => {
     setShowBlockSettings(false);
     setShowSubmitSettings(false);
@@ -752,7 +743,6 @@ export const Builder = ({ form }) => {
           onDuplicateBlock={duplicateBlock}
           onOpenSettings={handleOpenSettings}
           onOpenAddBlock={handleOpenAddBlock}
-          onAddBlockAt={handleAddBlockAt}
           onUpdateBlock={updateBlock}
           onMoveBlock={moveBlock}
           onSubmitButtonClick={handleSubmitButtonClick}
@@ -761,7 +751,6 @@ export const Builder = ({ form }) => {
           onDeleteSuccessBlock={handleDeleteSuccessBlock}
           onDuplicateSuccessBlock={duplicateSuccessBlock}
           onOpenSuccessSettings={handleOpenSuccessSettings}
-          onAddSuccessBlockAt={handleAddSuccessBlockAt}
           onUpdateSuccessBlock={updateSuccessBlock}
           onMoveSuccessBlock={moveSuccessBlock}
           onOpenAddSuccessBlock={handleOpenAddSuccessBlock}

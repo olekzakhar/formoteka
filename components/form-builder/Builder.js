@@ -719,6 +719,7 @@ export const Builder = ({ form }) => {
   return (
     <div className="flex flex-col h-screen w-full overflow-hidden">
       <Header
+        formSlug={form?.slug}
         formName={formName}
         setFormName={setFormName}
         onTogglePreview={() => setIsPreview((v) => !v)}

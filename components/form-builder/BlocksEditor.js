@@ -879,7 +879,7 @@ export const BlocksEditor = ({
                   {block.required && <span className="text-destructive ml-1">*</span>}
                 </Label>
               )}
-              <div className="p-4 border-2 border-dashed border-border rounded-lg bg-muted/30 text-center">
+              <div className="p-6 border-2 border-dashed border-border rounded-lg text-center">
                 <p
                   className="text-sm text-muted-foreground"
                   style={{color: getColor(formTextColor, 0.7) }}

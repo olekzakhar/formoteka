@@ -1,14 +1,23 @@
 // components/form-builder/Header
 
-import Link from 'next/link';
-import { ArrowLeft, Play, Link as LinkIcon, ExternalLink, Loader2, CheckCheck, FileCheckCorner } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useState, useRef, useEffect } from 'react';
-import { BASE_URL, FORMS_PATH } from '@/constants';
-import Logo from '@/components/Logo';
-import { cn } from '@/utils';
+import Link from 'next/link'
+import {
+  ArrowLeft,
+  Play,
+  Link as LinkIcon,
+  ExternalLink,
+  Loader2,
+  CheckCheck,
+  FileCheckCorner
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { useState, useRef, useEffect } from 'react'
+import { BASE_URL, FORMS_PATH } from '@/constants'
+import Logo from '@/components/Logo'
+import { cn } from '@/utils'
 
-export const Header = ({ 
+export const Header = ({
+  formSlug,
   formName,
   setFormName,
   onTogglePreview,
@@ -17,18 +26,18 @@ export const Header = ({
   hasUnsavedChanges,
   onManualSave
 }) => {
-  const [isEditingName, setIsEditingName] = useState(false);
-  const inputRef = useRef(null);
+  const [isEditingName, setIsEditingName] = useState(false)
+  const inputRef = useRef(null)
 
   useEffect(() => {
-    setFormName(formName);
-  }, [formName, setFormName]);
+    setFormName(formName)
+  }, [formName, setFormName])
 
   useEffect(() => {
     if (isEditingName && inputRef.current) {
-      inputRef.current.focus();
+      inputRef.current.focus()
     }
-  }, [isEditingName]);
+  }, [isEditingName])
 
   const handleSaveName = () => {
     const trimFormName = formName.trim()
@@ -37,15 +46,11 @@ export const Header = ({
     }
 
     setIsEditingName(false);
-  };
+  }
 
   const handleCopyUrl = () => {
-    navigator.clipboard.writeText(window.location.href);
-  };
-
-  const handleOpenInNewTab = () => {
-    window.open(window.location.href, '_blank');
-  };
+    navigator.clipboard.writeText(`${BASE_URL}/${formSlug}`)
+  }
 
   return (
     <header className="h-[52px] border-b border-border bg-card rounded-b-3xl flex items-center px-5 shrink-0 bg-transparent">
@@ -150,19 +155,21 @@ export const Header = ({
           size="icon"
           onClick={handleCopyUrl}
           className="h-8 w-8"
-          title="Copy URL"
+          title="Копіювати посилання"
         >
           <LinkIcon className="h-4 w-4" />
         </Button>
 
         <Button
+          asChild
           variant="ghost"
           size="icon"
-          onClick={handleOpenInNewTab}
           className="h-8 w-8"
-          title="Open in new tab"
+          title="Відкрити у новій вкладці"
         >
-          <ExternalLink className="h-4 w-4" />
+          <Link href={`${BASE_URL}/${formSlug}`} target="_blank">
+            <ExternalLink className="h-4 w-4" />
+          </Link>
         </Button>
       </div>
     </header>

@@ -729,7 +729,7 @@ const AvatarSettings = ({ block, onUpdate }) => {
           <div
             ref={containerRef}
             className={cn(
-              'relative overflow-hidden flex items-center justify-center bg-muted/50 border border-border',
+              'relative overflow-hidden flex items-center justify-center text-center bg-muted/50 border border-border',
               radiusClass,
               hasImage && 'cursor-grab active:cursor-grabbing'
             )}
@@ -776,7 +776,7 @@ const AvatarSettings = ({ block, onUpdate }) => {
             'border-input hover:border-primary/50 hover:bg-accent/50 cursor-pointer transition-smooth'
           )}>
             <Plus className="w-4 h-4" />
-            <span className="text-sm">Завантажити зображення</span>
+            <span className="text-sm">Додати зображення</span>
             <input
               type="file"
               accept="image/*"

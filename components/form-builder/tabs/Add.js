@@ -12,6 +12,32 @@ const categories = [
 ];
 
 export const TabsAdd = ({ onAddBlock }) => {
+  // Функція щоб створити копію кнопки блока який перетягую в редактор і щоб додати завкруглені краї
+  const handleDragStart = (e, blockType) => {
+    e.dataTransfer.setData('blockType', blockType)
+    e.dataTransfer.setData('text/plain', blockType)
+    e.dataTransfer.effectAllowed = 'copy'
+
+    // Створюємо кастомний drag image з заокругленнями
+    const dragElement = e.currentTarget.cloneNode(true)
+    dragElement.style.position = 'absolute'
+    dragElement.style.top = '-9999px'
+    dragElement.style.width = e.currentTarget.offsetWidth + 'px'
+    dragElement.style.height = e.currentTarget.offsetHeight + 'px'
+    dragElement.style.borderRadius = '0.5rem' // rounded-lg
+    dragElement.style.opacity = '0.9'
+    
+    document.body.appendChild(dragElement)
+    
+    // Встановлюємо кастомний drag image
+    e.dataTransfer.setDragImage(dragElement, e.currentTarget.offsetWidth / 2, e.currentTarget.offsetHeight / 2)
+    
+    // Видаляємо тимчасовий елемент після початку перетягування
+    setTimeout(() => {
+      document.body.removeChild(dragElement)
+    }, 0)
+  }
+
   return (
     <div className="p-4 space-y-6 animate-fade-in">
       {categories.map((category) => {
@@ -27,12 +53,7 @@ export const TabsAdd = ({ onAddBlock }) => {
                   key={block.type}
                   onClick={() => onAddBlock(block.type)}
                   draggable
-                  onDragStart={(e) => {
-                    e.dataTransfer.setData('blockType', block.type);
-                    // Safari/Firefox compatibility
-                    e.dataTransfer.setData('text/plain', block.type);
-                    e.dataTransfer.effectAllowed = 'copy';
-                  }}
+                  onDragStart={(e) => handleDragStart(e, block.type)}
                   className={cn(
                     'flex flex-col items-center gap-2 p-3 rounded-lg',
                     'bg-primary/[0.08] hover:bg-primary/15 border border-primary/20! hover:border-primary/40!',

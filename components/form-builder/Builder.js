@@ -24,7 +24,7 @@ export const Builder = ({ form }) => {
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [currentPageMode, setCurrentPageMode] = useState('form'); // Відстежуємо поточний режим (form/success)
+  const [currentPageMode, setCurrentPageMode] = useState('form');
   const supabase = createClient();
 
   // Parse saved data from database
@@ -487,12 +487,12 @@ export const Builder = ({ form }) => {
   };
 
   // ОНОВЛЕНА ФУНКЦІЯ: Тепер перевіряє currentPageMode і додає блок у правильне місце
-  const handleAddBlock = useCallback((type) => {
+  const handleAddBlock = useCallback((type, index) => {
     if (currentPageMode === 'success') {
-      addSuccessBlock(type)
+      addSuccessBlock(type, index)
       setIsEditingSuccessBlock(true)
     } else {
-      addBlock(type)
+      addBlock(type, index)
       openBlockSettings()
     }
   }, [currentPageMode, addSuccessBlock, addBlock])
@@ -664,7 +664,6 @@ export const Builder = ({ form }) => {
     setActiveTab('add');
   };
 
-  // НОВИЙ ОБРОБНИК: Отримує інформацію про зміну режиму з Canvas
   const handlePageModeChange = (mode) => {
     setCurrentPageMode(mode)
   }

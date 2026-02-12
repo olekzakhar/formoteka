@@ -49,6 +49,8 @@ export const Canvas = ({
 }) => {
   const [pageMode, setPageMode] = useState('form'); // 'form' or 'success'
   const [previewMode, setPreviewMode] = useState('desktop'); // 'desktop' or 'mobile'
+  const [dragOverIndex, setDragOverIndex] = useState(null);
+  const [isDraggingFromSidebar, setIsDraggingFromSidebar] = useState(false);
 
   // Setup sensors for drag and drop
   const sensors = useSensors(
@@ -84,6 +86,9 @@ export const Canvas = ({
   const handleDragEnd = (event) => {
     const { active, over } = event;
 
+    setDragOverIndex(null);
+    setIsDraggingFromSidebar(false);
+
     if (active.id !== over?.id) {
       const oldIndex = blocks.findIndex((block) => block.id === active.id);
       const newIndex = blocks.findIndex((block) => block.id === over.id);
@@ -97,6 +102,9 @@ export const Canvas = ({
   const handleSuccessDragEnd = (event) => {
     const { active, over } = event;
 
+    setDragOverIndex(null);
+    setIsDraggingFromSidebar(false);
+
     if (active.id !== over?.id) {
       const oldIndex = successBlocks.findIndex((block) => block.id === active.id);
       const newIndex = successBlocks.findIndex((block) => block.id === over.id);
@@ -107,27 +115,91 @@ export const Canvas = ({
     }
   };
 
+  // Обробник dragOver для визначення позиції вставки
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Перевіряємо чи це перетягування з sidebar
+    const hasBlockType = e.dataTransfer.types.includes('blocktype') || 
+                         e.dataTransfer.types.includes('text/plain');
+    
+    if (!hasBlockType) {
+      setIsDraggingFromSidebar(false);
+      setDragOverIndex(null);
+      return;
+    }
+
+    setIsDraggingFromSidebar(true);
+
+    // Визначаємо в якому режимі ми зараз (form або success)
+    const currentBlocks = pageMode === 'form' ? blocks : successBlocks;
+
+    // Знаходимо найближчий блок
+    const blocksContainer = e.currentTarget.querySelector('[data-blocks-container]');
+    if (!blocksContainer) return;
+
+    const blockElements = Array.from(blocksContainer.querySelectorAll('[data-block-root]'));
+    
+    if (blockElements.length === 0) {
+      setDragOverIndex(0);
+      return;
+    }
+
+    let closestIndex = 0;
+    let closestDistance = Infinity;
+
+    blockElements.forEach((el, index) => {
+      const rect = el.getBoundingClientRect();
+      const midpoint = rect.top + rect.height / 2;
+      const distance = Math.abs(e.clientY - midpoint);
+
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        // Якщо курсор вище середини - вставити перед, інакше - після
+        closestIndex = e.clientY < midpoint ? index : index + 1;
+      }
+    });
+
+    setDragOverIndex(closestIndex);
+  };
+
   // Обробник drop для додавання нових блоків з sidebar
   const handleDrop = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
     
-    const blockType = e.dataTransfer.getData('blockType') || e.dataTransfer.getData('text/plain')
+    const blockType = e.dataTransfer.getData('blockType') || e.dataTransfer.getData('text/plain');
     
     if (blockType && onAddBlock) {
-      onAddBlock(blockType)
+      // Використовуємо dragOverIndex для вставки в потрібне місце
+      // dragOverIndex вже правильно вказує на позицію вставки (0 = початок, length = кінець)
+      const insertIndex = dragOverIndex !== null ? dragOverIndex : undefined;
+      onAddBlock(blockType, insertIndex);
     }
-  }
+
+    setDragOverIndex(null);
+    setIsDraggingFromSidebar(false);
+  };
+
+  const handleDragLeave = (e) => {
+    // Перевіряємо чи курсор дійсно покинув область
+    const rect = e.currentTarget.getBoundingClientRect();
+    if (
+      e.clientX < rect.left ||
+      e.clientX >= rect.right ||
+      e.clientY < rect.top ||
+      e.clientY >= rect.bottom
+    ) {
+      setDragOverIndex(null);
+      setIsDraggingFromSidebar(false);
+    }
+  };
 
   return (
     <div
       className="w-full h-full overflow-y-auto"
       onClick={handleClearAll}
-      onDragOver={(e) => {
-        e.preventDefault()
-        e.stopPropagation()
-      }}
-      onDrop={handleDrop}
     >
       <div className="flex gap-1 transition-all duration-300">
         <div className={cn(
@@ -213,10 +285,8 @@ export const Canvas = ({
               <div
                 className="rounded-2xl border-2 border-[#2f3032]/90!"
                 style={{ backgroundColor: formDesign.backgroundColor }}
-                onDragOver={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                }}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
               >
                 <div className="w-full pt-6 pb-10 px-4 sm:px-6">
@@ -228,15 +298,10 @@ export const Canvas = ({
                     }}
                   >
                     {/* Blocks */}
-                    <div className="space-y-2">
+                    <div className="space-y-2" data-blocks-container>
                       {blocks.length === 0 ? (
                         <div
                           className="border-2 border-dashed rounded-lg p-12 text-center transition-smooth border-border hover:border-muted-foreground/50"
-                          onDragOver={(e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
-                          }}
-                          onDrop={handleDrop}
                         >
                           <div className="w-16 h-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
                             <Plus className="w-8 h-8 text-muted-foreground" />
@@ -256,7 +321,7 @@ export const Canvas = ({
                             strategy={verticalListSortingStrategy}
                           >
                             <div className="space-y-2">
-                              {blocks.map((block) => {
+                              {blocks.map((block, index) => {
                                 const widthClass = {
                                   '1/1': 'w-full',
                                   '1/2': 'w-[calc(50%-0.5rem)]',
@@ -279,38 +344,67 @@ export const Canvas = ({
                                   : '';
 
                                 return (
-                                  <div
-                                    key={block.id}
-                                    className={cn(
-                                      'relative',
-                                      widthClass,
-                                      verticalAlignClass,
-                                      horizontalAlignClass,
-                                    )}
-                                  >
-                                    <BlocksEditor
-                                      block={block}
-                                      isActive={activeBlockId === block.id}
-                                      onSelect={() => {
-                                        onSelectSuccessBlock(null);
-                                        onSelectBlock(block.id);
-                                      }}
-                                      onDelete={() => onDeleteBlock(block.id)}
-                                      onDuplicate={() => onDuplicateBlock(block.id)}
-                                      onOpenSettings={() => onOpenSettings(block.id)}
-                                      onAddBlock={onOpenAddBlock}
-                                      onUpdateBlock={(updates) => onUpdateBlock(block.id, updates)}
-                                      headingColor={formDesign.headingColor}
-                                      headingSize={formDesign.headingSize}
-                                      inputColor={formDesign.inputColor}
-                                      inputBgColor={formDesign.inputBgColor}
-                                      inputTextColor={formDesign.inputTextColor}
-                                      formTextColor={formDesign.textColor}
-                                      accentColor={formDesign.accentColor}
-                                    />
+                                  <div key={block.id}>
+                                    {/* Drop placeholder before block */}
+                                    <div
+                                      className={cn(
+                                        'overflow-hidden transition-all duration-200 ease-out',
+                                        isDraggingFromSidebar && dragOverIndex === index
+                                          ? 'max-h-24 opacity-100 mb-2'
+                                          : 'max-h-0 opacity-0'
+                                      )}
+                                    >
+                                      <div className="h-20 border-2 border-dashed border-primary bg-primary/5 rounded-lg flex items-center justify-center">
+                                        <span className="text-sm text-primary font-medium">Додати сюди</span>
+                                      </div>
+                                    </div>
+                                    
+                                    <div
+                                      className={cn(
+                                        'relative',
+                                        widthClass,
+                                        verticalAlignClass,
+                                        horizontalAlignClass,
+                                      )}
+                                    >
+                                      <BlocksEditor
+                                        block={block}
+                                        isActive={activeBlockId === block.id}
+                                        onSelect={() => {
+                                          onSelectSuccessBlock(null);
+                                          onSelectBlock(block.id);
+                                        }}
+                                        onDelete={() => onDeleteBlock(block.id)}
+                                        onDuplicate={() => onDuplicateBlock(block.id)}
+                                        onOpenSettings={() => onOpenSettings(block.id)}
+                                        onAddBlock={onOpenAddBlock}
+                                        onUpdateBlock={(updates) => onUpdateBlock(block.id, updates)}
+                                        headingColor={formDesign.headingColor}
+                                        headingSize={formDesign.headingSize}
+                                        inputColor={formDesign.inputColor}
+                                        inputBgColor={formDesign.inputBgColor}
+                                        inputTextColor={formDesign.inputTextColor}
+                                        formTextColor={formDesign.textColor}
+                                        accentColor={formDesign.accentColor}
+                                      />
+                                    </div>
                                   </div>
                                 )
                               })}
+                              
+                              {/* Drop placeholder after last block */}
+                              <div
+                                className={cn(
+                                  'overflow-hidden transition-all duration-200 ease-out',
+                                  isDraggingFromSidebar && dragOverIndex === blocks.length
+                                    ? 'max-h-24 opacity-100 mt-2'
+                                    : 'max-h-0 opacity-0'
+                                )}
+                              >
+                                <div className="h-20 border-2 border-dashed border-primary bg-primary/5 rounded-lg flex items-center justify-center">
+                                  <span className="text-sm text-primary font-medium">Додати сюди</span>
+                                </div>
+                              </div>
                             </div>
                           </SortableContext>
                         </DndContext>
@@ -409,10 +503,8 @@ export const Canvas = ({
                 color: formDesign.textColor,
                 fontSize: formDesign.fontSize
               }}
-              onDragOver={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-              }}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
               onDrop={handleDrop}
             >
               <div className="py-8">
@@ -424,15 +516,11 @@ export const Canvas = ({
                     color: formDesign.textColor,
                     fontSize: formDesign.fontSize
                   }}
+                  data-blocks-container
                 >
                   {successBlocks.length === 0 ? (
                     <div 
                       className="border-2 border-dashed rounded-lg p-8 text-center transition-smooth border-border hover:border-muted-foreground/50"
-                      onDragOver={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                      }}
-                      onDrop={handleDrop}
                     >
                       <p className="mb-2 text-sm">Сторінка успіху порожня</p>
                       <p className="text-sm opacity-90">Додайте або перетягніть сюди блоки з вкладки &quot;Додати&quot;</p>
@@ -449,29 +537,59 @@ export const Canvas = ({
                         strategy={verticalListSortingStrategy}
                       >
                         <div className="space-y-2">
-                          {successBlocks.map((block) => (
-                            <div key={block.id} className="relative">
-                              <BlocksEditor
-                                block={block}
-                                isActive={activeSuccessBlockId === block.id}
-                                onSelect={() => {
-                                  onSelectBlock(null);
-                                  onSelectSuccessBlock(block.id);
-                                }}
-                                onDelete={() => onDeleteSuccessBlock(block.id)}
-                                onDuplicate={() => onDuplicateSuccessBlock(block.id)}
-                                onOpenSettings={() => onOpenSuccessSettings(block.id)}
-                                onAddBlock={onOpenAddSuccessBlock}
-                                onUpdateBlock={(updates) => onUpdateSuccessBlock(block.id, updates)}
-                                headingColor={formDesign.headingColor}
-                                headingSize={formDesign.headingSize}
-                                inputColor={formDesign.inputColor}
-                                inputBgColor={formDesign.inputBgColor}
-                                inputTextColor={formDesign.inputTextColor}
-                                formTextColor={formDesign.textColor}
-                              />
+                          {successBlocks.map((block, index) => (
+                            <div key={block.id}>
+                              {/* Drop placeholder before block */}
+                              <div
+                                className={cn(
+                                  'overflow-hidden transition-all duration-200 ease-out',
+                                  isDraggingFromSidebar && dragOverIndex === index
+                                    ? 'max-h-24 opacity-100 mb-2'
+                                    : 'max-h-0 opacity-0'
+                                )}
+                              >
+                                <div className="h-20 border-2 border-dashed border-primary bg-primary/5 rounded-lg flex items-center justify-center">
+                                  <span className="text-sm text-primary font-medium">Додати сюди</span>
+                                </div>
+                              </div>
+                              
+                              <div className="relative">
+                                <BlocksEditor
+                                  block={block}
+                                  isActive={activeSuccessBlockId === block.id}
+                                  onSelect={() => {
+                                    onSelectBlock(null);
+                                    onSelectSuccessBlock(block.id);
+                                  }}
+                                  onDelete={() => onDeleteSuccessBlock(block.id)}
+                                  onDuplicate={() => onDuplicateSuccessBlock(block.id)}
+                                  onOpenSettings={() => onOpenSuccessSettings(block.id)}
+                                  onAddBlock={onOpenAddSuccessBlock}
+                                  onUpdateBlock={(updates) => onUpdateSuccessBlock(block.id, updates)}
+                                  headingColor={formDesign.headingColor}
+                                  headingSize={formDesign.headingSize}
+                                  inputColor={formDesign.inputColor}
+                                  inputBgColor={formDesign.inputBgColor}
+                                  inputTextColor={formDesign.inputTextColor}
+                                  formTextColor={formDesign.textColor}
+                                />
+                              </div>
                             </div>
                           ))}
+                          
+                          {/* Drop placeholder after last block */}
+                          <div
+                            className={cn(
+                              'overflow-hidden transition-all duration-200 ease-out',
+                              isDraggingFromSidebar && dragOverIndex === successBlocks.length
+                                ? 'max-h-24 opacity-100 mt-2'
+                                : 'max-h-0 opacity-0'
+                            )}
+                          >
+                            <div className="h-20 border-2 border-dashed border-primary bg-primary/5 rounded-lg flex items-center justify-center">
+                              <span className="text-sm text-primary font-medium">Додати сюди</span>
+                            </div>
+                          </div>
                         </div>
                       </SortableContext>
                     </DndContext>

@@ -29,7 +29,8 @@ import { BlockMessengerSelect } from '@/components/form-builder/block/MessengerS
 import { BlockList } from '@/components/form-builder/block/List';
 import { BlockChoiceCard } from '@/components/form-builder/block/ChoiceCard';
 import { DatePicker } from '@/components/ui/DatePicker'
-import { SortableKnob } from 'react-easy-sort'
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 export const BlocksEditor = ({
   block,
@@ -67,6 +68,22 @@ export const BlocksEditor = ({
   const dragButtonRef = useRef(null)
 
   const showLabel = block.showLabel !== false;
+
+  // @dnd-kit/sortable hook
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: block.id });
+
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
 
   // Notify parent when context menu state changes
   useEffect(() => {
@@ -1008,14 +1025,16 @@ export const BlocksEditor = ({
       )}
 
       <div
+        ref={setNodeRef}
+        style={style}
         data-block-root
         className={cn(
           'group relative py-2',
           // Only apply transition when no context menu is open anywhere
-          !hasOpenContextMenu && 'transition-smooth',
+          !hasOpenContextMenu && !isDragging && 'transition-smooth',
           // border overlay that extends beyond block without affecting layout
           "after:content-[''] after:absolute after:-inset-x-2 after:-inset-y-0 after:rounded-lg after:pointer-events-none",
-          !hasOpenContextMenu && 'after:transition-smooth',
+          !hasOpenContextMenu && !isDragging && 'after:transition-smooth',
           // Border logic:
           // - If active (selected in settings): primary border (thick)
           // - If context menu is open but not active: border like hover (thin)
@@ -1048,24 +1067,24 @@ export const BlocksEditor = ({
 
         {/* Drag handle with click to show context menu */}
         <div className="relative">
-          <SortableKnob>
-            <div
-              ref={dragButtonRef}
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowContextMenu(!showContextMenu);
-              }}
-              className={cn(
-                'px-[1.5px] py-[5px] rounded-xl text-foreground transition-smooth bg-white/70 hover:bg-white/85 border border-black/10! shadow-[1px_1px_0_rgba(0,0,0,0.7)] backdrop-blur-md relative z-10',
-                showContextMenu 
-                  ? 'text-foreground' 
-                  : 'cursor-grab active:cursor-grabbing'
-              )}
-              title="Перетягніть або натисніть"
-            >
-              <GripVertical className="w-4 h-4 pointer-events-none" />
-            </div>
-          </SortableKnob>
+          <div
+            ref={dragButtonRef}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowContextMenu(!showContextMenu);
+            }}
+            className={cn(
+              'px-[1.5px] py-[5px] rounded-xl text-foreground transition-smooth bg-white/70 hover:bg-white/85 border border-black/10! shadow-[1px_1px_0_rgba(0,0,0,0.7)] backdrop-blur-md relative z-10',
+              showContextMenu 
+                ? 'text-foreground' 
+                : 'cursor-grab active:cursor-grabbing'
+            )}
+            title="Перетягніть або натисніть"
+            {...attributes}
+            {...listeners}
+          >
+            <GripVertical className="w-4 h-4 pointer-events-none" />
+          </div>
 
           {/* Context menu */}
           {showContextMenu && showDuplicateDelete && (

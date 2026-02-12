@@ -6,7 +6,19 @@ import { cn } from '@/utils';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button'
 import { OrderButton } from '@/components/ui/OrderButton'
-import SortableList, { SortableItem } from 'react-easy-sort'
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 
 export const Canvas = ({
   blocks,
@@ -37,6 +49,18 @@ export const Canvas = ({
   const [pageMode, setPageMode] = useState('form'); // 'form' or 'success'
   const [previewMode, setPreviewMode] = useState('desktop'); // 'desktop' or 'mobile'
 
+  // Setup sensors for drag and drop
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // 8px of movement required to start drag
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
   // Повідомляємо батьківський компонент про зміну режиму перегляду
   useEffect(() => {
     if (onPageModeChange) {
@@ -53,17 +77,31 @@ export const Canvas = ({
     }
   }
 
-  const handleSortEnd = (oldIndex, newIndex) => {
-    if (oldIndex !== newIndex) {
-      onMoveBlock(oldIndex, newIndex)
-    }
-  }
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
 
-  const handleSuccessSortEnd = (oldIndex, newIndex) => {
-    if (oldIndex !== newIndex) {
-      onMoveSuccessBlock(oldIndex, newIndex)
+    if (active.id !== over?.id) {
+      const oldIndex = blocks.findIndex((block) => block.id === active.id);
+      const newIndex = blocks.findIndex((block) => block.id === over.id);
+
+      if (oldIndex !== -1 && newIndex !== -1) {
+        onMoveBlock(oldIndex, newIndex);
+      }
     }
-  }
+  };
+
+  const handleSuccessDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      const oldIndex = successBlocks.findIndex((block) => block.id === active.id);
+      const newIndex = successBlocks.findIndex((block) => block.id === over.id);
+
+      if (oldIndex !== -1 && newIndex !== -1) {
+        onMoveSuccessBlock(oldIndex, newIndex);
+      }
+    }
+  };
 
   return (
     <div
@@ -175,68 +213,75 @@ export const Canvas = ({
                           <p className="text-sm opacity-90">Додайте або перетягніть сюди блоки з вкладки &quot;Додати&quot;</p>
                         </div>
                       ) : (
-                        <SortableList
-                          onSortEnd={handleSortEnd}
-                          className="space-y-2"
-                          draggedItemClassName="opacity-50"
+                        <DndContext
+                          id="form-blocks-dnd"
+                          sensors={sensors}
+                          collisionDetection={closestCenter}
+                          onDragEnd={handleDragEnd}
                         >
-                          {blocks.map((block, index) => {
-                            const widthClass = {
-                              '1/1': 'w-full',
-                              '1/2': 'w-[calc(50%-0.5rem)]',
-                              '1/3': 'w-[calc(33.333%-0.67rem)]',
-                            }[block.blockWidth || '1/1'];
+                          <SortableContext
+                            items={blocks.map(block => block.id)}
+                            strategy={verticalListSortingStrategy}
+                          >
+                            <div className="space-y-2">
+                              {blocks.map((block) => {
+                                const widthClass = {
+                                  '1/1': 'w-full',
+                                  '1/2': 'w-[calc(50%-0.5rem)]',
+                                  '1/3': 'w-[calc(33.333%-0.67rem)]',
+                                }[block.blockWidth || '1/1'];
 
-                            const verticalAlignClass = {
-                              top: 'self-start',
-                              center: 'self-center',
-                              bottom: 'self-end',
-                            }[block.blockVerticalAlign || 'top'];
+                                const verticalAlignClass = {
+                                  top: 'self-start',
+                                  center: 'self-center',
+                                  bottom: 'self-end',
+                                }[block.blockVerticalAlign || 'top'];
 
-                            // Horizontal positioning for inline blocks (when a row has remaining free space)
-                            const horizontalAlignClass = block.blockWidth !== '1/1'
-                              ? {
-                                  start: '',
-                                  center: 'mx-auto',
-                                  end: 'ml-auto',
-                                }[block.blockHorizontalAlign || 'start']
-                              : '';
+                                // Horizontal positioning for inline blocks (when a row has remaining free space)
+                                const horizontalAlignClass = block.blockWidth !== '1/1'
+                                  ? {
+                                      start: '',
+                                      center: 'mx-auto',
+                                      end: 'ml-auto',
+                                    }[block.blockHorizontalAlign || 'start']
+                                  : '';
 
-                            return (
-                              <SortableItem key={block.id}>
-                                <div
-                                  className={cn(
-                                    'relative pl-[30px]',
-                                    widthClass,
-                                    verticalAlignClass,
-                                    horizontalAlignClass,
-                                  )}
-                                >
-                                  <BlocksEditor
-                                    block={block}
-                                    isActive={activeBlockId === block.id}
-                                    onSelect={() => {
-                                      onSelectSuccessBlock(null);
-                                      onSelectBlock(block.id);
-                                    }}
-                                    onDelete={() => onDeleteBlock(block.id)}
-                                    onDuplicate={() => onDuplicateBlock(block.id)}
-                                    onOpenSettings={() => onOpenSettings(block.id)}
-                                    onAddBlock={onOpenAddBlock}
-                                    onUpdateBlock={(updates) => onUpdateBlock(block.id, updates)}
-                                    headingColor={formDesign.headingColor}
-                                    headingSize={formDesign.headingSize}
-                                    inputColor={formDesign.inputColor}
-                                    inputBgColor={formDesign.inputBgColor}
-                                    inputTextColor={formDesign.inputTextColor}
-                                    formTextColor={formDesign.textColor}
-                                    accentColor={formDesign.accentColor}
-                                  />
-                                </div>
-                              </SortableItem>
-                            )
-                          })}
-                        </SortableList>
+                                return (
+                                  <div
+                                    key={block.id}
+                                    className={cn(
+                                      'relative',
+                                      widthClass,
+                                      verticalAlignClass,
+                                      horizontalAlignClass,
+                                    )}
+                                  >
+                                    <BlocksEditor
+                                      block={block}
+                                      isActive={activeBlockId === block.id}
+                                      onSelect={() => {
+                                        onSelectSuccessBlock(null);
+                                        onSelectBlock(block.id);
+                                      }}
+                                      onDelete={() => onDeleteBlock(block.id)}
+                                      onDuplicate={() => onDuplicateBlock(block.id)}
+                                      onOpenSettings={() => onOpenSettings(block.id)}
+                                      onAddBlock={onOpenAddBlock}
+                                      onUpdateBlock={(updates) => onUpdateBlock(block.id, updates)}
+                                      headingColor={formDesign.headingColor}
+                                      headingSize={formDesign.headingSize}
+                                      inputColor={formDesign.inputColor}
+                                      inputBgColor={formDesign.inputBgColor}
+                                      inputTextColor={formDesign.inputTextColor}
+                                      formTextColor={formDesign.textColor}
+                                      accentColor={formDesign.accentColor}
+                                    />
+                                  </div>
+                                )
+                              })}
+                            </div>
+                          </SortableContext>
+                        </DndContext>
                       )}
                     </div>
 
@@ -349,37 +394,43 @@ export const Canvas = ({
                       <p className="text-sm opacity-90">Додайте або перетягніть сюди блоки з вкладки &quot;Додати&quot;</p>
                     </div>
                   ) : (
-                    <SortableList
-                      onSortEnd={handleSuccessSortEnd}
-                      className="space-y-2"
-                      draggedItemClassName="opacity-50"
+                    <DndContext
+                      id="success-blocks-dnd"
+                      sensors={sensors}
+                      collisionDetection={closestCenter}
+                      onDragEnd={handleSuccessDragEnd}
                     >
-                      {successBlocks.map((block) => (
-                        <SortableItem key={block.id}>
-                          <div className="relative pl-[30px]">
-                            <BlocksEditor
-                              block={block}
-                              isActive={activeSuccessBlockId === block.id}
-                              onSelect={() => {
-                                onSelectBlock(null);
-                                onSelectSuccessBlock(block.id);
-                              }}
-                              onDelete={() => onDeleteSuccessBlock(block.id)}
-                              onDuplicate={() => onDuplicateSuccessBlock(block.id)}
-                              onOpenSettings={() => onOpenSuccessSettings(block.id)}
-                              onAddBlock={onOpenAddSuccessBlock}
-                              onUpdateBlock={(updates) => onUpdateSuccessBlock(block.id, updates)}
-                              headingColor={formDesign.headingColor}
-                              headingSize={formDesign.headingSize}
-                              inputColor={formDesign.inputColor}
-                              inputBgColor={formDesign.inputBgColor}
-                              inputTextColor={formDesign.inputTextColor}
-                              formTextColor={formDesign.textColor}
-                            />
-                          </div>
-                        </SortableItem>
-                      ))}
-                    </SortableList>
+                      <SortableContext
+                        items={successBlocks.map(block => block.id)}
+                        strategy={verticalListSortingStrategy}
+                      >
+                        <div className="space-y-2">
+                          {successBlocks.map((block) => (
+                            <div key={block.id} className="relative">
+                              <BlocksEditor
+                                block={block}
+                                isActive={activeSuccessBlockId === block.id}
+                                onSelect={() => {
+                                  onSelectBlock(null);
+                                  onSelectSuccessBlock(block.id);
+                                }}
+                                onDelete={() => onDeleteSuccessBlock(block.id)}
+                                onDuplicate={() => onDuplicateSuccessBlock(block.id)}
+                                onOpenSettings={() => onOpenSuccessSettings(block.id)}
+                                onAddBlock={onOpenAddSuccessBlock}
+                                onUpdateBlock={(updates) => onUpdateSuccessBlock(block.id, updates)}
+                                headingColor={formDesign.headingColor}
+                                headingSize={formDesign.headingSize}
+                                inputColor={formDesign.inputColor}
+                                inputBgColor={formDesign.inputBgColor}
+                                inputTextColor={formDesign.inputTextColor}
+                                formTextColor={formDesign.textColor}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </SortableContext>
+                    </DndContext>
                   )}
                 </div>
               </div>

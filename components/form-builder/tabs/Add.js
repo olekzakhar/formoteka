@@ -1,4 +1,4 @@
-// components/form-builder/tabs/AddBlock
+// components/form-builder/tabs/Add
 
 import { blockDefinitions } from '@/data/block-definitions';
 import { BlockIcon } from '@/components/form-builder/block/ButtonIcons';

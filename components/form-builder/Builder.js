@@ -487,7 +487,7 @@ export const Builder = ({ form }) => {
   };
 
   // ОНОВЛЕНА ФУНКЦІЯ: Тепер перевіряє currentPageMode і додає блок у правильне місце
-  const handleAddBlock = (type) => {
+  const handleAddBlock = useCallback((type) => {
     if (currentPageMode === 'success') {
       addSuccessBlock(type)
       setIsEditingSuccessBlock(true)
@@ -495,7 +495,7 @@ export const Builder = ({ form }) => {
       addBlock(type)
       openBlockSettings()
     }
-  }
+  }, [currentPageMode, addSuccessBlock, addBlock])
 
   const handleOpenSettings = (id) => {
     selectBlock(id);
@@ -756,6 +756,7 @@ export const Builder = ({ form }) => {
           onMoveSuccessBlock={moveSuccessBlock}
           onOpenAddSuccessBlock={handleOpenAddSuccessBlock}
           onPageModeChange={handlePageModeChange}
+          onAddBlock={handleAddBlock}
         />
 
         {/* Desktop side panel */}

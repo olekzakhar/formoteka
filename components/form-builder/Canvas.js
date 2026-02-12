@@ -44,7 +44,8 @@ export const Canvas = ({
   onUpdateSuccessBlock,
   onMoveSuccessBlock,
   onOpenAddSuccessBlock,
-  onPageModeChange
+  onPageModeChange,
+  onAddBlock,
 }) => {
   const [pageMode, setPageMode] = useState('form'); // 'form' or 'success'
   const [previewMode, setPreviewMode] = useState('desktop'); // 'desktop' or 'mobile'
@@ -68,7 +69,10 @@ export const Canvas = ({
     }
   }, [pageMode, onPageModeChange])
 
-  const handleClearAll = () => {
+  const handleClearAll = (e) => {
+    // Не очищаємо вибір якщо це drag event
+    if (e.dataTransfer) return;
+    
     // Коли клікається на канвасі і відкрито Block Settings тоді буде ставати активною таба Додати а при інших умовах ні
     // Викликаємо onClearSelection тільки якщо є активний блок або success блок або вибрана кнопка submit
     if (activeBlockId || activeSuccessBlockId || isSubmitButtonSelected) {
@@ -103,10 +107,27 @@ export const Canvas = ({
     }
   };
 
+  // Обробник drop для додавання нових блоків з sidebar
+  const handleDrop = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    
+    const blockType = e.dataTransfer.getData('blockType') || e.dataTransfer.getData('text/plain')
+    
+    if (blockType && onAddBlock) {
+      onAddBlock(blockType)
+    }
+  }
+
   return (
     <div
       className="w-full h-full overflow-y-auto"
       onClick={handleClearAll}
+      onDragOver={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+      }}
+      onDrop={handleDrop}
     >
       <div className="flex gap-1 transition-all duration-300">
         <div className={cn(
@@ -192,6 +213,11 @@ export const Canvas = ({
               <div
                 className="rounded-2xl border-2 border-[#2f3032]/90!"
                 style={{ backgroundColor: formDesign.backgroundColor }}
+                onDragOver={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                }}
+                onDrop={handleDrop}
               >
                 <div className="w-full pt-6 pb-10 px-4 sm:px-6">
                   <div
@@ -205,7 +231,13 @@ export const Canvas = ({
                     <div className="space-y-2">
                       {blocks.length === 0 ? (
                         <div
-                          className="border-2 border-dashed rounded-lg p-12 text-center transition-smooth border-border hover:border-muted-foreground/50">
+                          className="border-2 border-dashed rounded-lg p-12 text-center transition-smooth border-border hover:border-muted-foreground/50"
+                          onDragOver={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                          }}
+                          onDrop={handleDrop}
+                        >
                           <div className="w-16 h-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
                             <Plus className="w-8 h-8 text-muted-foreground" />
                           </div>
@@ -377,6 +409,11 @@ export const Canvas = ({
                 color: formDesign.textColor,
                 fontSize: formDesign.fontSize
               }}
+              onDragOver={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+              }}
+              onDrop={handleDrop}
             >
               <div className="py-8">
                 {/* Success Page Blocks */}
@@ -389,7 +426,14 @@ export const Canvas = ({
                   }}
                 >
                   {successBlocks.length === 0 ? (
-                    <div className="border-2 border-dashed rounded-lg p-8 text-center transition-smooth border-border hover:border-muted-foreground/50">
+                    <div 
+                      className="border-2 border-dashed rounded-lg p-8 text-center transition-smooth border-border hover:border-muted-foreground/50"
+                      onDragOver={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                      }}
+                      onDrop={handleDrop}
+                    >
                       <p className="mb-2 text-sm">Сторінка успіху порожня</p>
                       <p className="text-sm opacity-90">Додайте або перетягніть сюди блоки з вкладки &quot;Додати&quot;</p>
                     </div>

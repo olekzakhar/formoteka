@@ -8,7 +8,8 @@ import {
   ExternalLink,
   Loader2,
   CheckCheck,
-  FileCheckCorner
+  FileCheckCorner,
+  Check
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useState, useRef, useEffect } from 'react'
@@ -27,6 +28,7 @@ export const Header = ({
   onManualSave
 }) => {
   const [isEditingName, setIsEditingName] = useState(false)
+  const [isCopied, setIsCopied] = useState(false)
   const inputRef = useRef(null)
 
   useEffect(() => {
@@ -50,6 +52,8 @@ export const Header = ({
 
   const handleCopyUrl = () => {
     navigator.clipboard.writeText(`${BASE_URL}/${formSlug}`)
+    setIsCopied(true)
+    setTimeout(() => setIsCopied(false), 2000)
   }
 
   return (
@@ -154,10 +158,13 @@ export const Header = ({
           variant="ghost"
           size="icon"
           onClick={handleCopyUrl}
-          className="h-8 w-8"
-          title="Копіювати посилання"
+          className="h-8 w-8 transition-colors"
+          title={isCopied ? "Скопійовано!" : "Копіювати посилання"}
         >
-          <LinkIcon className="h-4 w-4" />
+          {isCopied
+            ? <Check className="h-4 w-4" />
+            : <LinkIcon className="h-4 w-4" />
+          }
         </Button>
 
         <Button
@@ -173,5 +180,5 @@ export const Header = ({
         </Button>
       </div>
     </header>
-  );
-};
+  )
+}

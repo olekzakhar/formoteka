@@ -1053,7 +1053,7 @@ export const BlocksEditor = ({
       {/* Left action bar - vertical, close to block */}
       <div
         className={cn(
-          'absolute -left-[30px] top-1/2 -translate-y-1/2',
+          'absolute -left-[30px] top-0 bottom-0',
           // Always show when this block's context menu is open, otherwise show on hover only if no other menu is open
           showContextMenu 
             ? 'opacity-100 z-[101]' 
@@ -1063,10 +1063,10 @@ export const BlocksEditor = ({
         )}
       >
         {/* Invisible bridge to prevent gap between block and button */}
-        <div className="absolute right-0 top-0 bottom-0 w-[12px] translate-x-full" />
+        <div className="absolute right-0 top-0 bottom-0 w-[30px] translate-x-full z-0" />
 
         {/* Drag handle with click to show context menu */}
-        <div className="relative">
+        <div className="absolute top-1/2 -translate-y-1/2">
           <div
             ref={dragButtonRef}
             onClick={(e) => {

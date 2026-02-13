@@ -520,7 +520,7 @@ export const Canvas = ({
                           items={successBlocks.map(block => block.id)}
                           strategy={rectSortingStrategy}
                         >
-                          <div className="py-8 space-y-2 flex flex-wrap justify-center items-center gap-x-4 min-h-[300px]">
+                          <div className="py-8 space-y-2 flex flex-wrap justify-center items-center gap-x-4">
                             {successBlocks.map((block, index) => {
                               const widthClass = {
                                 '1/1': '',

@@ -483,103 +483,117 @@ export const Canvas = ({
           {/* Success Page Section - показується тільки коли pageMode === 'success' */}
           {pageMode === 'success' && (
             <div
-              className="rounded-2xl border-2 border-[#2f3032]/90! bg-white"
-              style={{
-                backgroundColor: formDesign.backgroundColor,
-                color: formDesign.textColor,
-                fontSize: formDesign.fontSize
-              }}
+              className="rounded-2xl border-2 border-[#2f3032]/90!"
+              style={{ backgroundColor: formDesign.backgroundColor }}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
             >
-              <div className="py-8">
-                {/* Success Page Blocks */}
+              <div className="w-full pt-6 pb-10 px-4 sm:px-6">
                 <div
-                  className="space-y-2 w-full max-w-[700px] mx-auto px-4 sm:px-6"
+                  className="w-full max-w-[700px] mx-auto"
                   style={{
-                    backgroundColor: formDesign.backgroundColor,
                     color: formDesign.textColor,
                     fontSize: formDesign.fontSize
                   }}
-                  data-blocks-container
                 >
-                  {successBlocks.length === 0 ? (
-                    <div 
-                      className="border-2 border-dashed rounded-lg p-8 text-center transition-smooth border-border hover:border-muted-foreground/50"
-                    >
-                      <p className="mb-2 text-sm">Сторінка успіху порожня</p>
-                      <p className="text-sm opacity-90">Додайте або перетягніть сюди блоки з вкладки &quot;Додати&quot;</p>
-                    </div>
-                  ) : (
-                    <DndContext
-                      id="success-blocks-dnd"
-                      sensors={sensors}
-                      collisionDetection={closestCenter}
-                      onDragEnd={handleSuccessDragEnd}
-                    >
-                      <SortableContext
-                        items={successBlocks.map(block => block.id)}
-                        strategy={verticalListSortingStrategy}
+                  {/* Success Page Blocks */}
+                  <div className="space-y-2" data-blocks-container>
+                    {successBlocks.length === 0 ? (
+                      <div 
+                        className="border-2 border-dashed rounded-lg p-12 text-center transition-smooth border-border hover:border-muted-foreground/50"
                       >
-                        <div className="space-y-2">
-                          {successBlocks.map((block, index) => (
-                            <div key={block.id}>
-                              {/* Drop placeholder before block */}
-                              <div
-                                className={cn(
-                                  'overflow-hidden transition-all duration-200 ease-out',
-                                  isDraggingFromSidebar && dragOverIndex === index
-                                    ? 'max-h-24 opacity-100 mb-2'
-                                    : 'max-h-0 opacity-0'
-                                )}
-                              >
-                                <div className="h-20 border-2 border-dashed border-primary bg-primary/5 rounded-lg flex items-center justify-center">
-                                  <span className="text-sm text-primary font-medium">Додати сюди</span>
-                                </div>
-                              </div>
-                              
-                              <div className="relative">
-                                <BlocksEditor
-                                  block={block}
-                                  isActive={activeSuccessBlockId === block.id}
-                                  onSelect={() => {
-                                    onSelectBlock(null);
-                                    onSelectSuccessBlock(block.id);
-                                  }}
-                                  onDelete={() => onDeleteSuccessBlock(block.id)}
-                                  onDuplicate={() => onDuplicateSuccessBlock(block.id)}
-                                  onOpenSettings={() => onOpenSuccessSettings(block.id)}
-                                  onAddBlock={onOpenAddSuccessBlock}
-                                  onUpdateBlock={(updates) => onUpdateSuccessBlock(block.id, updates)}
-                                  headingColor={formDesign.headingColor}
-                                  headingSize={formDesign.headingSize}
-                                  inputColor={formDesign.inputColor}
-                                  inputBgColor={formDesign.inputBgColor}
-                                  inputTextColor={formDesign.inputTextColor}
-                                  formTextColor={formDesign.textColor}
-                                />
-                              </div>
-                            </div>
-                          ))}
-                          
-                          {/* Drop placeholder after last block */}
-                          <div
-                            className={cn(
-                              'overflow-hidden transition-all duration-200 ease-out',
-                              isDraggingFromSidebar && dragOverIndex === successBlocks.length
-                                ? 'max-h-24 opacity-100 mt-2'
-                                : 'max-h-0 opacity-0'
-                            )}
-                          >
-                            <div className="h-20 border-2 border-dashed border-primary bg-primary/5 rounded-lg flex items-center justify-center">
-                              <span className="text-sm text-primary font-medium">Додати сюди</span>
-                            </div>
-                          </div>
+                        <div className="w-16 h-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
+                          <Plus className="w-8 h-8 text-muted-foreground" />
                         </div>
-                      </SortableContext>
-                    </DndContext>
-                  )}
+                        <p className="mb-2 text-sm">Сторінка успіху порожня</p>
+                        <p className="text-sm opacity-90">Додайте або перетягніть сюди блоки з вкладки &quot;Додати&quot;</p>
+                      </div>
+                    ) : (
+                      <DndContext
+                        id="success-blocks-dnd"
+                        sensors={sensors}
+                        collisionDetection={rectIntersection}
+                        onDragEnd={handleSuccessDragEnd}
+                      >
+                        <SortableContext
+                          items={successBlocks.map(block => block.id)}
+                          strategy={rectSortingStrategy}
+                        >
+                          <div className="py-8 space-y-2 flex flex-wrap justify-center items-center gap-x-4 min-h-[300px]">
+                            {successBlocks.map((block, index) => {
+                              const widthClass = {
+                                '1/1': '',
+                                '1/2': 'max-w-[calc(50%-0.5rem)]',
+                                '1/3': 'max-w-[calc(33.333%-0.67rem)]',
+                              }[block.blockWidth || '1/1'];
+
+                              const verticalAlignClass = {
+                                top: 'self-start',
+                                center: 'self-center',
+                                bottom: 'self-end',
+                              }[block.blockVerticalAlign || 'top'];
+
+                              // Horizontal positioning for inline blocks (when a row has remaining free space)
+                              const horizontalAlignClass = block.blockWidth !== '1/1'
+                                ? {
+                                    start: '',
+                                    center: 'mx-auto',
+                                    end: 'ml-auto',
+                                  }[block.blockHorizontalAlign || 'start']
+                                : '';
+
+                              return (
+                                <div 
+                                  className={cn(
+                                    'w-full',
+                                    (isDraggingFromSidebar && dragOverIndex === index) ? '' : widthClass,
+                                    verticalAlignClass,
+                                    horizontalAlignClass
+                                  )} 
+                                  key={block.id}
+                                >
+                                  {/* Drop placeholder */}
+                                  {isDraggingFromSidebar && dragOverIndex === index && (
+                                    <div className="h-20 mb-2 border-2 border-dashed border-primary bg-primary/5 rounded-lg flex items-center justify-center">
+                                      <span className="text-sm text-primary font-medium">Додати сюди</span>
+                                    </div>
+                                  )}
+                                  
+                                  <BlocksEditor
+                                    block={block}
+                                    isActive={activeSuccessBlockId === block.id}
+                                    onSelect={() => {
+                                      onSelectBlock(null);
+                                      onSelectSuccessBlock(block.id);
+                                    }}
+                                    onDelete={() => onDeleteSuccessBlock(block.id)}
+                                    onDuplicate={() => onDuplicateSuccessBlock(block.id)}
+                                    onOpenSettings={() => onOpenSuccessSettings(block.id)}
+                                    onAddBlock={onOpenAddSuccessBlock}
+                                    onUpdateBlock={(updates) => onUpdateSuccessBlock(block.id, updates)}
+                                    headingColor={formDesign.headingColor}
+                                    headingSize={formDesign.headingSize}
+                                    inputColor={formDesign.inputColor}
+                                    inputBgColor={formDesign.inputBgColor}
+                                    inputTextColor={formDesign.inputTextColor}
+                                    formTextColor={formDesign.textColor}
+                                  />
+                                </div>
+                              )
+                            })}
+                            
+                            {/* Drop placeholder після останнього блоку */}
+                            {isDraggingFromSidebar && dragOverIndex === successBlocks.length && (
+                              <div className="w-full h-20 mt-2 border-2 border-dashed border-primary bg-primary/5 rounded-lg flex items-center justify-center">
+                                <span className="text-sm text-primary font-medium">Додати сюди</span>
+                              </div>
+                            )}
+                          </div>
+                        </SortableContext>
+                      </DndContext>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

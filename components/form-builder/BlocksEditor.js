@@ -1029,7 +1029,7 @@ export const BlocksEditor = ({
         style={style}
         data-block-root
         className={cn(
-          'group relative py-2',
+          'group relative py-1.5',
           // Only apply transition when no context menu is open anywhere
           !hasOpenContextMenu && !isDragging && 'transition-smooth',
           // border overlay that extends beyond block without affecting layout

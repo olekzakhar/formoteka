@@ -574,12 +574,12 @@ export const FormRenderer = ({
               <p>Немає блоків для відображення.</p>
             </div>
           ) : isSubmitted ? (
-            <div className="py-8 flex items-center justify-center min-h-[300px]">
+            <div className="py-8 flex items-center justify-center">
               <div className="text-center">
                 {/* Render success blocks */}
                 <div className="space-y-2">
                   {successBlocks.map((block) => (
-                    <div key={block.id}>{renderBlock(block)}</div>
+                    <div key={block.id} className="py-1.5">{renderBlock(block)}</div>
                   ))}
                 </div>
               </div>
@@ -615,7 +615,7 @@ export const FormRenderer = ({
                 return (
                   <div
                     key={block.id}
-                    className={cn(widthClass, verticalAlignClass, horizontalAlignClass, 'py-2')}
+                    className={cn(widthClass, verticalAlignClass, horizontalAlignClass, 'py-1.5')}
                   >
                     {renderBlock(block)}
                   </div>

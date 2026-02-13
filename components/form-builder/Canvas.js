@@ -13,11 +13,12 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  rectIntersection
 } from '@dnd-kit/core';
 import {
   SortableContext,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
+  rectSortingStrategy
 } from '@dnd-kit/sortable';
 
 export const Canvas = ({
@@ -313,19 +314,19 @@ export const Canvas = ({
                         <DndContext
                           id="form-blocks-dnd"
                           sensors={sensors}
-                          collisionDetection={closestCenter}
+                          collisionDetection={rectIntersection} // або closestCenter
                           onDragEnd={handleDragEnd}
                         >
                           <SortableContext
                             items={blocks.map(block => block.id)}
-                            strategy={verticalListSortingStrategy}
+                            strategy={rectSortingStrategy}
                           >
-                            <div className="space-y-2">
+                            <div className="space-y-2 flex flex-wrap gap-x-4">
                               {blocks.map((block, index) => {
                                 const widthClass = {
-                                  '1/1': 'w-full',
-                                  '1/2': 'w-[calc(50%-0.5rem)]',
-                                  '1/3': 'w-[calc(33.333%-0.67rem)]',
+                                  '1/1': '',
+                                  '1/2': 'max-w-[calc(50%-0.5rem)]',
+                                  '1/3': 'max-w-[calc(33.333%-0.67rem)]',
                                 }[block.blockWidth || '1/1'];
 
                                 const verticalAlignClass = {
@@ -344,67 +345,52 @@ export const Canvas = ({
                                   : '';
 
                                 return (
-                                  <div key={block.id}>
-                                    {/* Drop placeholder before block */}
-                                    <div
-                                      className={cn(
-                                        'overflow-hidden transition-all duration-200 ease-out',
-                                        isDraggingFromSidebar && dragOverIndex === index
-                                          ? 'max-h-24 opacity-100 mb-2'
-                                          : 'max-h-0 opacity-0'
-                                      )}
-                                    >
-                                      <div className="h-20 border-2 border-dashed border-primary bg-primary/5 rounded-lg flex items-center justify-center">
+                                  <div 
+                                    className={cn(
+                                      'w-full',
+                                      (isDraggingFromSidebar && dragOverIndex === index) ? '' : widthClass,
+                                      verticalAlignClass,
+                                      horizontalAlignClass
+                                    )} 
+                                    key={block.id}
+                                  >
+                                    {/* Drop placeholder */}
+                                    {isDraggingFromSidebar && dragOverIndex === index && (
+                                      <div className="h-20 mb-2 border-2 border-dashed border-primary bg-primary/5 rounded-lg flex items-center justify-center">
                                         <span className="text-sm text-primary font-medium">Додати сюди</span>
                                       </div>
-                                    </div>
+                                    )}
                                     
-                                    <div
-                                      className={cn(
-                                        'relative',
-                                        widthClass,
-                                        verticalAlignClass,
-                                        horizontalAlignClass,
-                                      )}
-                                    >
-                                      <BlocksEditor
-                                        block={block}
-                                        isActive={activeBlockId === block.id}
-                                        onSelect={() => {
-                                          onSelectSuccessBlock(null);
-                                          onSelectBlock(block.id);
-                                        }}
-                                        onDelete={() => onDeleteBlock(block.id)}
-                                        onDuplicate={() => onDuplicateBlock(block.id)}
-                                        onOpenSettings={() => onOpenSettings(block.id)}
-                                        onAddBlock={onOpenAddBlock}
-                                        onUpdateBlock={(updates) => onUpdateBlock(block.id, updates)}
-                                        headingColor={formDesign.headingColor}
-                                        headingSize={formDesign.headingSize}
-                                        inputColor={formDesign.inputColor}
-                                        inputBgColor={formDesign.inputBgColor}
-                                        inputTextColor={formDesign.inputTextColor}
-                                        formTextColor={formDesign.textColor}
-                                        accentColor={formDesign.accentColor}
-                                      />
-                                    </div>
+                                    <BlocksEditor
+                                      block={block}
+                                      isActive={activeBlockId === block.id}
+                                      onSelect={() => {
+                                        onSelectSuccessBlock(null);
+                                        onSelectBlock(block.id);
+                                      }}
+                                      onDelete={() => onDeleteBlock(block.id)}
+                                      onDuplicate={() => onDuplicateBlock(block.id)}
+                                      onOpenSettings={() => onOpenSettings(block.id)}
+                                      onAddBlock={onOpenAddBlock}
+                                      onUpdateBlock={(updates) => onUpdateBlock(block.id, updates)}
+                                      headingColor={formDesign.headingColor}
+                                      headingSize={formDesign.headingSize}
+                                      inputColor={formDesign.inputColor}
+                                      inputBgColor={formDesign.inputBgColor}
+                                      inputTextColor={formDesign.inputTextColor}
+                                      formTextColor={formDesign.textColor}
+                                      accentColor={formDesign.accentColor}
+                                    />
                                   </div>
                                 )
                               })}
                               
-                              {/* Drop placeholder after last block */}
-                              <div
-                                className={cn(
-                                  'overflow-hidden transition-all duration-200 ease-out',
-                                  isDraggingFromSidebar && dragOverIndex === blocks.length
-                                    ? 'max-h-24 opacity-100 mt-2'
-                                    : 'max-h-0 opacity-0'
-                                )}
-                              >
-                                <div className="h-20 border-2 border-dashed border-primary bg-primary/5 rounded-lg flex items-center justify-center">
+                              {/* Drop placeholder після останнього блоку */}
+                              {isDraggingFromSidebar && dragOverIndex === blocks.length && (
+                                <div className="w-full h-20 mt-2 border-2 border-dashed border-primary bg-primary/5 rounded-lg flex items-center justify-center">
                                   <span className="text-sm text-primary font-medium">Додати сюди</span>
                                 </div>
-                              </div>
+                              )}
                             </div>
                           </SortableContext>
                         </DndContext>

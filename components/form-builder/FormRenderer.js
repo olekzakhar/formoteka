@@ -588,7 +588,7 @@ export const FormRenderer = ({
             <form
               data-form-slug={formSlug}
               onSubmit={handleSubmit}
-              className={cn('flex flex-wrap gap-4 items-start', formDesign.stickyButton && 'pb-24')}
+              className={cn('flex flex-wrap gap-2 items-start', formDesign.stickyButton && 'pb-24')}
             >
               {blocks.map((block) => {
                 const widthClass = {

@@ -985,7 +985,7 @@ export const BlocksEditor = ({
       data-block-root
       className={cn(
         'group relative py-1.5',
-        'transition-all duration-300 ease-out',
+        'transition-all duration-300 ease-out will-change-transform',
         // border overlay that extends beyond block without affecting layout
         "after:content-[''] after:absolute after:-inset-x-2 after:-inset-y-0 after:rounded-lg after:pointer-events-none",
         'after:transition-all after:duration-300 after:ease-out',
@@ -1010,7 +1010,7 @@ export const BlocksEditor = ({
       {/* Bottom action menu - only shown when active */}
       {isActive && (
         <div className="absolute left-1/2 -translate-x-1/2 -bottom-[42px] z-30">
-          <div
+          <div 
             className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/70 backdrop-blur-xl border border-black/10 shadow-[2px_2px_0_rgba(0,0,0,0.7)]"
             onClick={(e) => e.stopPropagation()}
           >

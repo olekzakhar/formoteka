@@ -3,7 +3,7 @@
 import { BlocksEditor } from '@/components/form-builder/BlocksEditor';
 import { Plus, ArrowRight, Monitor, Smartphone } from 'lucide-react';
 import { cn } from '@/utils';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/button'
 import { OrderButton } from '@/components/ui/OrderButton'
 
@@ -38,6 +38,11 @@ export const Canvas = ({
   const [previewMode, setPreviewMode] = useState('desktop'); // 'desktop' or 'mobile'
   const [dragOverIndex, setDragOverIndex] = useState(null);
   const [isDraggingFromSidebar, setIsDraggingFromSidebar] = useState(false);
+  
+  // Refs for throttling dragOver
+  const lastDragTime = useRef(0);
+  const dragThrottleDelay = 50; // Update every 50ms instead of every frame
+  // const blocksContainerRef = useRef(null);
 
   // Повідомляємо батьківський компонент про зміну режиму перегляду
   useEffect(() => {
@@ -58,10 +63,17 @@ export const Canvas = ({
     }
   }
 
-  // Обробник dragOver для визначення позиції вставки
-  const handleDragOver = (e) => {
+  // Обробник dragOver для визначення позиції вставки (оптимізований)
+  const handleDragOver = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
+
+    // Throttle: update max every 50ms
+    const now = Date.now();
+    if (now - lastDragTime.current < dragThrottleDelay) {
+      return;
+    }
+    lastDragTime.current = now;
 
     // Перевіряємо чи це перетягування з sidebar
     const hasBlockType = e.dataTransfer.types.includes('blocktype') || 
@@ -75,14 +87,11 @@ export const Canvas = ({
 
     setIsDraggingFromSidebar(true);
 
-    // Визначаємо в якому режимі ми зараз (form або success)
-    const currentBlocks = pageMode === 'form' ? blocks : successBlocks;
-
     // Знаходимо найближчий блок
     const blocksContainer = e.currentTarget.querySelector('[data-blocks-container]');
     if (!blocksContainer) return;
 
-    const blockElements = Array.from(blocksContainer.querySelectorAll('[data-block-root]'));
+    const blockElements = blocksContainer.querySelectorAll('[data-block-root]')
     
     if (blockElements.length === 0) {
       setDragOverIndex(0);
@@ -91,24 +100,27 @@ export const Canvas = ({
 
     let closestIndex = 0;
     let closestDistance = Infinity;
+    const mouseY = e.clientY;
 
-    blockElements.forEach((el, index) => {
+    // Use for...of for better performance than forEach
+    let index = 0;
+    for (const el of blockElements) {
       const rect = el.getBoundingClientRect();
-      const midpoint = rect.top + rect.height / 2;
-      const distance = Math.abs(e.clientY - midpoint);
+      const midpoint = rect.top + (rect.height >> 1); // Bit shift for faster division by 2
+      const distance = Math.abs(mouseY - midpoint);
 
       if (distance < closestDistance) {
         closestDistance = distance;
-        // Якщо курсор вище середини - вставити перед, інакше - після
-        closestIndex = e.clientY < midpoint ? index : index + 1;
+        closestIndex = mouseY < midpoint ? index : index + 1;
       }
-    });
+      index++;
+    }
 
     setDragOverIndex(closestIndex);
-  };
+  }, [dragThrottleDelay]);
 
   // Обробник drop для додавання нових блоків з sidebar
-  const handleDrop = (e) => {
+  const handleDrop = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
     
@@ -123,9 +135,9 @@ export const Canvas = ({
 
     setDragOverIndex(null);
     setIsDraggingFromSidebar(false);
-  };
+  }, [dragOverIndex, onAddBlock])
 
-  const handleDragLeave = (e) => {
+  const handleDragLeave = useCallback((e) => {
     // Перевіряємо чи курсор дійсно покинув область
     const rect = e.currentTarget.getBoundingClientRect();
     if (
@@ -137,7 +149,7 @@ export const Canvas = ({
       setDragOverIndex(null);
       setIsDraggingFromSidebar(false);
     }
-  };
+  }, [])
 
   return (
     <div
@@ -253,7 +265,7 @@ export const Canvas = ({
                           <p className="text-sm opacity-90">Додайте або перетягніть сюди блоки з вкладки &quot;Додати&quot;</p>
                         </div>
                       ) : (
-                        <div className="space-y-2 flex flex-wrap gap-x-4 transition-all duration-300 ease-out">
+                        <div className="space-y-2 flex flex-wrap gap-x-4 transition-all duration-300 ease-out will-change-transform">
                           {blocks.map((block, index) => {
                             const widthClass = {
                               '1/1': '',
@@ -426,7 +438,7 @@ export const Canvas = ({
                         <p className="text-sm opacity-90">Додайте або перетягніть сюди блоки з вкладки &quot;Додати&quot;</p>
                       </div>
                     ) : (
-                      <div className="py-8 space-y-2 flex flex-wrap justify-center items-center gap-x-4 transition-all duration-300 ease-out">
+                      <div className="py-8 space-y-2 flex flex-wrap justify-center items-center gap-x-4 transition-all duration-300 ease-out will-change-transform">
                         {successBlocks.map((block, index) => {
                           const widthClass = {
                             '1/1': '',

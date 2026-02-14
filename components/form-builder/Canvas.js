@@ -292,6 +292,7 @@ export const Canvas = ({
                               <div 
                                 className={cn(
                                   'w-full',
+                                  activeBlockId === block.id ? 'z-10' : '',
                                   (isDraggingFromSidebar && dragOverIndex === index) ? '' : widthClass,
                                   verticalAlignClass,
                                   horizontalAlignClass
@@ -465,6 +466,7 @@ export const Canvas = ({
                             <div 
                               className={cn(
                                 'w-full',
+                                activeSuccessBlockId === block.id ? 'z-10' : '',
                                 (isDraggingFromSidebar && dragOverIndex === index) ? '' : widthClass,
                                 verticalAlignClass,
                                 horizontalAlignClass

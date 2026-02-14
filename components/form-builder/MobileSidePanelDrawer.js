@@ -130,8 +130,8 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
         style={{
           transform: getTransformStyle(),
           // paddingTop: '60px',
-          maxHeight: '92%',
-          height: '100%'
+          maxHeight: '92vh',
+          height: '92vh',
         }}
       >
         {/* Handle button */}
@@ -171,7 +171,7 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
         </div>
 
         {/* Content */}
-        <div className="min-h-full h-full overflow-y-auto pointer-events-auto">
+        <div className="pointer-events-auto" style={{ height: 'calc(100% - 32px)' }}>
           {children}
         </div>
       </div>

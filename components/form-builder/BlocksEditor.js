@@ -4,14 +4,15 @@
 
 import { blockDefinitions } from '@/data/block-definitions';
 import {
-  GripVertical,
   Copy,
   Trash2,
   Image,
   Image as ImageIcon,
   Loader2,
   Calendar as CalendarIcon,
-  ChevronDown
+  ChevronDown,
+  ChevronUp,
+  ChevronDown as ArrowDown
 } from 'lucide-react';
 import { cn, getImageUrl, getColor, dateChange } from '@/utils';
 import { useState, useRef, useEffect } from 'react';
@@ -29,15 +30,17 @@ import { BlockMessengerSelect } from '@/components/form-builder/block/MessengerS
 import { BlockList } from '@/components/form-builder/block/List';
 import { BlockChoiceCard } from '@/components/form-builder/block/ChoiceCard';
 import { DatePicker } from '@/components/ui/DatePicker'
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 
 export const BlocksEditor = ({
   block,
+  blockIndex,
+  totalBlocks,
   isActive,
   onSelect,
   onDelete,
   onDuplicate,
+  onMoveUp,
+  onMoveDown,
   onOpenSettings,
   onAddBlock,
   onUpdateBlock,
@@ -48,8 +51,6 @@ export const BlocksEditor = ({
   inputTextColor,
   formTextColor,
   accentColor,
-  onContextMenuChange, // New callback to notify parent when context menu opens/closes
-  hasOpenContextMenu, // Whether ANY block has an open context menu
 }) => {
   const definition = blockDefinitions.find((d) => d.type === block.type)
   const [isEditingLabel, setIsEditingLabel] = useState(false)
@@ -57,68 +58,20 @@ export const BlocksEditor = ({
   const [editLabelValue, setEditLabelValue] = useState(block.label ?? '')
   const [editPlaceholderValue, setEditPlaceholderValue] = useState(block.placeholder ?? '')
   const [uploadingImages, setUploadingImages] = useState(new Set())
-  const [showContextMenu, setShowContextMenu] = useState(false)
   const [dateValues, setDateValues] = useState({})
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   const labelInputRef = useRef(null)
   const placeholderInputRef = useRef(null)
   const textareaRef = useRef(null)
   const fileInputRef = useRef(null)
-  const contextMenuRef = useRef(null)
-  const dragButtonRef = useRef(null)
 
   const showLabel = block.showLabel !== false;
-
-  // @dnd-kit/sortable hook
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: block.id });
-
-  const style = {
-    transform: CSS.Translate.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-  };
-
-  // Notify parent when context menu state changes
-  useEffect(() => {
-    if (onContextMenuChange) {
-      onContextMenuChange(block.id, showContextMenu)
-    }
-  }, [showContextMenu, block.id, onContextMenuChange])
 
   useEffect(() => {
     setEditLabelValue(block.label);
     setEditPlaceholderValue(block.placeholder || '');
   }, [block.label, block.placeholder]);
-
-  // Close context menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        showContextMenu &&
-        contextMenuRef.current &&
-        !contextMenuRef.current.contains(event.target) &&
-        dragButtonRef.current &&
-        !dragButtonRef.current.contains(event.target)
-      ) {
-        setShowContextMenu(false)
-      }
-    };
-
-    if (showContextMenu) {
-      // Use mousedown instead of click for better responsiveness
-      document.addEventListener('mousedown', handleClickOutside)
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside)
-      };
-    }
-  }, [showContextMenu])
 
   // Auto-resize textarea for paragraph
   const autoResizeTextarea = () => {
@@ -262,6 +215,22 @@ export const BlocksEditor = ({
     };
     input.click();
   };
+
+  const handleDeleteClick = (e) => {
+    e.stopPropagation()
+    setShowDeleteConfirm(true)
+  }
+
+  const handleDeleteConfirm = (e) => {
+    e.stopPropagation()
+    onDelete()
+    setShowDeleteConfirm(false)
+  }
+
+  const handleDeleteCancel = (e) => {
+    e.stopPropagation()
+    setShowDeleteConfirm(false)
+  }
 
   const renderImageGrid = () => {
     const count = block.imageCount || 1;
@@ -1008,121 +977,28 @@ export const BlocksEditor = ({
     }
   }
 
-  // messenger-select: draggable only (no duplicate/delete)
-  const showDuplicateDelete = block.type !== 'messenger-select';
+  // messenger-select: show menu but only with move buttons (no delete/duplicate)
+  const isMessengerSelect = block.type === 'messenger-select';
 
   return (
-    <>
-      {/* Overlay to block all interactions when context menu is open */}
-      {showContextMenu && (
-        <div 
-          className="fixed inset-0 z-[100]" 
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowContextMenu(false);
-          }}
-        />
+    <div
+      data-block-root
+      className={cn(
+        'group relative py-1.5',
+        'transition-all duration-300 ease-out',
+        // border overlay that extends beyond block without affecting layout
+        "after:content-[''] after:absolute after:-inset-x-2 after:-inset-y-0 after:rounded-lg after:pointer-events-none",
+        'after:transition-all after:duration-300 after:ease-out',
+        // Border logic: If active (selected in settings): primary border (thick), otherwise transparent border, show border on hover
+        isActive
+          ? 'after:border-2 after:border-primary'
+          : 'after:border after:border-transparent hover:after:border-border'
       )}
-
-      <div
-        ref={setNodeRef}
-        style={style}
-        data-block-root
-        className={cn(
-          'group relative py-1.5',
-          // Only apply transition when no context menu is open anywhere
-          !hasOpenContextMenu && !isDragging && 'transition-smooth',
-          // border overlay that extends beyond block without affecting layout
-          "after:content-[''] after:absolute after:-inset-x-2 after:-inset-y-0 after:rounded-lg after:pointer-events-none",
-          !hasOpenContextMenu && !isDragging && 'after:transition-smooth',
-          // Border logic:
-          // - If active (selected in settings): primary border (thick)
-          // - If context menu is open but not active: border like hover (thin)
-          // - Otherwise: transparent border, show border on hover
-          isActive
-            ? 'after:border-2 after:border-primary'
-            : showContextMenu
-              ? 'after:border after:border-border'
-              : 'after:border after:border-transparent hover:after:border-border'
-        )}
-        onClick={(e) => {
-          e.stopPropagation();
-          onSelect();
-        }}
-      >
-      {/* Left action bar - vertical, close to block */}
-      <div
-        className={cn(
-          'absolute -left-[30px] top-0 bottom-0',
-          // Always show when this block's context menu is open, otherwise show on hover only if no other menu is open
-          showContextMenu 
-            ? 'opacity-100 z-[101]' 
-            : hasOpenContextMenu 
-              ? 'opacity-0 z-20' 
-              : 'opacity-0 z-20 transition-smooth group-hover:opacity-100'
-        )}
-      >
-        {/* Invisible bridge to prevent gap between block and button */}
-        <div className="absolute right-0 top-0 bottom-0 w-[30px] translate-x-full z-0" />
-
-        {/* Drag handle with click to show context menu */}
-        <div className="absolute top-1/2 -translate-y-1/2">
-          <div
-            ref={dragButtonRef}
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowContextMenu(!showContextMenu);
-            }}
-            className={cn(
-              'px-[1.5px] py-[5px] rounded-xl text-foreground transition-smooth bg-white/70 hover:bg-white/85 border border-black/10! shadow-[1px_1px_0_rgba(0,0,0,0.7)] backdrop-blur-md relative z-10',
-              showContextMenu 
-                ? 'text-foreground' 
-                : 'cursor-grab active:cursor-grabbing'
-            )}
-            title="Перетягніть або натисніть"
-            {...attributes}
-            {...listeners}
-          >
-            <GripVertical className="w-4 h-4 pointer-events-none" />
-          </div>
-
-          {/* Context menu */}
-          {showContextMenu && showDuplicateDelete && (
-            <div
-              ref={contextMenuRef}
-              className="absolute left-[calc(100%+0.25rem)] top-1/2 -translate-y-1/2 px-1 py-1.5 bg-white/70 backdrop-blur-lg border border-black/70 rounded-lg shadow-[2px_2px_0_rgba(0,0,0,0.7)] overflow-hidden z-[101] min-w-[160px]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Duplicate */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onDuplicate()
-                  setShowContextMenu(false)
-                }}
-                className="w-full flex items-center gap-2 px-2.5 py-1 hover:bg-black/[0.06] text-foreground text-sm rounded-md transition-smooth"
-              >
-                <Copy className="w-4 h-4" />
-                <span>Дублювати</span>
-              </button>
-
-              {/* Delete */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onDelete()
-                  setShowContextMenu(false)
-                }}
-                className="w-full flex items-center gap-2 px-2.5 py-1 hover:bg-black/[0.06] text-destructive text-sm rounded-md transition-smooth"
-              >
-                <Trash2 className="w-4 h-4" />
-                <span>Видалити</span>
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect();
+      }}
+    >
       {/* Block content */}
       <div
         className="w-full"
@@ -1130,7 +1006,107 @@ export const BlocksEditor = ({
       >
         {renderBlockContent()}
       </div>
+
+      {/* Bottom action menu - only shown when active */}
+      {isActive && (
+        <div className="absolute left-1/2 -translate-x-1/2 -bottom-[42px] z-30">
+          <div
+            className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/70 backdrop-blur-xl border border-black/10 shadow-[2px_2px_0_rgba(0,0,0,0.7)]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Delete and Duplicate buttons - NOT shown for messenger-select */}
+            {!isMessengerSelect && (
+              <>
+                {showDeleteConfirm ? (
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={handleDeleteConfirm}
+                      className="px-3 py-1.5 text-sm font-medium text-white/85 bg-red-500/95 hover:bg-red-600/85 rounded-xl transition-smooth"
+                    >
+                      Видалити
+                    </button>
+                    <button
+                      onClick={handleDeleteCancel}
+                      className="px-3 py-1.5 text-sm font-medium text-[#2F3032] hover:bg-black/[0.06] rounded-xl transition-smooth"
+                    >
+                      Скасувати
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <button
+                      onClick={handleDeleteClick}
+                      className="p-2 hover:bg-black/[0.06] text-red-600 rounded-xl transition-smooth"
+                      title="Видалити"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+
+                    {/* Visual separator */}
+                    <div className="w-px h-6 bg-black/10 mx-1" />
+
+                    {/* Duplicate button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDuplicate();
+                      }}
+                      className="p-2 hover:bg-black/[0.06] text-[#2F3032] rounded-xl transition-smooth"
+                      title="Дублювати"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </button>
+
+                    {/* Visual separator before move buttons */}
+                    <div className="w-px h-6 bg-black/10 mx-1" />
+                  </>
+                )}
+              </>
+            )}
+
+            {/* Move buttons - always shown (including for messenger-select) */}
+            {!showDeleteConfirm && (
+              <>
+                {/* Move up button */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onMoveUp();
+                  }}
+                  disabled={blockIndex === 0}
+                  className={cn(
+                    "p-2 rounded-xl transition-smooth",
+                    blockIndex === 0
+                      ? "text-[#2F3032]/40 cursor-not-allowed"
+                      : "hover:bg-black/[0.06] text-[#2F3032]"
+                  )}
+                  title="Вгору"
+                >
+                  <ChevronUp className="w-4 h-4" />
+                </button>
+
+                {/* Move down button */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onMoveDown();
+                  }}
+                  disabled={blockIndex === totalBlocks - 1}
+                  className={cn(
+                    "p-2 rounded-xl transition-smooth",
+                    blockIndex === totalBlocks - 1
+                      ? "text-[#2F3032]/40 cursor-not-allowed"
+                      : "hover:bg-black/[0.06] text-[#2F3032]"
+                  )}
+                  title="Вниз"
+                >
+                  <ArrowDown className="w-4 h-4" />
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
-    </>
   )
 }

@@ -58,11 +58,14 @@ export default function FormCard({ form, userId }) {
       const { form: newForm, error } = await duplicateForm(supabase, form.slug, userId)
       
       if (error) {
+        // console.error('Помилка дублювання форми:', error)
+        // alert(`Не вдалося дублювати форму: ${error}`)
         alert(`Не вдалося дублювати форму`)
       } else {
         router.refresh()
       }
     } catch (err) {
+      // console.error('Помилка:', err)
       alert('Сталася помилка при дублюванні форми')
     } finally {
       setIsDuplicating(false)
@@ -71,6 +74,7 @@ export default function FormCard({ form, userId }) {
 
     setIsMenuOpen(false)
   }
+
 
   const handleDelete = async () => {
     const confirmed = confirm(`Видалити форму "${form?.name}"? Цю дію неможливо скасувати. Усі заявки буде видалено.`)
@@ -83,11 +87,14 @@ export default function FormCard({ form, userId }) {
       const { success, error } = await deleteForm(supabase, form.slug, userId)
       
       if (error) {
+        // console.error('Помилка видалення форми:', error)
+        // alert(`Не вдалося видалити форму: ${error}`)
         alert(`Не вдалося видалити форму`)
       } else {
         router.refresh()
       }
     } catch (err) {
+      // console.error('Помилка:', err)
       alert('Сталася помилка при видаленні форми')
     } finally {
       setIsDeleting(false)
@@ -120,6 +127,21 @@ export default function FormCard({ form, userId }) {
             </Tooltip>
           </TooltipProvider>
 
+          {/* <div className="relative inline-block group">
+            <Link
+              href={`${BASE_URL}/${form?.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center text-sm text-black/60 hover:text-black/80 transition-smooth"
+            >
+              {BASE_URL}/{form?.slug}
+            </Link>
+            
+            <ExternalLink 
+              className="absolute top-[7px] left-[calc(100%+4px)] w-[13px] h-[13px] opacity-0 group-hover:opacity-100
+                z-10 pointer-events-none transition-opacity duration-200" />
+          </div> */}
+
           <div className="absolute bottom-0 left-0 mt-1.5 flex items-center whitespace-nowrap gap-2.5 sm:gap-[18px]">
             <TooltipProvider>
               <Tooltip>
@@ -143,6 +165,7 @@ export default function FormCard({ form, userId }) {
               </Tooltip>
             </TooltipProvider>
 
+            {/* <div className="mt-0.5 text-[13px] text-[#6b7280]">Остання 15 хвилин тому</div> */}
             {form?.order_count && form?.last_order_at
               ? <div className="mt-0.5 text-[13px] text-[#6b7280]">
                   <span className="hidden sm:inline">Остання</span> {timeAgo(form?.last_order_at)}

@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
-import { ChevronUp, ChevronDown } from 'lucide-react';
+import { Settings2, Columns3 } from 'lucide-react';
 import { cn } from '@/utils';
 
-export const MobileSidePanelDrawer = ({ children }) => {
+export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartY, setDragStartY] = useState(0);
@@ -109,7 +109,7 @@ export const MobileSidePanelDrawer = ({ children }) => {
       return `translateY(calc(100% - 32px + ${currentTranslateY}px))`;
     }
   };
-
+  
   return (
     <>
       {/* Overlay */}
@@ -124,7 +124,7 @@ export const MobileSidePanelDrawer = ({ children }) => {
       <div
         ref={drawerRef}
         className={cn(
-          'fixed inset-x-0 bottom-0 z-50 md:hidden',
+          'fixed inset-x-0 bottom-0 z-50 md:hidden pointer-events-none',
           isDragging ? '' : 'transition-transform duration-300 ease-out'
         )}
         style={{
@@ -143,12 +143,12 @@ export const MobileSidePanelDrawer = ({ children }) => {
             onTouchEnd={handleTouchEnd}
             onMouseDown={handleMouseDown}
             className={cn(
-              'flex items-center justify-center bg-primary text-primary-foreground',
+              'flex items-center justify-center gap-2 bg-primary text-primary-foreground',
               'cursor-grab active:cursor-grabbing',
-              'select-none touch-none'
+              'select-none touch-none pointer-events-auto'
             )}
             style={{
-              width: '180px',
+              width: '200px',
               height: '32px',
               borderTopLeftRadius: '36px',
               borderTopRightRadius: '36px',
@@ -156,19 +156,25 @@ export const MobileSidePanelDrawer = ({ children }) => {
               borderBottomRightRadius: '0'
             }}
           >
-            {isOpen ? (
-              <ChevronDown className="w-5 h-5" />
+            {isSettingsBlockMode ? (
+              <>
+                <Settings2 className="w-4 h-4" />
+                <span className="text-sm font-medium">Властивості</span>
+              </>
             ) : (
-              <ChevronUp className="w-5 h-5" />
+              <>
+                <Columns3 className="w-4 h-4 rotate-90" />
+                <span className="text-sm font-medium">Блоки</span>
+              </>
             )}
           </button>
         </div>
 
         {/* Content */}
-        <div className="min-h-full h-full overflow-y-auto">
+        <div className="min-h-full h-full overflow-y-auto pointer-events-auto">
           {children}
         </div>
       </div>
     </>
-  );
-};
+  )
+}

@@ -6,7 +6,7 @@ import { TabsSettings } from '@/components/form-builder/tabs/Settings'
 import { TabsDesign } from '@/components/form-builder/tabs/Design'
 import { SubmitButtonSettings } from '@/components/form-builder/SubmitButtonSettings'
 import { cn } from '@/utils'
-import { PaintbrushVertical, Settings, ArrowLeft, Plus } from 'lucide-react'
+import { PaintbrushVertical, Settings, ArrowLeft, PackagePlus } from 'lucide-react'
 
 const PANEL_WIDTH = 'w-full md:w-[280px] lg:w-[360px] md:h-[calc(100%-16px)] md:mt-[8px] md:mr-[10px] rounded-3xl border'
 
@@ -41,7 +41,7 @@ export const SidePanel = ({
   // Render Block Settings view (for form blocks)
   if (showBlockSettings && activeBlock) {
     return (
-      <div key="block-settings" className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shrink-0')}>
+      <div key="block-settings" className={cn(PANEL_WIDTH, 'h-full bg-[#FDFEFE] border-l border-border flex flex-col shrink-0')}>
         <div className="flex items-center gap-2 pl-3.5 pr-4 py-[11px] border-b border-border">
           <button
             onClick={onCloseBlockSettings}
@@ -61,7 +61,7 @@ export const SidePanel = ({
   // Render Success Block Settings view
   if (showSuccessBlockSettings && activeSuccessBlock) {
     return (
-      <div key="success-block-settings" className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shrink-0')}>
+      <div key="success-block-settings" className={cn(PANEL_WIDTH, 'h-full bg-[#FDFEFE] border-l border-border flex flex-col shrink-0')}>
         <div className="flex items-center gap-2 pl-3.5 pr-4 py-[11px] border-b border-border">
           <button
             onClick={onCloseSuccessBlockSettings}
@@ -81,7 +81,7 @@ export const SidePanel = ({
   // Render Submit Button Settings view
   if (showSubmitSettings) {
     return (
-      <div key="submit-settings" className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shrink-0')}>
+      <div key="submit-settings" className={cn(PANEL_WIDTH, 'h-full bg-[#FDFEFE] border-l border-border flex flex-col shrink-0')}>
         <div className="flex items-center gap-2 pl-3.5 pr-4 py-[11px] border-b border-border">
           <button
             onClick={onCloseSubmitSettings}
@@ -111,25 +111,25 @@ export const SidePanel = ({
 
   // Render main tabs (Add + Design + Settings)
   return (
-    <div key="main-tabs" className={cn(PANEL_WIDTH, 'h-full bg-card border-l border-border flex flex-col shrink-0 overflow-hidden')}>
+    <div key="main-tabs" className={cn(PANEL_WIDTH, 'h-full bg-[#FDFEFE] border-l border-border flex flex-col shrink-0 overflow-hidden')}>
       {/* Tabs */}
       <div className="flex border-b border-border">
         <button
           onClick={() => onTabChange('add')}
           className={cn(
-            'flex-1 flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium transition-smooth',
+            'flex-1 flex items-center justify-center gap-2 pl-2 pr-3 py-3.5 text-sm font-medium transition-smooth',
             activeTab === 'add'
               ? activeTabClasses
               : noActiveTabClasses
           )}
         >
-          <Plus className="w-4 h-4" />
+          <PackagePlus className="w-4 h-4" />
           Додати
         </button>
         <button
           onClick={() => onTabChange('design')}
           className={cn(
-            'flex-1 flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium transition-smooth',
+            'flex-1 flex items-center justify-center gap-2 pl-2 pr-3 py-3.5 text-sm font-medium transition-smooth',
             activeTab === 'design'
               ? activeTabClasses
               : noActiveTabClasses
@@ -141,14 +141,14 @@ export const SidePanel = ({
         <button
           onClick={() => onTabChange('settings')}
           className={cn(
-            'flex-1 flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium transition-smooth',
+            'flex-1 flex items-center justify-center gap-2 pl-2 pr-3 py-3.5 text-sm font-medium transition-smooth',
             activeTab === 'settings'
               ? activeTabClasses
               : noActiveTabClasses
           )}
         >
           <Settings className="w-4 h-4" />
-          <span className="hidden lg:inline-block">Параметри</span>
+          Параметри
         </button>
       </div>
 

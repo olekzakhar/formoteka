@@ -767,7 +767,9 @@ export const Builder = ({ form }) => {
 
         {/* Mobile side panel drawer */}
         {isMobile && (
-          <MobileSidePanelDrawer>
+          <MobileSidePanelDrawer
+            isSettingsBlockMode={showBlockSettings || showSubmitSettings || isEditingSuccessBlock}
+          >
             {sidePanelContent}
           </MobileSidePanelDrawer>
         )}

@@ -398,7 +398,12 @@ export const BlocksEditor = ({
 
 
       case 'list':
-        return <BlockList block={block} onUpdateBlock={onUpdateBlock} isEditable />
+        return <BlockList 
+          block={block} 
+          onUpdateBlock={onUpdateBlock} 
+          isEditable 
+          onRequestSelect={onSelect}  // Додаємо цей prop
+        />
 
 
       case 'avatar':
@@ -988,11 +993,13 @@ export const BlocksEditor = ({
         'transition-all duration-300 ease-out will-change-transform',
         // border overlay that extends beyond block without affecting layout
         "after:content-[''] after:absolute after:-inset-x-2 after:-inset-y-0 after:rounded-lg after:pointer-events-none",
-        'after:transition-all after:duration-300 after:ease-out',
-        // Border logic: If active (selected in settings): primary border (thick), otherwise transparent border, show border on hover
+        // Transition setup for color changes
+        'after:transition-all after:duration-100 after:ease-out',
+        // Border logic: If active (selected): thick green border
+        // If not active: transparent, on hover show green flash then gray border
         isActive
           ? 'after:border-2 after:border-primary'
-          : 'after:border after:border-transparent hover:after:border-border'
+          : 'after:border after:border-transparent hover:after:!border-border hover:after:!duration-75 group-hover:after:!border-border group-hover:after:!delay-75 group-hover:after:!duration-150'
       )}
       onClick={(e) => {
         e.stopPropagation();

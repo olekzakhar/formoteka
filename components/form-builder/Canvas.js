@@ -346,21 +346,30 @@ export const Canvas = ({
 
                     {/* Submit Button - Fixed at end (only if not sticky) */}
                     {!formDesign.stickyButton && (
-                      <div className="mt-6 group/submit relative inline-block">
-                        {/* Button with hover/selected border */}
-                        <div
-                          className={cn(
-                            'rounded-lg transition-smooth',
-                            isSubmitButtonSelected
-                              ? 'ring-2 ring-primary ring-offset-2'
-                              : 'ring-0 group-hover/submit:ring-2 group-hover/submit:ring-border group-hover/submit:ring-offset-2'
-                          )}
-                        >
+                      <div 
+                        className={cn(
+                          "mt-6 group/submit relative py-1.5",
+                          // Обводка на зовнішньому блоці (на всю ширину)
+                          "after:content-[''] after:absolute after:-inset-x-2 after:-inset-y-0 after:rounded-lg after:pointer-events-none",
+                          // Transition setup for color changes
+                          'after:transition-all after:duration-100 after:ease-out',
+                          // Border matching blocks: green flash then gray border on hover
+                          isSubmitButtonSelected
+                            ? 'after:border-2 after:border-primary'
+                            : 'after:border after:border-transparent hover:after:!border-border hover:after:!duration-75 group-hover/submit:after:!border-border group-hover/submit:after:!delay-75 group-hover/submit:after:!duration-150'
+                        )}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSubmitButtonClick();
+                        }}
+                      >
+                        {/* Button wrapper without border styles */}
+                        <div className="relative inline-block">
                           <Button
                             variant="black"
                             size="black"
                             onClick={(e) => {
-                              e.stopPropagation();
+                              // Не блокуємо спливання, щоб подія дійшла до батьківського div
                               onSubmitButtonClick();
                             }}
                           >
@@ -379,30 +388,30 @@ export const Canvas = ({
                 <div
                   className={cn(
                     'group/sticky mt-4 rounded-xl p-3 bg-card border border-border cursor-pointer transition-smooth',
-                    isSubmitButtonSelected
+                      isSubmitButtonSelected
                       ? 'ring-2 ring-primary ring-offset-2'
                       : 'ring-0 hover:ring-2 hover:ring-border hover:ring-offset-2'
-                  )}
-                  style={{
-                    backgroundColor: formDesign.backgroundColor,
-                    color: formDesign.textColor,
-                    fontSize: formDesign.fontSize
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSubmitButtonClick();
-                  }}
-                >
-                  <div className="group-hover/sticky:opacity-90 transition-smooth">
-                    <OrderButton
-                      hasLineItems={blocks.some((b) => b.type === 'line-items')}
-                      quantityLineItems={1}
-                      totalAmount="0.00"
-                      submitButtonText={submitButtonText}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                    />
+                    )}
+                    style={{
+                      backgroundColor: formDesign.backgroundColor,
+                      color: formDesign.textColor,
+                      fontSize: formDesign.fontSize
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSubmitButtonClick();
+                    }}
+                  >
+                    <div className="group-hover/sticky:opacity-90 transition-smooth">
+                      <OrderButton
+                        hasLineItems={blocks.some((b) => b.type === 'line-items')}
+                        quantityLineItems={1}
+                        totalAmount="0.00"
+                        submitButtonText={submitButtonText}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      />
                   </div>
                 </div>
               )}

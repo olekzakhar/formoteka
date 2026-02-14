@@ -4,7 +4,7 @@ import { cn } from '@/utils'
 import * as LucideIcons from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 
-export const BlockList = ({ block, isPreview, isEditable, onUpdateBlock }) => {
+export const BlockList = ({ block, isPreview, isEditable, onUpdateBlock, onRequestSelect }) => {
   const items = block.listItems || [];
   const style = block.listStyle || 'icon';
   const iconName = block.listIcon || 'Check';
@@ -23,8 +23,14 @@ export const BlockList = ({ block, isPreview, isEditable, onUpdateBlock }) => {
     }
   }, [editingIndex]);
 
-  const handleStartEdit = (index) => {
+  const handleStartEdit = (index, e) => {
     if (!isEditable || !onUpdateBlock) return;
+    
+    // Викликаємо onRequestSelect ПЕРЕД початком редагування
+    if (onRequestSelect && editingIndex === null) {
+      onRequestSelect();
+    }
+    
     setEditingIndex(index);
     setEditValue(items[index] || '');
   };
@@ -93,8 +99,8 @@ export const BlockList = ({ block, isPreview, isEditable, onUpdateBlock }) => {
               className={cn("flex-1", isEditable && "cursor-text")}
               onClick={(e) => {
                 if (isEditable) {
-                  e.stopPropagation();
-                  handleStartEdit(index);
+                  // НЕ викликаємо stopPropagation, щоб подія дійшла до BlocksEditor
+                  handleStartEdit(index, e)
                 }
               }}
             >

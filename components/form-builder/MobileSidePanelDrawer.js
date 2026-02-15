@@ -9,6 +9,24 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
   const [currentTranslateY, setCurrentTranslateY] = useState(0);
   const drawerRef = useRef(null);
 
+  // Set CSS custom properties for viewport height
+  useEffect(() => {
+    const setViewportHeight = () => {
+      // Use dvh (dynamic viewport height) which adjusts for iOS Safari toolbars
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    setViewportHeight();
+    window.addEventListener('resize', setViewportHeight);
+    window.addEventListener('orientationchange', setViewportHeight);
+
+    return () => {
+      window.removeEventListener('resize', setViewportHeight);
+      window.removeEventListener('orientationchange', setViewportHeight);
+    };
+  }, []);
+
   const handleToggle = () => {
     setIsOpen(!isOpen);
     setCurrentTranslateY(0);
@@ -129,9 +147,8 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
         )}
         style={{
           transform: getTransformStyle(),
-          // paddingTop: '60px',
-          maxHeight: '92vh',
-          height: '92vh',
+          maxHeight: 'calc(var(--vh, 1vh) * 92)',
+          height: 'calc(var(--vh, 1vh) * 92)',
         }}
       >
         {/* Handle button */}

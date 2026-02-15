@@ -8,34 +8,45 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
   const [dragStartY, setDragStartY] = useState(0);
   const [currentTranslateY, setCurrentTranslateY] = useState(0);
   const drawerRef = useRef(null);
+  const [viewportHeight, setViewportHeight] = useState(0)
+  const [keyboardOffset, setKeyboardOffset] = useState(0)
 
-  // Set CSS custom properties for viewport height
+  // Track actual available viewport height (accounting for keyboard)
   useEffect(() => {
-    const setViewportHeight = () => {
-      // Use window.innerHeight which adjusts when keyboard opens
-      const vh = window.innerHeight * 0.01;
+    const updateHeight = () => {
+      // Use visualViewport when available (better for iOS keyboard)
+      const height = window.visualViewport?.height || window.innerHeight;
+      setViewportHeight(height);
+      
+      // Calculate keyboard offset (difference between window height and visual viewport)
+      const offset = window.innerHeight - height;
+      setKeyboardOffset(offset);
+      
+      // Also update CSS variable for other components
+      const vh = height * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
     };
 
-    setViewportHeight();
+    updateHeight()
     
-    // Update on resize (including keyboard open/close)
-    window.addEventListener('resize', setViewportHeight);
-    window.addEventListener('orientationchange', setViewportHeight);
-    
-    // Also listen to visual viewport changes for better keyboard handling
+    // Listen to visual viewport changes (better for keyboard)
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', setViewportHeight);
+      window.visualViewport.addEventListener('resize', updateHeight)
+      window.visualViewport.addEventListener('scroll', updateHeight)
     }
+    
+    window.addEventListener('resize', updateHeight)
+    window.addEventListener('orientationchange', updateHeight)
 
     return () => {
-      window.removeEventListener('resize', setViewportHeight);
-      window.removeEventListener('orientationchange', setViewportHeight);
       if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', setViewportHeight);
+        window.visualViewport.removeEventListener('resize', updateHeight)
+        window.visualViewport.removeEventListener('scroll', updateHeight)
       }
+      window.removeEventListener('resize', updateHeight)
+      window.removeEventListener('orientationchange', updateHeight)
     };
-  }, []);
+  }, [])
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
@@ -130,6 +141,9 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
   }, [isDragging, dragStartY, isOpen, currentTranslateY]);
 
   const getTransformStyle = () => {
+    // Calculate max height based on actual viewport
+    const maxHeight = viewportHeight > 0 ? viewportHeight * 0.92 : window.innerHeight * 0.92;
+    
     if (isOpen) {
       return `translateY(${currentTranslateY}px)`;
     } else {
@@ -137,6 +151,9 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
       return `translateY(calc(100% - 32px + ${currentTranslateY}px))`;
     }
   };
+  
+  // Calculate dynamic height based on viewport
+  const drawerHeight = viewportHeight > 0 ? viewportHeight * 0.92 : window.innerHeight * 0.92;
   
   return (
     <>
@@ -153,13 +170,15 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
         ref={drawerRef}
         data-mobile-drawer
         className={cn(
-          'fixed inset-x-0 bottom-0 z-50 md:hidden pointer-events-none',
+          'fixed inset-x-0 z-50 md:hidden pointer-events-none',
           isDragging ? '' : 'transition-transform duration-300 ease-out'
         )}
         style={{
           transform: getTransformStyle(),
-          maxHeight: 'calc(var(--vh, 1vh) * 92)',
-          height: 'calc(var(--vh, 1vh) * 92)',
+          height: `${drawerHeight}px`,
+          maxHeight: `${drawerHeight}px`,
+          // Position from bottom, accounting for keyboard
+          bottom: `${keyboardOffset}px`,
         }}
       >
         {/* Handle button */}

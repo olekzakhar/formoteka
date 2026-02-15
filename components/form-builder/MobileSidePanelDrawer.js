@@ -59,21 +59,14 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
   };
 
   const handleTouchMove = (e) => {
-    if (!isDragging) return;
+    if (!isDragging || !isOpen) return;
     
     const currentY = e.touches[0].clientY;
     const diff = currentY - dragStartY;
     
-    if (isOpen) {
-      // When open, only allow dragging down
-      if (diff > 0) {
-        setCurrentTranslateY(diff);
-      }
-    } else {
-      // When closed, only allow dragging up
-      if (diff < 0) {
-        setCurrentTranslateY(diff);
-      }
+    // When open, only allow dragging down
+    if (diff > 0) {
+      setCurrentTranslateY(diff);
     }
   };
 
@@ -85,8 +78,6 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
     
     if (isOpen && currentTranslateY > threshold) {
       setIsOpen(false);
-    } else if (!isOpen && currentTranslateY < -threshold) {
-      setIsOpen(true);
     }
     
     setCurrentTranslateY(0);
@@ -99,18 +90,13 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      if (!isDragging) return;
+      if (!isDragging || !isOpen) return;
       
       const diff = e.clientY - dragStartY;
       
-      if (isOpen) {
-        if (diff > 0) {
-          setCurrentTranslateY(diff);
-        }
-      } else {
-        if (diff < 0) {
-          setCurrentTranslateY(diff);
-        }
+      // When open, only allow dragging down
+      if (diff > 0) {
+        setCurrentTranslateY(diff);
       }
     };
 
@@ -122,8 +108,6 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
       
       if (isOpen && currentTranslateY > threshold) {
         setIsOpen(false);
-      } else if (!isOpen && currentTranslateY < -threshold) {
-        setIsOpen(true);
       }
       
       setCurrentTranslateY(0);
@@ -147,8 +131,8 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
     if (isOpen) {
       return `translateY(${currentTranslateY}px)`;
     } else {
-      // When closed, drawer is off-screen, pulled up reveals it
-      return `translateY(calc(100% - 32px + ${currentTranslateY}px))`;
+      // When closed, move drawer completely off screen (including handle)
+      return `translateY(100%)`;
     }
   };
   
@@ -165,13 +149,53 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
         />
       )}
       
+      {/* Floating button when drawer is closed */}
+      {!isOpen && (
+        <div 
+          className="fixed left-1/2 -translate-x-1/2 z-50 md:hidden"
+          style={{
+            bottom: `${keyboardOffset}px`,
+          }}
+        >
+          <button
+            onClick={handleToggle}
+            className={cn(
+              'flex items-center justify-center gap-2 bg-primary text-primary-foreground shadow-lg',
+              'select-none pointer-events-auto'
+            )}
+            style={{
+              width: '200px',
+              height: '32px',
+              borderTopLeftRadius: '36px',
+              borderTopRightRadius: '36px',
+              borderBottomLeftRadius: '0',
+              borderBottomRightRadius: '0'
+            }}
+          >
+            {isSettingsBlockMode ? (
+              <>
+                <Settings2 className="w-4 h-4" />
+                <span className="text-sm font-medium">Властивості</span>
+              </>
+            ) : (
+              <>
+                <Columns3 className="w-4 h-4 rotate-90" />
+                <span className="text-sm font-medium">Блоки</span>
+              </>
+            )}
+          </button>
+        </div>
+      )}
+      
       {/* Drawer */}
       <div
         ref={drawerRef}
         data-mobile-drawer
         className={cn(
           'fixed inset-x-0 z-50 md:hidden pointer-events-none',
-          isDragging ? '' : 'transition-transform duration-300 ease-out'
+          isDragging ? '' : 'transition-transform duration-300 ease-out',
+          // Hide completely when closed
+          !isOpen && 'invisible'
         )}
         style={{
           transform: getTransformStyle(),
@@ -179,9 +203,11 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
           maxHeight: `${drawerHeight}px`,
           // Position from bottom, accounting for keyboard
           bottom: `${keyboardOffset}px`,
+          // Prevent height transition
+          transition: isDragging ? 'none' : 'transform 300ms ease-out',
         }}
       >
-        {/* Handle button */}
+        {/* Handle button - only visible when drawer is open */}
         <div className="flex justify-center">
           <button
             onClick={handleToggle}

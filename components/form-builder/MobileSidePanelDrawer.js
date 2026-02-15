@@ -8,8 +8,8 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
   const [dragStartY, setDragStartY] = useState(0);
   const [currentTranslateY, setCurrentTranslateY] = useState(0);
   const drawerRef = useRef(null);
-  const [viewportHeight, setViewportHeight] = useState(window.innerHeight)
-  const [keyboardOffset, setKeyboardOffset] = useState(0)
+  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+  const [keyboardOffset, setKeyboardOffset] = useState(0);
 
   // Track actual available viewport height (accounting for keyboard)
   useEffect(() => {
@@ -27,26 +27,26 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
       document.documentElement.style.setProperty('--vh', `${vh}px`);
     };
 
-    updateHeight()
+    updateHeight();
     
     // Listen to visual viewport changes (better for keyboard)
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', updateHeight)
-      window.visualViewport.addEventListener('scroll', updateHeight)
+      window.visualViewport.addEventListener('resize', updateHeight);
+      window.visualViewport.addEventListener('scroll', updateHeight);
     }
     
-    window.addEventListener('resize', updateHeight)
-    window.addEventListener('orientationchange', updateHeight)
+    window.addEventListener('resize', updateHeight);
+    window.addEventListener('orientationchange', updateHeight);
 
     return () => {
       if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', updateHeight)
-        window.visualViewport.removeEventListener('scroll', updateHeight)
+        window.visualViewport.removeEventListener('resize', updateHeight);
+        window.visualViewport.removeEventListener('scroll', updateHeight);
       }
-      window.removeEventListener('resize', updateHeight)
-      window.removeEventListener('orientationchange', updateHeight)
+      window.removeEventListener('resize', updateHeight);
+      window.removeEventListener('orientationchange', updateHeight);
     };
-  }, [])
+  }, []);
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
@@ -146,53 +146,44 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
         />
       )}
       
-      {/* Floating button when drawer is closed */}
-      {!isOpen && (
-        <div 
-          className="fixed left-1/2 -translate-x-1/2 z-50 md:hidden"
-          style={{
-            // Always position at 0 from bottom - this is the actual visible bottom
-            bottom: 0,
-            // Add safe area padding for devices with home indicator
-            paddingBottom: 'env(safe-area-inset-bottom, 0px)',
-          }}
+      {/* Floating button - ALWAYS visible with margin from bottom */}
+      <div 
+        className="fixed left-1/2 -translate-x-1/2 md:hidden"
+        style={{
+          bottom: '12px', // Fixed margin from bottom
+          zIndex: isOpen ? 40 : 50, // Lower z-index when drawer is open
+        }}
+      >
+        <button
+          onClick={handleToggle}
+          className={cn(
+            'flex items-center justify-center gap-2 bg-primary text-primary-foreground shadow-lg',
+            'select-none pointer-events-auto rounded-full pl-[23px] pr-6 py-2',
+            'transition-all duration-200',
+            isOpen && 'scale-95 opacity-90'
+          )}
         >
-          <button
-            onClick={handleToggle}
-            className={cn(
-              'flex items-center justify-center gap-2 bg-primary text-primary-foreground shadow-lg',
-              'select-none pointer-events-auto'
-            )}
-            style={{
-              width: '200px',
-              height: '32px',
-              borderTopLeftRadius: '36px',
-              borderTopRightRadius: '36px',
-              borderBottomLeftRadius: '0',
-              borderBottomRightRadius: '0'
-            }}
-          >
-            {isSettingsBlockMode ? (
-              <>
-                <Settings2 className="w-4 h-4" />
-                <span className="text-sm font-medium">Властивості</span>
-              </>
-            ) : (
-              <>
-                <Columns3 className="w-4 h-4 rotate-90" />
-                <span className="text-sm font-medium">Блоки</span>
-              </>
-            )}
-          </button>
-        </div>
-      )}
+          {isSettingsBlockMode ? (
+            <>
+              <Settings2 className="w-4 h-4" />
+              <span className="text-sm font-medium">Властивості</span>
+            </>
+          ) : (
+            <>
+              <Columns3 className="w-4 h-4 rotate-90" />
+              <span className="text-sm font-medium">Блоки</span>
+            </>
+          )}
+        </button>
+      </div>
       
       {/* Drawer */}
       <div
         ref={drawerRef}
         data-mobile-drawer
         className={cn(
-          'fixed inset-x-0 z-50 md:hidden pointer-events-none'
+          'fixed inset-x-0 z-50 md:hidden pointer-events-none',
+          'bg-background rounded-t-3xl shadow-2xl'
         )}
         style={{
           transform: getTransformStyle(),
@@ -206,47 +197,25 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
           display: isOpen ? 'block' : 'none',
         }}
       >
-        {/* Handle button - only visible when drawer is open */}
-        <div className="flex justify-center">
-          <button
-            onClick={handleToggle}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            onMouseDown={handleMouseDown}
-            className={cn(
-              'flex items-center justify-center gap-2 bg-primary text-primary-foreground',
-              'cursor-grab active:cursor-grabbing',
-              'select-none touch-none pointer-events-auto'
-            )}
-            style={{
-              width: '200px',
-              height: '32px',
-              borderTopLeftRadius: '36px',
-              borderTopRightRadius: '36px',
-              borderBottomLeftRadius: '0',
-              borderBottomRightRadius: '0'
-            }}
-          >
-            {isSettingsBlockMode ? (
-              <>
-                <Settings2 className="w-4 h-4" />
-                <span className="text-sm font-medium">Властивості</span>
-              </>
-            ) : (
-              <>
-                <Columns3 className="w-4 h-4 rotate-90" />
-                <span className="text-sm font-medium">Блоки</span>
-              </>
-            )}
-          </button>
+        {/* Apple-style drag handle */}
+        <div 
+          className="pt-2 pb-2 flex justify-center bg-[#E4E5E5] rounded-t-3xl pointer-events-auto"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onMouseDown={handleMouseDown}
+        >
+          <div 
+            className="w-14 h-[2px] bg-gray-400/60 rounded-full cursor-grab active:cursor-grabbing"
+            style={{ touchAction: 'none' }}
+          />
         </div>
 
         {/* Content */}
         <div 
           data-drawer-content
-          className="pointer-events-auto overflow-y-auto" 
-          style={{ height: 'calc(100% - 32px)' }}
+          className="bg-[#E4E5E5] pointer-events-auto overflow-y-auto" 
+          style={{ height: 'calc(100% - 28px)' }} // Subtract handle height
         >
           {children}
         </div>

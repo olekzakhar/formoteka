@@ -10,6 +10,7 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
   const drawerRef = useRef(null);
   const [viewportHeight, setViewportHeight] = useState(0)
   const [keyboardOffset, setKeyboardOffset] = useState(0)
+  const [isHeightReady, setIsHeightReady] = useState(false)
 
   // Track actual available viewport height (accounting for keyboard)
   useEffect(() => {
@@ -25,6 +26,11 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
       // Also update CSS variable for other components
       const vh = height * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
+      
+      // Mark height as ready after first calculation
+      if (!isHeightReady) {
+        setIsHeightReady(true);
+      }
     };
 
     updateHeight()
@@ -46,11 +52,14 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
       window.removeEventListener('resize', updateHeight)
       window.removeEventListener('orientationchange', updateHeight)
     };
-  }, [])
+  }, [isHeightReady])
 
   const handleToggle = () => {
-    setIsOpen(!isOpen);
-    setCurrentTranslateY(0);
+    // Only toggle if height is calculated
+    if (isHeightReady) {
+      setIsOpen(!isOpen);
+      setCurrentTranslateY(0);
+    }
   };
 
   const handleTouchStart = (e) => {
@@ -152,9 +161,10 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
       {/* Floating button when drawer is closed */}
       {!isOpen && (
         <div 
-          className="fixed left-1/2 -translate-x-1/2 z-50 md:hidden"
+          className="fixed left-1/2 -translate-x-1/2 z-50 md:hidden transition-all duration-300 ease-out"
           style={{
-            bottom: `${keyboardOffset}px`,
+            // Use max() to ensure button never goes below screen
+            bottom: `max(${keyboardOffset}px, env(safe-area-inset-bottom, 0px))`,
           }}
         >
           <button
@@ -192,19 +202,22 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
         ref={drawerRef}
         data-mobile-drawer
         className={cn(
-          'fixed inset-x-0 z-50 md:hidden pointer-events-none',
-          isDragging ? '' : 'transition-transform duration-300 ease-out',
-          // Hide completely when closed
-          !isOpen && 'invisible'
+          'fixed inset-x-0 z-50 md:hidden pointer-events-none'
         )}
         style={{
           transform: getTransformStyle(),
           height: `${drawerHeight}px`,
           maxHeight: `${drawerHeight}px`,
+          minHeight: `${drawerHeight}px`, // Force exact height
           // Position from bottom, accounting for keyboard
           bottom: `${keyboardOffset}px`,
-          // Prevent height transition
-          transition: isDragging ? 'none' : 'transform 300ms ease-out',
+          // Smooth transitions
+          transition: isDragging 
+            ? 'none' 
+            : 'transform 300ms ease-out, opacity 150ms ease-out',
+          // Hide completely when closed or height not ready
+          visibility: (isOpen && isHeightReady) ? 'visible' : 'hidden',
+          opacity: (isOpen && isHeightReady) ? 1 : 0,
         }}
       >
         {/* Handle button - only visible when drawer is open */}

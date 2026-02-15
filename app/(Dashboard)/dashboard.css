@@ -395,3 +395,24 @@
 [data-theme="dashboard"] [role="combobox"] {
   --tw-ring-color: var(--focus-ring-color, hsl(var(--ring)));
 }
+
+/* iOS Safari mobile drawer optimizations */
+@supports (-webkit-touch-callout: none) {
+  /* Smooth scrolling for drawer content */
+  [data-drawer-content] {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  
+  /* Ensure drawer stays at bottom with proper height */
+  [data-mobile-drawer] {
+    touch-action: pan-y;
+  }
+}
+
+/* Smooth scrolling for drawer content on all devices */
+[data-drawer-content] {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+}

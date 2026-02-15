@@ -8,9 +8,8 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
   const [dragStartY, setDragStartY] = useState(0);
   const [currentTranslateY, setCurrentTranslateY] = useState(0);
   const drawerRef = useRef(null);
-  const [viewportHeight, setViewportHeight] = useState(0)
+  const [viewportHeight, setViewportHeight] = useState(window.innerHeight)
   const [keyboardOffset, setKeyboardOffset] = useState(0)
-  const [isHeightReady, setIsHeightReady] = useState(false)
 
   // Track actual available viewport height (accounting for keyboard)
   useEffect(() => {
@@ -26,11 +25,6 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
       // Also update CSS variable for other components
       const vh = height * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
-      
-      // Mark height as ready after first calculation
-      if (!isHeightReady) {
-        setIsHeightReady(true);
-      }
     };
 
     updateHeight()
@@ -52,14 +46,11 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
       window.removeEventListener('resize', updateHeight)
       window.removeEventListener('orientationchange', updateHeight)
     };
-  }, [isHeightReady])
+  }, [])
 
   const handleToggle = () => {
-    // Only toggle if height is calculated
-    if (isHeightReady) {
-      setIsOpen(!isOpen);
-      setCurrentTranslateY(0);
-    }
+    setIsOpen(!isOpen);
+    setCurrentTranslateY(0);
   };
 
   const handleTouchStart = (e) => {
@@ -134,9 +125,6 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
   }, [isDragging, dragStartY, isOpen, currentTranslateY]);
 
   const getTransformStyle = () => {
-    // Calculate max height based on actual viewport
-    const maxHeight = viewportHeight > 0 ? viewportHeight * 0.92 : window.innerHeight * 0.92;
-    
     if (isOpen) {
       return `translateY(${currentTranslateY}px)`;
     } else {
@@ -145,8 +133,8 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
     }
   };
   
-  // Calculate dynamic height based on viewport
-  const drawerHeight = viewportHeight > 0 ? viewportHeight * 0.92 : window.innerHeight * 0.92;
+  // Calculate dynamic height based on viewport - use current values directly
+  const drawerHeight = viewportHeight * 0.92;
   
   return (
     <>
@@ -161,10 +149,12 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
       {/* Floating button when drawer is closed */}
       {!isOpen && (
         <div 
-          className="fixed left-1/2 -translate-x-1/2 z-50 md:hidden transition-all duration-300 ease-out"
+          className="fixed left-1/2 -translate-x-1/2 z-50 md:hidden"
           style={{
-            // Use max() to ensure button never goes below screen
-            bottom: `max(${keyboardOffset}px, env(safe-area-inset-bottom, 0px))`,
+            // Always position at 0 from bottom - this is the actual visible bottom
+            bottom: 0,
+            // Add safe area padding for devices with home indicator
+            paddingBottom: 'env(safe-area-inset-bottom, 0px)',
           }}
         >
           <button
@@ -207,17 +197,13 @@ export const MobileSidePanelDrawer = ({ children, isSettingsBlockMode = false })
         style={{
           transform: getTransformStyle(),
           height: `${drawerHeight}px`,
-          maxHeight: `${drawerHeight}px`,
-          minHeight: `${drawerHeight}px`, // Force exact height
-          // Position from bottom, accounting for keyboard
-          bottom: `${keyboardOffset}px`,
-          // Smooth transitions
-          transition: isDragging 
-            ? 'none' 
-            : 'transform 300ms ease-out, opacity 150ms ease-out',
-          // Hide completely when closed or height not ready
-          visibility: (isOpen && isHeightReady) ? 'visible' : 'hidden',
-          opacity: (isOpen && isHeightReady) ? 1 : 0,
+          // Always position at actual bottom
+          bottom: 0,
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+          // Only animate transform, NOT height
+          transition: isDragging ? 'none' : 'transform 300ms ease-out',
+          // Completely hide when closed
+          display: isOpen ? 'block' : 'none',
         }}
       >
         {/* Handle button - only visible when drawer is open */}
